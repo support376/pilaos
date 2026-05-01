@@ -44,7 +44,7 @@ function Foot() {
         <div className="flex gap-3">
           <Link href="/start/intent">창업 의향</Link>
           <Link href="/close/intent">폐업 의향</Link>
-          <Link href="/admin/inbox">운영팀</Link>
+          <Link href="/admin/inbox">운영팀 인박스</Link>
         </div>
         <div>모든 추정치는 공개 데이터 기반이며 실사 후 검증됩니다.</div>
       </div>
