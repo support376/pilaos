@@ -11,6 +11,7 @@ import { FavButton } from "@/components/listing/FavButton";
 import { ChannelLinks } from "@/components/listing/ChannelLinks";
 import { EstimateNote } from "@/components/listing/EstimateNote";
 import { PhotoMain } from "@/components/listing/PhotoMain";
+import { InterestCounter } from "@/components/listing/InterestCounter";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -53,6 +54,7 @@ export default async function ListingPage({ params }: Params) {
               <p className="mt-0.5 text-xs text-gray-500">{s.road_address_name || s.address_name} · 디지털 {l.digital_grade}급 ({l.digital_score}/90){brand ? ` · 브랜드 ${brand.name}` : ""}</p>
             </div>
             <FavButton listingId={l.id} variant="hero" />
+            <Suspense fallback={null}><InterestCounter listingId={l.id} /></Suspense>
           </div>
 
           <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
