@@ -1,22 +1,14 @@
 import { Studio } from "@/lib/types";
 import { channelsOf } from "@/lib/listings";
-
-const ICONS: Record<string, string> = {
-  kakao_place: "🗺",
-  naver_place: "N",
-  homepage: "🌐",
-  instagram: "@",
-  naver_blog: "B",
-  kakao_channel: "💬",
-};
+import { BrandIcon } from "./BrandIcon";
 
 const COLORS: Record<string, string> = {
-  kakao_place: "bg-yellow-50 text-yellow-900 ring-yellow-200 hover:bg-yellow-100",
-  naver_place: "bg-emerald-50 text-emerald-900 ring-emerald-200 hover:bg-emerald-100",
-  homepage: "bg-sky-50 text-sky-900 ring-sky-200 hover:bg-sky-100",
-  instagram: "bg-pink-50 text-pink-900 ring-pink-200 hover:bg-pink-100",
-  naver_blog: "bg-lime-50 text-lime-900 ring-lime-200 hover:bg-lime-100",
-  kakao_channel: "bg-orange-50 text-orange-900 ring-orange-200 hover:bg-orange-100",
+  kakao_place: "bg-yellow-50 hover:bg-yellow-100 text-yellow-900 ring-yellow-200",
+  naver_place: "bg-emerald-50 hover:bg-emerald-100 text-emerald-900 ring-emerald-200",
+  homepage: "bg-sky-50 hover:bg-sky-100 text-sky-900 ring-sky-200",
+  instagram: "bg-pink-50 hover:bg-pink-100 text-pink-900 ring-pink-200",
+  naver_blog: "bg-lime-50 hover:bg-lime-100 text-lime-900 ring-lime-200",
+  kakao_channel: "bg-orange-50 hover:bg-orange-100 text-orange-900 ring-orange-200",
 };
 
 export function ChannelLinks({ studio, compact = false }: { studio: Studio; compact?: boolean }) {
@@ -29,19 +21,29 @@ export function ChannelLinks({ studio, compact = false }: { studio: Studio; comp
     );
   }
   return (
-    <div className={`flex flex-wrap ${compact ? "gap-1" : "gap-2"}`}>
+    <div className={`flex flex-wrap ${compact ? "gap-1.5" : "gap-2"}`}>
       {links.map((l) => (
-        <a
-          key={l.kind}
-          href={l.url}
-          target="_blank"
-          rel="noreferrer noopener"
-          className={`inline-flex items-center gap-1.5 rounded-md ring-1 transition ${COLORS[l.kind] ?? "bg-gray-50 text-gray-700 ring-gray-200"} ${compact ? "px-2 py-1 text-[11px]" : "px-3 py-2 text-xs"} font-medium`}
-        >
-          <span className="font-bold" aria-hidden>{ICONS[l.kind] ?? "·"}</span>
-          {l.label}
+        <a key={l.kind} href={l.url} target="_blank" rel="noreferrer noopener"
+          className={`inline-flex items-center gap-2 rounded-lg ring-1 transition ${COLORS[l.kind] ?? "bg-gray-50 text-gray-700 ring-gray-200"} ${compact ? "px-2.5 py-1.5 text-[11px]" : "px-3.5 py-2.5 text-sm"} font-medium`}>
+          <BrandIcon kind={l.kind} size={compact ? 16 : 22} />
+          <span>{l.label}</span>
           <span aria-hidden className="text-[10px] opacity-60">↗</span>
         </a>
+      ))}
+    </div>
+  );
+}
+
+// 카드 미니 칩 (아이콘만)
+export function ChannelDots({ studio }: { studio: Studio }) {
+  const links = channelsOf(studio);
+  if (!links.length) return null;
+  return (
+    <div className="flex flex-wrap items-center gap-1">
+      {links.slice(0, 6).map((l) => (
+        <span key={l.kind} className="inline-flex" title={l.label}>
+          <BrandIcon kind={l.kind} size={18} />
+        </span>
       ))}
     </div>
   );

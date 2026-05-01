@@ -5,41 +5,49 @@ import { fmtMan } from "@/lib/estimate";
 import { PotentialBadge } from "./PotentialBadge";
 import { FavButton } from "./FavButton";
 import { PhotoMain } from "./PhotoMain";
-import { channelsOf } from "@/lib/listings";
+import { ChannelDots } from "./ChannelLinks";
 
 const GRADE_COLORS: Record<Listing["digital_grade"], string> = {
   A: "text-emerald-600", B: "text-sky-600", C: "text-amber-600", D: "text-orange-600", F: "text-rose-600",
 };
-const CHANNEL_DOTS: Record<string, string> = {
-  kakao_place: "bg-yellow-500", naver_place: "bg-emerald-500", homepage: "bg-sky-500",
-  instagram: "bg-pink-500", naver_blog: "bg-lime-500", kakao_channel: "bg-orange-500",
-};
-const CHANNEL_LABELS: Record<string, string> = {
-  kakao_place: "카카오", naver_place: "네이버", homepage: "홈피",
-  instagram: "인스타", naver_blog: "블로그", kakao_channel: "톡채널",
-};
 
 function PhotoSkeleton() {
-  return <div className="h-32 w-full animate-pulse bg-gray-100 rounded-t-lg" />;
+  return <div className="h-48 w-full animate-pulse bg-gray-100" />;
 }
 
 export function ListingCard({ listing: l }: { listing: Listing }) {
-  const channels = channelsOf(l.studio);
   const reviewSum = (l.studio.kakao_review_count ?? 0) + (l.studio.blog_review_count ?? 0);
 
   return (
     <Link href={`/listings/${l.id}`}
       className="group relative block overflow-hidden rounded-xl border border-gray-200 bg-white transition hover:border-gray-400 hover:shadow-md">
-      {/* 사진 — 풀폭 */}
-      <div className="relative">
+      {/* 사진 — 풀폭 큰 사이즈 */}
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-gray-100">
         <Suspense fallback={<PhotoSkeleton />}>
           <PhotoMain kakaoPlaceId={l.studio.kakao_place_id} lng={l.lng} lat={l.lat} naverUrl={l.studio.naver_url} alt={l.studio.place_name} sigungu={l.sigungu} size="card" />
         </Suspense>
-        <div className="absolute right-2 top-2 z-10">
+
+        {/* 좌상단: 잠재매물 배지 */}
+        <div className="absolute left-3 top-3 z-10">
+          <PotentialBadge listing={l} />
+        </div>
+        {/* 우상단: 찜 */}
+        <div className="absolute right-3 top-3 z-10">
           <FavButton listingId={l.id} />
         </div>
-        <div className="absolute left-2 top-2 z-10">
-          <PotentialBadge listing={l} />
+        {/* 좌하단: 권리금 가격 오버레이 */}
+        <div className="absolute bottom-3 left-3 z-10">
+          <div className="rounded-lg bg-black/65 px-2.5 py-1.5 backdrop-blur-sm">
+            <div className="text-[9px] uppercase tracking-wide text-amber-200/90">권리금 추정</div>
+            <div className="text-base font-bold text-white">{fmtMan(l.estimate.key_money.mid)}</div>
+          </div>
+        </div>
+        {/* 우하단: 수익률 */}
+        <div className="absolute bottom-3 right-3 z-10">
+          <div className="rounded-lg bg-emerald-600/90 px-2.5 py-1.5 backdrop-blur-sm">
+            <div className="text-[9px] uppercase tracking-wide text-white/85">월수익률</div>
+            <div className="text-base font-bold text-white">{l.estimate.monthly_yield_pct}%</div>
+          </div>
         </div>
       </div>
 
@@ -52,25 +60,18 @@ export function ListingCard({ listing: l }: { listing: Listing }) {
         <div className="mt-0.5 truncate text-xs text-gray-600">{[l.sigungu, l.dong].filter(Boolean).join(" · ")}</div>
         <div className="mt-0.5 truncate text-[11px] text-gray-500">{l.studio.road_address_name || l.studio.address_name}</div>
 
-        {/* 채널 보유 미니 칩 */}
-        <div className="mt-2.5 flex flex-wrap items-center gap-1">
-          {channels.slice(0, 6).map((c) => (
-            <span key={c.kind} className="inline-flex items-center gap-1 rounded-full bg-gray-50 px-2 py-0.5 text-[10px] text-gray-700">
-              <span className={`h-1.5 w-1.5 rounded-full ${CHANNEL_DOTS[c.kind]}`} aria-hidden />
-              {CHANNEL_LABELS[c.kind]}
-            </span>
-          ))}
+        {/* 채널 아이콘 + 리뷰 */}
+        <div className="mt-2.5 flex flex-wrap items-center gap-2">
+          <ChannelDots studio={l.studio} />
           {reviewSum > 0 ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-gray-50 px-2 py-0.5 text-[10px] text-gray-700">★ {reviewSum.toLocaleString()}</span>
+            <span className="inline-flex items-center gap-0.5 text-[11px] text-gray-500">★ {reviewSum.toLocaleString()}</span>
           ) : null}
         </div>
 
-        {/* 5지표 */}
-        <div className="mt-3 grid grid-cols-3 gap-1.5 sm:grid-cols-5">
-          <Metric label="권리금" value={fmtMan(l.estimate.key_money.mid)} />
+        {/* 5지표 — 권리금/수익률은 위에 오버레이로 빠졌으니 나머지 3지표 */}
+        <div className="mt-3 grid grid-cols-3 gap-1.5">
           <Metric label="월매출" value={fmtMan(l.estimate.monthly_revenue.mid)} />
           <Metric label="월순익" value={fmtMan(l.estimate.monthly_profit.mid)} />
-          <Metric label="수익률" value={`${l.estimate.monthly_yield_pct}%`} highlight />
           <Metric label="회수기간" value={l.estimate.payback_months_keyMoney >= 999 ? "—" : `${l.estimate.payback_months_keyMoney}개월`} />
         </div>
         <div className="mt-2 flex items-center justify-between gap-2 text-[11px]">
@@ -82,11 +83,11 @@ export function ListingCard({ listing: l }: { listing: Listing }) {
   );
 }
 
-function Metric({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className={`rounded-md px-2 py-1.5 ${highlight ? "bg-emerald-50" : "bg-gray-50"}`}>
-      <div className={`text-[9px] uppercase tracking-wide ${highlight ? "text-emerald-700" : "text-gray-500"}`}>{label}<span className="ml-0.5 text-amber-600">~</span></div>
-      <div className={`mt-0.5 text-sm font-bold ${highlight ? "text-emerald-900" : "text-gray-900"}`}>{value}</div>
+    <div className="rounded-md bg-gray-50 px-2 py-1.5">
+      <div className="text-[9px] uppercase tracking-wide text-gray-500">{label}<span className="ml-0.5 text-amber-600">~</span></div>
+      <div className="mt-0.5 text-sm font-bold text-gray-900">{value}</div>
     </div>
   );
 }
