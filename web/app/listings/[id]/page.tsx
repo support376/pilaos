@@ -10,6 +10,7 @@ import { PotentialBadge } from "@/components/listing/PotentialBadge";
 import { FavButton } from "@/components/listing/FavButton";
 import { ChannelLinks } from "@/components/listing/ChannelLinks";
 import { EstimateNote } from "@/components/listing/EstimateNote";
+import { EstimateBasis } from "@/components/listing/EstimateBasis";
 import { PhotoMain } from "@/components/listing/PhotoMain";
 import { InterestCounter } from "@/components/listing/InterestCounter";
 
@@ -89,6 +90,7 @@ export default async function ListingPage({ params }: Params) {
           </div>
 
           <EstimateNote listing={l} />
+          <EstimateBasis listing={l} />
 
           <div className="mt-5 grid gap-2 sm:grid-cols-2">
             <Link href={`/sell/new?listing=${encodeURIComponent(l.id)}`} className="rounded-xl border-2 border-amber-300 bg-amber-50 px-5 py-4 text-center transition hover:bg-amber-100">
