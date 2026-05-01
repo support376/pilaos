@@ -44,7 +44,9 @@ export function Roadmap({ studio }: { studio: Studio }) {
       points:
         (studio.kakao_review_count ?? 0) >= 5
           ? 0
-          : 6 - (studio.kakao_review_count ?? 0 > 0 ? 3 : 0),
+          : (studio.kakao_review_count ?? 0) >= 1
+            ? 3
+            : 6,
       effort: "리뷰 요청 자동화",
       why: "로컬 검색 노출 가중치",
     },
@@ -54,7 +56,9 @@ export function Roadmap({ studio }: { studio: Studio }) {
       points:
         (studio.blog_review_count ?? 0) >= 5
           ? 0
-          : 6 - (studio.blog_review_count ?? 0 > 0 ? 3 : 0),
+          : (studio.blog_review_count ?? 0) >= 1
+            ? 3
+            : 6,
       effort: "체험단 2~3명",
       why: "네이버 블로그 SEO",
     },

@@ -9,7 +9,6 @@ export function db(): Database.Database {
   // 배포 시 web/data/pilates.db를 번들. 로컬 개발도 같은 경로 사용.
   const p = path.resolve(process.cwd(), "data", "pilates.db");
   _db = new Database(p, { fileMustExist: true, readonly: true });
-  _db.pragma("journal_mode = WAL");
   _db.pragma("busy_timeout = 5000");
   return _db;
 }
