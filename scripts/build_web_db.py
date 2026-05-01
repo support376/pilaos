@@ -49,6 +49,9 @@ SLIM_COLS = [
     "has_coupon",
     "first_seen_at",
     "last_seen_at",
+    "photo_urls",
+    "photo_main",
+    "photo_count_real",
 ]
 
 
@@ -141,6 +144,7 @@ def _coltype(col: str) -> str:
         "menu_price_max",
         "has_coupon",
         "google_review_count",
+        "photo_count_real",
     }
     real_cols = {"lng", "lat", "kakao_review_score", "google_rating"}
     if col in int_cols:

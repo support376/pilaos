@@ -1,12 +1,27 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // better-sqlite3는 네이티브 모듈이라 번들 대상에서 제외
   serverExternalPackages: ["better-sqlite3"],
-
-  // SQLite 파일을 서버리스 함수 번들에 포함 (Vercel 배포 필수)
-  outputFileTracingIncludes: {
-    "/**/*": ["./data/pilates.db"],
+  outputFileTracingIncludes: { "/**/*": ["./data/pilates.db"] },
+  images: {
+    remotePatterns: [
+      // 카카오
+      { protocol: "https", hostname: "t1.daumcdn.net" },
+      { protocol: "https", hostname: "img1.kakaocdn.net" },
+      { protocol: "https", hostname: "t1.kakaocdn.net" },
+      { protocol: "http",  hostname: "t1.kakaocdn.net" },
+      // 네이버
+      { protocol: "https", hostname: "phinf.pstatic.net" },
+      { protocol: "https", hostname: "ldb-phinf.pstatic.net" },
+      { protocol: "https", hostname: "search.pstatic.net" },
+      // og:image 다양한 호스트
+      { protocol: "https", hostname: "**.kakaocdn.net" },
+      { protocol: "https", hostname: "**.pstatic.net" },
+    ],
+    deviceSizes: [320, 640, 750, 1080],
+    imageSizes: [120, 240, 360],
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60 * 60 * 24 * 7,
   },
 };
 

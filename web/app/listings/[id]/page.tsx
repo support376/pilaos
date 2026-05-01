@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { getListing, sigunguMarketStats, similarListings } from "@/lib/listings";
 import { fmtMan } from "@/lib/estimate";
@@ -9,6 +10,7 @@ import { PotentialBadge } from "@/components/listing/PotentialBadge";
 import { FavButton } from "@/components/listing/FavButton";
 import { ChannelLinks } from "@/components/listing/ChannelLinks";
 import { EstimateNote } from "@/components/listing/EstimateNote";
+import { PhotoMain } from "@/components/listing/PhotoMain";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -32,104 +34,95 @@ export default async function ListingPage({ params }: Params) {
         <span className="text-gray-700">{l.id}</span>
       </div>
 
-      {/* 1. HERO */}
-      <section className="rounded-2xl border border-gray-200 bg-white p-6">
-        <div className="mb-2 flex flex-wrap items-center gap-2">
-          <PotentialBadge listing={l} size="md" />
-          <span className="text-[11px] font-mono text-gray-400">{l.id}</span>
-        </div>
+      {/* HERO */}
+      <section className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
+        <Suspense fallback={<div className="h-64 w-full animate-pulse bg-gray-100 sm:h-80" />}>
+          <PhotoMain kakaoPlaceId={s.kakao_place_id} naverUrl={s.naver_url} alt={s.place_name} size="hero" />
+        </Suspense>
 
-        <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <h1 className="text-2xl font-bold tracking-tight">{s.place_name}</h1>
-            <p className="mt-1 text-sm text-gray-700">{[l.sigungu, l.dong].filter(Boolean).join(" · ")}</p>
-            <p className="mt-0.5 text-xs text-gray-500">{s.road_address_name || s.address_name} · 디지털 {l.digital_grade}급 ({l.digital_score}/90) {brand ? `· 브랜드 ${brand.name}` : ""}</p>
+        <div className="p-6">
+          <div className="mb-2 flex flex-wrap items-center gap-2">
+            <PotentialBadge listing={l} size="md" />
+            <span className="text-[11px] font-mono text-gray-400">{l.id}</span>
           </div>
-          <FavButton listingId={l.id} variant="hero" />
-        </div>
 
-        {/* 잠재매물 알림 박스 */}
-        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-          <p className="font-semibold">잠재매물입니다</p>
-          <p className="mt-1 text-amber-900/85 leading-relaxed">
-            이 매물은 카카오·네이버 공개 데이터로 자동 수집된 잠재매물입니다. 주인이 등록한 매물이 아니며 권리금·매출 등 모든 숫자는 추정치입니다.
-            정확한 정보는 아래 외부 채널에서 직접 확인하시고, 매수 의향을 등록하시면 운영팀이 매도 의사 확인 컨택을 진행합니다.
-          </p>
-        </div>
-
-        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-5">
-          {[
-            { label: "권리금", v: fmtMan(e.key_money.mid), s: `${fmtMan(e.key_money.low)}~${fmtMan(e.key_money.high)}` },
-            { label: "월매출", v: fmtMan(e.monthly_revenue.mid), s: `${fmtMan(e.monthly_revenue.low)}~${fmtMan(e.monthly_revenue.high)}` },
-            { label: "월순익", v: fmtMan(e.monthly_profit.mid), s: `${fmtMan(e.monthly_profit.low)}~${fmtMan(e.monthly_profit.high)}` },
-            { label: "월수익률", v: `${e.monthly_yield_pct}%`, s: `연 ROI ${e.annual_roi_pct}%` },
-            { label: "회수기간", v: e.payback_months_keyMoney >= 999 ? "—" : `${e.payback_months_keyMoney}개월`, s: `총투자 ${e.payback_months_total >= 999 ? "—" : e.payback_months_total + "개월"}` },
-          ].map((it) => (
-            <div key={it.label} className="rounded-lg bg-gray-50 px-3 py-2">
-              <div className="flex items-center gap-1 text-[10px] uppercase text-gray-500">
-                {it.label}
-                <span className="text-amber-600">~</span>
-              </div>
-              <div className="mt-0.5 text-lg font-bold text-gray-900">{it.v}</div>
-              <div className="text-[10px] text-gray-400">{it.s}</div>
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h1 className="text-2xl font-bold tracking-tight">{s.place_name}</h1>
+              <p className="mt-1 text-sm text-gray-700">{[l.sigungu, l.dong].filter(Boolean).join(" · ")}</p>
+              <p className="mt-0.5 text-xs text-gray-500">{s.road_address_name || s.address_name} · 디지털 {l.digital_grade}급 ({l.digital_score}/90){brand ? ` · 브랜드 ${brand.name}` : ""}</p>
             </div>
-          ))}
-        </div>
+            <FavButton listingId={l.id} variant="hero" />
+          </div>
 
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          <ConfidencePill level={e.confidence} />
-          <span className="text-[11px] text-gray-500">신뢰도 {Math.round(e.confidence_score * 100)}%</span>
-          <span className="text-[11px] text-gray-400">·</span>
-          <span className="text-[11px] text-gray-500">멀티플 {e.multiple_used}x</span>
-        </div>
+          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+            <p className="font-semibold">잠재매물입니다</p>
+            <p className="mt-1 leading-relaxed text-amber-900/85">
+              이 매물은 카카오·네이버 공개 데이터로 자동 수집된 잠재매물입니다. 주인이 등록한 매물이 아니며 권리금·매출 등 모든 숫자는 추정치입니다.
+              매수 의향을 등록하시면 운영팀이 매도 의사 확인 컨택을 진행합니다.
+            </p>
+          </div>
 
-        <EstimateNote listing={l} />
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-5">
+            {[
+              { label: "권리금", v: fmtMan(e.key_money.mid), s: `${fmtMan(e.key_money.low)}~${fmtMan(e.key_money.high)}` },
+              { label: "월매출", v: fmtMan(e.monthly_revenue.mid), s: `${fmtMan(e.monthly_revenue.low)}~${fmtMan(e.monthly_revenue.high)}` },
+              { label: "월순익", v: fmtMan(e.monthly_profit.mid), s: `${fmtMan(e.monthly_profit.low)}~${fmtMan(e.monthly_profit.high)}` },
+              { label: "월수익률", v: `${e.monthly_yield_pct}%`, s: `연 ROI ${e.annual_roi_pct}%` },
+              { label: "회수기간", v: e.payback_months_keyMoney >= 999 ? "—" : `${e.payback_months_keyMoney}개월`, s: `총투자 ${e.payback_months_total >= 999 ? "—" : e.payback_months_total + "개월"}` },
+            ].map((it) => (
+              <div key={it.label} className="rounded-lg bg-gray-50 px-3 py-2">
+                <div className="flex items-center gap-1 text-[10px] uppercase text-gray-500">{it.label}<span className="text-amber-600">~</span></div>
+                <div className="mt-0.5 text-lg font-bold text-gray-900">{it.v}</div>
+                <div className="text-[10px] text-gray-400">{it.s}</div>
+              </div>
+            ))}
+          </div>
 
-        {/* CTA — 매도 / 매수 / 계산기 */}
-        <div className="mt-5 grid gap-2 sm:grid-cols-2">
-          <Link href={`/sell/new?listing=${encodeURIComponent(l.id)}`}
-            className="rounded-xl border-2 border-amber-300 bg-amber-50 px-5 py-4 text-center transition hover:bg-amber-100">
-            <div className="text-xs text-amber-700">셀러시면</div>
-            <div className="text-base font-bold text-amber-900">이거 우리 매장입니다 →</div>
-            <div className="mt-1 text-[11px] text-amber-700/80">매도 의향 등록 · 정보 수정 가능</div>
-          </Link>
-          <Link href={`/buy/intent?listing=${encodeURIComponent(l.id)}`}
-            className="rounded-xl bg-gray-900 px-5 py-4 text-center text-white transition hover:bg-gray-700">
-            <div className="text-xs text-gray-300">매수자시면</div>
-            <div className="text-base font-bold">이 매물 사고 싶어요 →</div>
-            <div className="mt-1 text-[11px] text-gray-400">관심 등록 · 운영팀이 매도 의사 확인 컨택</div>
-          </Link>
-        </div>
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <ConfidencePill level={e.confidence} />
+            <span className="text-[11px] text-gray-500">신뢰도 {Math.round(e.confidence_score * 100)}%</span>
+            <span className="text-[11px] text-gray-400">·</span>
+            <span className="text-[11px] text-gray-500">멀티플 {e.multiple_used}x</span>
+          </div>
 
-        <div className="mt-3 flex flex-wrap gap-2">
-          <Link href={`/calc?listing=${encodeURIComponent(l.id)}`} className="rounded-md border px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-50">수익률 계산기</Link>
-          <Link href={`/compare?ids=${encodeURIComponent(l.id)}`} className="rounded-md border px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-50">비교 추가</Link>
+          <EstimateNote listing={l} />
+
+          <div className="mt-5 grid gap-2 sm:grid-cols-2">
+            <Link href={`/sell/new?listing=${encodeURIComponent(l.id)}`} className="rounded-xl border-2 border-amber-300 bg-amber-50 px-5 py-4 text-center transition hover:bg-amber-100">
+              <div className="text-xs text-amber-700">셀러시면</div>
+              <div className="text-base font-bold text-amber-900">이거 우리 매장입니다 →</div>
+              <div className="mt-1 text-[11px] text-amber-700/80">매도 의향 등록 · 정보 수정 가능</div>
+            </Link>
+            <Link href={`/buy/intent?listing=${encodeURIComponent(l.id)}`} className="rounded-xl bg-gray-900 px-5 py-4 text-center text-white transition hover:bg-gray-700">
+              <div className="text-xs text-gray-300">매수자시면</div>
+              <div className="text-base font-bold">이 매물 사고 싶어요 →</div>
+              <div className="mt-1 text-[11px] text-gray-400">관심 등록 · 운영팀이 매도 의사 확인 컨택</div>
+            </Link>
+          </div>
+
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Link href={`/calc?listing=${encodeURIComponent(l.id)}`} className="rounded-md border px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-50">수익률 계산기</Link>
+            <Link href={`/compare?ids=${encodeURIComponent(l.id)}`} className="rounded-md border px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-50">비교 추가</Link>
+          </div>
         </div>
       </section>
 
-      {/* 2. 외부 채널 직접 확인 — 가장 prominent */}
       <section className="mt-6 rounded-2xl border-2 border-emerald-200 bg-emerald-50/50 p-6">
         <div className="mb-3">
           <h2 className="text-lg font-bold text-emerald-900">사진·리뷰는 외부 채널에서 직접 확인</h2>
-          <p className="mt-1 text-xs text-emerald-800/80">잠재매물이라 자체 사진 갤러리 미수집. 아래 채널에서 실제 운영 모습 확인하세요.</p>
+          <p className="mt-1 text-xs text-emerald-800/80">자체 사진 갤러리는 카카오 panel3 raw 추출 후 제공 예정. 지금은 외부 채널에서 직접.</p>
         </div>
         <ChannelLinks studio={s} />
         {(s.kakao_review_count ?? 0) > 0 || (s.blog_review_count ?? 0) > 0 ? (
           <div className="mt-4 flex flex-wrap gap-3 text-xs text-emerald-900">
-            {(s.kakao_review_count ?? 0) > 0 ? (
-              <span>카카오맵 ★ {s.kakao_review_score?.toFixed(1) ?? "-"} <strong>({s.kakao_review_count?.toLocaleString()})</strong></span>
-            ) : null}
-            {(s.blog_review_count ?? 0) > 0 ? (
-              <span>블로그 체험단 <strong>{s.blog_review_count?.toLocaleString()}</strong>건</span>
-            ) : null}
-            {(s.menu_count ?? 0) > 0 ? (
-              <span>메뉴 등록 <strong>{s.menu_count}</strong>건 · {s.menu_price_min?.toLocaleString()}~{s.menu_price_max?.toLocaleString()}원</span>
-            ) : null}
+            {(s.kakao_review_count ?? 0) > 0 ? <span>카카오맵 ★ {s.kakao_review_score?.toFixed(1) ?? "-"} <strong>({s.kakao_review_count?.toLocaleString()})</strong></span> : null}
+            {(s.blog_review_count ?? 0) > 0 ? <span>블로그 체험단 <strong>{s.blog_review_count?.toLocaleString()}</strong>건</span> : null}
+            {(s.menu_count ?? 0) > 0 ? <span>메뉴 등록 <strong>{s.menu_count}</strong>건 · {s.menu_price_min?.toLocaleString()}~{s.menu_price_max?.toLocaleString()}원</span> : null}
           </div>
         ) : null}
       </section>
 
-      {/* 3. 위치 */}
       <section className="mt-6 rounded-2xl border border-gray-200 bg-white p-6">
         <h2 className="text-lg font-bold">위치</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -147,7 +140,6 @@ export default async function ListingPage({ params }: Params) {
         </div>
       </section>
 
-      {/* 4. 시군구 시세 */}
       {market ? (
         <section className="mt-6 rounded-2xl border border-gray-200 bg-white p-6">
           <h2 className="text-lg font-bold">{l.sigungu} 시세 비교</h2>
@@ -157,10 +149,12 @@ export default async function ListingPage({ params }: Params) {
             <Compare label="월매출" mid={e.monthly_revenue.mid} p25={market.rev_p25} p50={market.rev_p50} p75={market.rev_p75} fmt={fmtMan} />
             <Compare label="월수익률" mid={e.monthly_yield_pct} p25={market.yield_p25} p50={market.yield_p50} p75={market.yield_p75} fmt={(n) => `${n}%`} />
           </div>
+          {l.sido && l.sigungu ? (
+            <Link href={`/area/${encodeURIComponent(l.sigungu)}/market`} className="mt-3 inline-block text-xs text-emerald-700 underline">전체 시세 분포 보기 →</Link>
+          ) : null}
         </section>
       ) : null}
 
-      {/* 5. 인증 단계 — 진짜 데이터로만 */}
       <section className="mt-6 rounded-2xl border border-gray-200 bg-white p-6">
         <h2 className="text-lg font-bold">인증 단계</h2>
         <p className="mt-1 text-xs text-gray-500">잠재매물 → 주인 등록 → 운영팀 검증 순서로 진행됩니다.</p>
@@ -173,23 +167,18 @@ export default async function ListingPage({ params }: Params) {
         </ol>
       </section>
 
-      {/* 6. 매수자 측 안내 */}
       <section className="mt-6 rounded-2xl bg-gray-900 p-6 text-white">
         <h2 className="text-lg font-bold">매수자라면 어떻게 진행되나요?</h2>
-        <ol className="mt-4 space-y-2 text-sm text-gray-200 list-decimal pl-5">
-          <li><strong className="text-white">관심 매물 등록</strong> — 위 ♥ 또는 매수 의향 폼 작성</li>
-          <li><strong className="text-white">운영팀 컨택 대행</strong> — 매도 의사 미등록 매물엔 우리가 대신 연락해 의향 확인</li>
-          <li><strong className="text-white">매칭 성사 시 NDA 진행</strong> — 진성정보(매출장·계약서·회원명단) 공개</li>
-          <li><strong className="text-white">변호사 동반 실사</strong> — 법률·재무·시설·회원 4축 검증</li>
-          <li><strong className="text-white">계약·잔금</strong> — 표준 양수도계약 + 회원 승계 절차</li>
+        <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm text-gray-200">
+          <li><strong className="text-white">관심 매물 등록</strong> — ♥ 또는 매수 의향 폼</li>
+          <li><strong className="text-white">운영팀 컨택 대행</strong> — 매도 의사 미등록 매물엔 우리가 대신 연락</li>
+          <li><strong className="text-white">매칭 성사 시 NDA</strong> — 진성정보 공개</li>
+          <li><strong className="text-white">변호사 동반 실사</strong> — 법률·재무·시설·회원 4축</li>
+          <li><strong className="text-white">계약·잔금</strong> — 표준 양수도계약 + 회원 승계</li>
         </ol>
-        <Link href={`/buy/intent?listing=${encodeURIComponent(l.id)}`}
-          className="mt-5 inline-block rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-bold text-gray-900 hover:bg-amber-400">
-          이 매물 매수 의향 등록 →
-        </Link>
+        <Link href={`/buy/intent?listing=${encodeURIComponent(l.id)}`} className="mt-5 inline-block rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-bold text-gray-900 hover:bg-amber-400">이 매물 매수 의향 등록 →</Link>
       </section>
 
-      {/* 7. 비슷한 매물 */}
       {similar.length > 0 ? (
         <section className="mt-6">
           <h2 className="mb-3 text-lg font-bold">비슷한 매물</h2>
@@ -220,9 +209,7 @@ function Step({ done, label, cta, href }: { done: boolean; label: string; cta?: 
         <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${done ? "bg-emerald-500 text-white" : "bg-gray-200 text-gray-500"}`}>{done ? "✓" : "○"}</span>
         <span className={done ? "text-gray-900" : "text-gray-600"}>{label}</span>
       </div>
-      {cta && href ? (
-        <Link href={href} className="rounded-md bg-amber-100 px-3 py-1.5 text-xs font-bold text-amber-900 hover:bg-amber-200">{cta} →</Link>
-      ) : null}
+      {cta && href ? <Link href={href} className="rounded-md bg-amber-100 px-3 py-1.5 text-xs font-bold text-amber-900 hover:bg-amber-200">{cta} →</Link> : null}
     </li>
   );
 }
@@ -233,7 +220,7 @@ export async function generateMetadata({ params }: Params) {
   if (!l) return { title: "매물을 찾을 수 없습니다" };
   return {
     title: `${l.studio.place_name} · ${l.sigungu ?? ""} · 잠재매물 (권리금 ${fmtMan(l.estimate.key_money.mid)} 추정)`,
-    description: `잠재매물 — ${[l.sigungu, l.dong].filter(Boolean).join(" · ")}. 추정 권리금 ${fmtMan(l.estimate.key_money.mid)}, 월수익률 ${l.estimate.monthly_yield_pct}%. 사진·리뷰는 외부 채널에서 확인.`,
+    description: `잠재매물 — ${[l.sigungu, l.dong].filter(Boolean).join(" · ")}. 추정 권리금 ${fmtMan(l.estimate.key_money.mid)}, 월수익률 ${l.estimate.monthly_yield_pct}%.`,
     robots: { index: true, follow: true },
   };
 }
