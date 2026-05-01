@@ -16,6 +16,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "search.pstatic.net" },
       // og:image 다양한 호스트
       { protocol: "https", hostname: "**.kakaocdn.net" },
+      { protocol: "https", hostname: "staticmap.kakao.com" },
+      { protocol: "http",  hostname: "staticmap.kakao.com" },
       { protocol: "https", hostname: "**.pstatic.net" },
     ],
     deviceSizes: [320, 640, 750, 1080],

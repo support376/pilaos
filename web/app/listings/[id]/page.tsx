@@ -39,7 +39,7 @@ export default async function ListingPage({ params }: Params) {
       {/* HERO */}
       <section className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
         <Suspense fallback={<div className="h-64 w-full animate-pulse bg-gray-100 sm:h-80" />}>
-          <PhotoMain kakaoPlaceId={s.kakao_place_id} naverUrl={s.naver_url} alt={s.place_name} size="hero" />
+          <PhotoMain kakaoPlaceId={s.kakao_place_id} lng={l.lng} lat={l.lat} naverUrl={s.naver_url} sigungu={l.sigungu} alt={s.place_name} size="hero" />
         </Suspense>
 
         <div className="p-6">
