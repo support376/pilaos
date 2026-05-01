@@ -193,3 +193,18 @@ export type CloseIntent = IntentBase & {
 };
 
 export type Intent = SellIntent | AcquireIntent | StartIntent | CloseIntent;
+
+
+// === marketplace meta ===
+
+export type ListingVisibility =
+  | "potential"   // Kakao 시드만, 주인 미등록
+  | "claimed"     // 주인이 등록함 (인증 미)
+  | "verified";   // pilaos 운영팀 본인확인 + 자료 검증 완료
+
+export type ChannelLink = {
+  kind: "naver_place" | "kakao_place" | "kakao_channel" | "homepage" | "instagram" | "naver_blog";
+  label: string;
+  url: string;
+  has_data: boolean;
+};

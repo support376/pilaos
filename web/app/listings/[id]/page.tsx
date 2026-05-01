@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getListing, sigunguMarketStats, similarListings } from "@/lib/listings";
-import { fmtMan, confidenceLabel, confidenceColor } from "@/lib/estimate";
+import { fmtMan } from "@/lib/estimate";
 import { brandBySlug } from "@/lib/brands";
-import { BadgeStack } from "@/components/listing/BadgeStack";
 import { ListingCard } from "@/components/listing/ListingCard";
 import { ConfidencePill } from "@/components/listing/ConfidencePill";
-import { NDAGate } from "@/components/listing/NDAGate";
+import { PotentialBadge } from "@/components/listing/PotentialBadge";
+import { FavButton } from "@/components/listing/FavButton";
+import { ChannelLinks } from "@/components/listing/ChannelLinks";
+import { EstimateNote } from "@/components/listing/EstimateNote";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -30,15 +32,30 @@ export default async function ListingPage({ params }: Params) {
         <span className="text-gray-700">{l.id}</span>
       </div>
 
-      {/* HERO */}
+      {/* 1. HERO */}
       <section className="rounded-2xl border border-gray-200 bg-white p-6">
-        <div className="mb-2 flex items-center gap-2">
-          <BadgeStack badges={l.badges} />
-          <span className="text-[11px] text-gray-400 font-mono">{l.id}</span>
+        <div className="mb-2 flex flex-wrap items-center gap-2">
+          <PotentialBadge listing={l} size="md" />
+          <span className="text-[11px] font-mono text-gray-400">{l.id}</span>
         </div>
-        <h1 className="text-2xl font-bold tracking-tight">{s.place_name}</h1>
-        <p className="mt-1 text-sm text-gray-700">{l.title}</p>
-        <p className="mt-1 text-xs text-gray-500">{l.dong ?? l.sigungu} · {l.floor} · 디지털 {l.digital_grade}급 ({l.digital_score}점) · 브랜드 {brand?.name ?? "—"}</p>
+
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <h1 className="text-2xl font-bold tracking-tight">{s.place_name}</h1>
+            <p className="mt-1 text-sm text-gray-700">{[l.sigungu, l.dong].filter(Boolean).join(" · ")}</p>
+            <p className="mt-0.5 text-xs text-gray-500">{s.road_address_name || s.address_name} · 디지털 {l.digital_grade}급 ({l.digital_score}/90) {brand ? `· 브랜드 ${brand.name}` : ""}</p>
+          </div>
+          <FavButton listingId={l.id} variant="hero" />
+        </div>
+
+        {/* 잠재매물 알림 박스 */}
+        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+          <p className="font-semibold">잠재매물입니다</p>
+          <p className="mt-1 text-amber-900/85 leading-relaxed">
+            이 매물은 카카오·네이버 공개 데이터로 자동 수집된 잠재매물입니다. 주인이 등록한 매물이 아니며 권리금·매출 등 모든 숫자는 추정치입니다.
+            정확한 정보는 아래 외부 채널에서 직접 확인하시고, 매수 의향을 등록하시면 운영팀이 매도 의사 확인 컨택을 진행합니다.
+          </p>
+        </div>
 
         <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-5">
           {[
@@ -49,7 +66,10 @@ export default async function ListingPage({ params }: Params) {
             { label: "회수기간", v: e.payback_months_keyMoney >= 999 ? "—" : `${e.payback_months_keyMoney}개월`, s: `총투자 ${e.payback_months_total >= 999 ? "—" : e.payback_months_total + "개월"}` },
           ].map((it) => (
             <div key={it.label} className="rounded-lg bg-gray-50 px-3 py-2">
-              <div className="text-[10px] uppercase text-gray-500">{it.label}</div>
+              <div className="flex items-center gap-1 text-[10px] uppercase text-gray-500">
+                {it.label}
+                <span className="text-amber-600">~</span>
+              </div>
               <div className="mt-0.5 text-lg font-bold text-gray-900">{it.v}</div>
               <div className="text-[10px] text-gray-400">{it.s}</div>
             </div>
@@ -61,123 +81,77 @@ export default async function ListingPage({ params }: Params) {
           <span className="text-[11px] text-gray-500">신뢰도 {Math.round(e.confidence_score * 100)}%</span>
           <span className="text-[11px] text-gray-400">·</span>
           <span className="text-[11px] text-gray-500">멀티플 {e.multiple_used}x</span>
-          <span className="text-[11px] text-gray-400">·</span>
-          <span className="text-[11px] text-gray-500">매도 시그널 {e.sell_signal_score}/100</span>
         </div>
 
-        <div className="mt-5 flex flex-wrap gap-2">
-          <Link href={`/buy/intent?listing=${encodeURIComponent(l.id)}`} className="rounded-md bg-gray-900 px-4 py-2 text-sm font-bold text-white hover:bg-gray-700">매수 의향 등록</Link>
-          <Link href={`/sell/new?listing=${encodeURIComponent(l.id)}`} className="rounded-md border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-bold text-amber-900 hover:bg-amber-100">이 매물 주인입니다</Link>
-          <Link href={`/calc?listing=${encodeURIComponent(l.id)}`} className="rounded-md border px-4 py-2 text-sm font-bold text-gray-800 hover:bg-gray-50">수익률 계산기</Link>
-          <Link href={`/compare?ids=${encodeURIComponent(l.id)}`} className="rounded-md border px-4 py-2 text-sm font-bold text-gray-800 hover:bg-gray-50">비교 추가</Link>
+        <EstimateNote listing={l} />
+
+        {/* CTA — 매도 / 매수 / 계산기 */}
+        <div className="mt-5 grid gap-2 sm:grid-cols-2">
+          <Link href={`/sell/new?listing=${encodeURIComponent(l.id)}`}
+            className="rounded-xl border-2 border-amber-300 bg-amber-50 px-5 py-4 text-center transition hover:bg-amber-100">
+            <div className="text-xs text-amber-700">셀러시면</div>
+            <div className="text-base font-bold text-amber-900">이거 우리 매장입니다 →</div>
+            <div className="mt-1 text-[11px] text-amber-700/80">매도 의향 등록 · 정보 수정 가능</div>
+          </Link>
+          <Link href={`/buy/intent?listing=${encodeURIComponent(l.id)}`}
+            className="rounded-xl bg-gray-900 px-5 py-4 text-center text-white transition hover:bg-gray-700">
+            <div className="text-xs text-gray-300">매수자시면</div>
+            <div className="text-base font-bold">이 매물 사고 싶어요 →</div>
+            <div className="mt-1 text-[11px] text-gray-400">관심 등록 · 운영팀이 매도 의사 확인 컨택</div>
+          </Link>
         </div>
 
-        <div className="mt-3 text-[11px] text-gray-500">조회 {l.view_count.toLocaleString()} · 찜 {l.fav_count} · 매수자 대기 <strong className="text-rose-600">{l.buyer_intent_count}명</strong></div>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Link href={`/calc?listing=${encodeURIComponent(l.id)}`} className="rounded-md border px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-50">수익률 계산기</Link>
+          <Link href={`/compare?ids=${encodeURIComponent(l.id)}`} className="rounded-md border px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-50">비교 추가</Link>
+        </div>
       </section>
 
-      {/* 위치 & 상권 */}
+      {/* 2. 외부 채널 직접 확인 — 가장 prominent */}
+      <section className="mt-6 rounded-2xl border-2 border-emerald-200 bg-emerald-50/50 p-6">
+        <div className="mb-3">
+          <h2 className="text-lg font-bold text-emerald-900">사진·리뷰는 외부 채널에서 직접 확인</h2>
+          <p className="mt-1 text-xs text-emerald-800/80">잠재매물이라 자체 사진 갤러리 미수집. 아래 채널에서 실제 운영 모습 확인하세요.</p>
+        </div>
+        <ChannelLinks studio={s} />
+        {(s.kakao_review_count ?? 0) > 0 || (s.blog_review_count ?? 0) > 0 ? (
+          <div className="mt-4 flex flex-wrap gap-3 text-xs text-emerald-900">
+            {(s.kakao_review_count ?? 0) > 0 ? (
+              <span>카카오맵 ★ {s.kakao_review_score?.toFixed(1) ?? "-"} <strong>({s.kakao_review_count?.toLocaleString()})</strong></span>
+            ) : null}
+            {(s.blog_review_count ?? 0) > 0 ? (
+              <span>블로그 체험단 <strong>{s.blog_review_count?.toLocaleString()}</strong>건</span>
+            ) : null}
+            {(s.menu_count ?? 0) > 0 ? (
+              <span>메뉴 등록 <strong>{s.menu_count}</strong>건 · {s.menu_price_min?.toLocaleString()}~{s.menu_price_max?.toLocaleString()}원</span>
+            ) : null}
+          </div>
+        ) : null}
+      </section>
+
+      {/* 3. 위치 */}
       <section className="mt-6 rounded-2xl border border-gray-200 bg-white p-6">
-        <h2 className="text-lg font-bold">위치 & 상권</h2>
-        <p className="mt-1 text-xs text-gray-500">정확 주소는 NDA 후 공개. 동까지만 노출.</p>
+        <h2 className="text-lg font-bold">위치</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <div className="rounded-lg bg-gray-50 p-4 text-sm">
             <div className="text-xs text-gray-500">지역</div>
             <div className="mt-1 font-medium">{l.sido} {l.sigungu} {l.dong ?? ""}</div>
             <div className="mt-2 text-xs text-gray-500">좌표 {l.lat.toFixed(4)}, {l.lng.toFixed(4)}</div>
+            {s.phone ? <div className="mt-2 text-xs text-gray-500">{s.phone}</div> : null}
           </div>
           <div className="rounded-lg bg-gray-50 p-4 text-sm">
-            <div className="text-xs text-gray-500">시설</div>
-            <div className="mt-1 font-medium">{l.area_pyeong}평 · {l.floor}</div>
-            <div className="mt-2 flex flex-wrap gap-1 text-xs text-gray-700">
-              {l.has_shower ? <span className="rounded bg-white px-2 py-0.5">샤워</span> : null}
-              {l.has_parking ? <span className="rounded bg-white px-2 py-0.5">주차</span> : null}
-              {l.has_sauna ? <span className="rounded bg-white px-2 py-0.5">사우나</span> : null}
-              {l.has_flying ? <span className="rounded bg-white px-2 py-0.5">플라잉</span> : null}
-              {l.has_barre ? <span className="rounded bg-white px-2 py-0.5">바레</span> : null}
-            </div>
+            <div className="text-xs text-gray-500">등급</div>
+            <div className="mt-1 text-xl font-bold text-gray-900">{l.digital_grade}급 · {l.digital_score}/90점</div>
+            <div className="mt-2 text-[11px] text-gray-500">디지털 채널·리뷰·메뉴 등록 기반</div>
           </div>
         </div>
       </section>
 
-      {/* 시설 & 장비 */}
-      <section className="mt-6 rounded-2xl border border-gray-200 bg-white p-6">
-        <h2 className="text-lg font-bold">시설 & 장비</h2>
-        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <Stat label="리포머" v={`${l.reformer_count}대`} />
-          <Stat label="그룹룸" v={`${l.group_room}개`} />
-          <Stat label="개인룸" v={`${l.private_room}개`} />
-          <Stat label="브랜드" v={brand?.name ?? "—"} />
-        </div>
-      </section>
-
-      {/* 숫자 검증 */}
-      <section className="mt-6 rounded-2xl border border-gray-200 bg-white p-6">
-        <h2 className="text-lg font-bold">숫자 검증</h2>
-        <p className="mt-1 text-xs text-gray-500">pilaos 추정 vs 매도자 신고 vs 검증 결과를 함께 노출. 차이가 클수록 실사 우선순위.</p>
-        <table className="mt-4 w-full text-sm">
-          <thead className="bg-gray-50 text-xs text-gray-500">
-            <tr>
-              <th className="px-3 py-2 text-left">지표</th>
-              <th className="px-3 py-2 text-right">low</th>
-              <th className="px-3 py-2 text-right">mid</th>
-              <th className="px-3 py-2 text-right">high</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {[
-              ["월매출", e.monthly_revenue],
-              ["월순익", e.monthly_profit],
-              ["권리금", e.key_money],
-              ["보증금", e.deposit],
-              ["월세", e.monthly_rent],
-              ["활성 회원수(명)", e.member_count],
-              ["총 인수가", e.total_acquisition],
-            ].map(([k, r]) => {
-              const range = r as typeof e.key_money;
-              const isMember = (k as string).includes("회원");
-              const f = (n: number) => isMember ? `${n.toLocaleString()}명` : fmtMan(n);
-              return (
-                <tr key={k as string}>
-                  <td className="px-3 py-2 font-medium text-gray-700">{k as string}</td>
-                  <td className="px-3 py-2 text-right text-gray-500">{f(range.low)}</td>
-                  <td className="px-3 py-2 text-right font-bold text-gray-900">{f(range.mid)}</td>
-                  <td className="px-3 py-2 text-right text-gray-500">{f(range.high)}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        <div className="mt-4">
-          <NDAGate listingId={l.id}>
-            매출장·임대차계약·회원명단·재등록률 그래프는 NDA 서명 후 매수자에게만 공개.
-          </NDAGate>
-        </div>
-      </section>
-
-      {/* 디지털 자산 */}
-      <section className="mt-6 rounded-2xl border border-gray-200 bg-white p-6">
-        <h2 className="text-lg font-bold">디지털 자산</h2>
-        <p className="mt-1 text-xs text-gray-500">현재 노출 점수 {l.digital_score}/90 · 등급 {l.digital_grade}</p>
-        <div className="mt-3 grid grid-cols-2 gap-2 text-sm sm:grid-cols-3">
-          <Asset label="네이버 플레이스" url={s.naver_url} />
-          <Asset label="홈페이지" url={s.homepage_url} />
-          <Asset label="인스타그램" url={s.instagram_handle ? `https://instagram.com/${s.instagram_handle}` : null} text={s.instagram_handle ? `@${s.instagram_handle}` : null} />
-          <Asset label="네이버 블로그" url={s.naver_blog_handle ? `https://blog.naver.com/${s.naver_blog_handle}` : null} text={s.naver_blog_handle ?? null} />
-          <Asset label="카카오톡 채널" url={s.kakao_channel_url} text={s.kakao_channel_name} />
-          <Asset label="카카오 플레이스" url={s.place_url} />
-        </div>
-        <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
-          <Mini label="카카오 리뷰" v={s.kakao_review_count ?? 0} sub={s.kakao_review_score?.toFixed(1) ?? "—"} />
-          <Mini label="블로그 리뷰" v={s.blog_review_count ?? 0} />
-          <Mini label="메뉴 등록" v={s.menu_count ?? 0} />
-        </div>
-      </section>
-
-      {/* 시군구 시세 */}
+      {/* 4. 시군구 시세 */}
       {market ? (
         <section className="mt-6 rounded-2xl border border-gray-200 bg-white p-6">
           <h2 className="text-lg font-bold">{l.sigungu} 시세 비교</h2>
-          <p className="mt-1 text-xs text-gray-500">동일 시군구 {market.n}개 매물 분포 (p25 / p50 / p75)</p>
+          <p className="mt-1 text-xs text-gray-500">동일 시군구 {market.n}개 매물 추정 분포 (p25 / p50 / p75)</p>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             <Compare label="권리금" mid={e.key_money.mid} p25={market.key_p25} p50={market.key_p50} p75={market.key_p75} fmt={fmtMan} />
             <Compare label="월매출" mid={e.monthly_revenue.mid} p25={market.rev_p25} p50={market.rev_p50} p75={market.rev_p75} fmt={fmtMan} />
@@ -186,19 +160,36 @@ export default async function ListingPage({ params }: Params) {
         </section>
       ) : null}
 
-      {/* 실사 워크룸 placeholder */}
+      {/* 5. 인증 단계 — 진짜 데이터로만 */}
       <section className="mt-6 rounded-2xl border border-gray-200 bg-white p-6">
-        <h2 className="text-lg font-bold">실사 · 인증 상태</h2>
-        <ul className="mt-3 space-y-1.5 text-sm">
-          <Check label="원장 본인확인" done={l.status !== "cold"} />
-          <Check label="휴대폰·사업자번호 매칭" done={false} />
-          <Check label="현장 실사 완료" done={l.badges.includes("verified")} />
-          <Check label="변호사 1차 법률검토" done={false} />
-        </ul>
-        <p className="mt-3 text-[11px] text-gray-500">실사 패키지 의뢰 시 변호사 동반 1회 방문 + 매출장·계약·회원명단 검증 진행.</p>
+        <h2 className="text-lg font-bold">인증 단계</h2>
+        <p className="mt-1 text-xs text-gray-500">잠재매물 → 주인 등록 → 운영팀 검증 순서로 진행됩니다.</p>
+        <ol className="mt-4 space-y-2 text-sm">
+          <Step done label="공개 데이터 수집 (카카오·네이버)" />
+          <Step done={false} label="주인 등록 — 휴대폰·사업자번호 인증" cta="이거 우리 매장" href={`/sell/new?listing=${encodeURIComponent(l.id)}`} />
+          <Step done={false} label="운영팀 본인확인 통화" />
+          <Step done={false} label="현장 실사 + 변호사 1차 법률검토" />
+          <Step done={false} label="검증 매물 배지 부여 — 진성정보 NDA 후 공개" />
+        </ol>
       </section>
 
-      {/* 유사 매물 */}
+      {/* 6. 매수자 측 안내 */}
+      <section className="mt-6 rounded-2xl bg-gray-900 p-6 text-white">
+        <h2 className="text-lg font-bold">매수자라면 어떻게 진행되나요?</h2>
+        <ol className="mt-4 space-y-2 text-sm text-gray-200 list-decimal pl-5">
+          <li><strong className="text-white">관심 매물 등록</strong> — 위 ♥ 또는 매수 의향 폼 작성</li>
+          <li><strong className="text-white">운영팀 컨택 대행</strong> — 매도 의사 미등록 매물엔 우리가 대신 연락해 의향 확인</li>
+          <li><strong className="text-white">매칭 성사 시 NDA 진행</strong> — 진성정보(매출장·계약서·회원명단) 공개</li>
+          <li><strong className="text-white">변호사 동반 실사</strong> — 법률·재무·시설·회원 4축 검증</li>
+          <li><strong className="text-white">계약·잔금</strong> — 표준 양수도계약 + 회원 승계 절차</li>
+        </ol>
+        <Link href={`/buy/intent?listing=${encodeURIComponent(l.id)}`}
+          className="mt-5 inline-block rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-bold text-gray-900 hover:bg-amber-400">
+          이 매물 매수 의향 등록 →
+        </Link>
+      </section>
+
+      {/* 7. 비슷한 매물 */}
       {similar.length > 0 ? (
         <section className="mt-6">
           <h2 className="mb-3 text-lg font-bold">비슷한 매물</h2>
@@ -207,39 +198,6 @@ export default async function ListingPage({ params }: Params) {
           </div>
         </section>
       ) : null}
-    </div>
-  );
-}
-
-function Stat({ label, v }: { label: string; v: string }) {
-  return (
-    <div className="rounded-lg bg-gray-50 px-3 py-2">
-      <div className="text-[10px] uppercase text-gray-500">{label}</div>
-      <div className="mt-0.5 text-base font-bold text-gray-900">{v}</div>
-    </div>
-  );
-}
-
-function Asset({ label, url, text }: { label: string; url: string | null; text?: string | null }) {
-  if (!url) return (
-    <div className="rounded-lg bg-gray-50 px-3 py-2">
-      <div className="text-[10px] uppercase text-gray-500">{label}</div>
-      <div className="mt-0.5 text-xs text-gray-400">미등록</div>
-    </div>
-  );
-  return (
-    <a href={url} target="_blank" rel="noreferrer" className="rounded-lg bg-emerald-50 px-3 py-2 hover:bg-emerald-100">
-      <div className="text-[10px] uppercase text-emerald-700">{label}</div>
-      <div className="mt-0.5 truncate text-xs text-emerald-900 underline">{text ?? "열기 →"}</div>
-    </a>
-  );
-}
-
-function Mini({ label, v, sub }: { label: string; v: number; sub?: string }) {
-  return (
-    <div className="rounded bg-gray-50 px-3 py-2">
-      <div className="text-[10px] text-gray-500">{label}</div>
-      <div className="mt-0.5 text-sm font-bold text-gray-900">{v.toLocaleString()} {sub ? <span className="text-[10px] text-gray-400">★ {sub}</span> : null}</div>
     </div>
   );
 }
@@ -255,11 +213,16 @@ function Compare({ label, mid, p25, p50, p75, fmt }: { label: string; mid: numbe
   );
 }
 
-function Check({ label, done }: { label: string; done: boolean }) {
+function Step({ done, label, cta, href }: { done: boolean; label: string; cta?: string; href?: string }) {
   return (
-    <li className="flex items-center gap-2">
-      <span className={`flex h-5 w-5 items-center justify-center rounded-full ${done ? "bg-emerald-500 text-white" : "bg-gray-200 text-gray-500"} text-[10px]`}>{done ? "✓" : ""}</span>
-      <span className={done ? "text-gray-900" : "text-gray-500"}>{label}</span>
+    <li className="flex items-center justify-between gap-3 rounded-lg bg-gray-50 px-4 py-3">
+      <div className="flex items-center gap-3">
+        <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${done ? "bg-emerald-500 text-white" : "bg-gray-200 text-gray-500"}`}>{done ? "✓" : "○"}</span>
+        <span className={done ? "text-gray-900" : "text-gray-600"}>{label}</span>
+      </div>
+      {cta && href ? (
+        <Link href={href} className="rounded-md bg-amber-100 px-3 py-1.5 text-xs font-bold text-amber-900 hover:bg-amber-200">{cta} →</Link>
+      ) : null}
     </li>
   );
 }
@@ -269,7 +232,8 @@ export async function generateMetadata({ params }: Params) {
   const l = getListing(id);
   if (!l) return { title: "매물을 찾을 수 없습니다" };
   return {
-    title: `${l.studio.place_name} · ${l.sigungu ?? ""} · 권리금 ${fmtMan(l.estimate.key_money.mid)}`,
-    description: `${l.title} · 월수익률 ${l.estimate.monthly_yield_pct}% · 회수 ${l.estimate.payback_months_keyMoney}개월 · 디지털 ${l.digital_grade}급`,
+    title: `${l.studio.place_name} · ${l.sigungu ?? ""} · 잠재매물 (권리금 ${fmtMan(l.estimate.key_money.mid)} 추정)`,
+    description: `잠재매물 — ${[l.sigungu, l.dong].filter(Boolean).join(" · ")}. 추정 권리금 ${fmtMan(l.estimate.key_money.mid)}, 월수익률 ${l.estimate.monthly_yield_pct}%. 사진·리뷰는 외부 채널에서 확인.`,
+    robots: { index: true, follow: true },
   };
 }

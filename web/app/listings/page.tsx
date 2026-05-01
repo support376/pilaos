@@ -34,12 +34,12 @@ export default async function ListingsPage({ searchParams }: Props) {
     totalAcqMax: asNum(sp.total_max),
     yieldMin: asNum(sp.yield_min),
     paybackMax: asNum(sp.payback_max),
-    areaMinPy: asNum(sp.area_min),
-    areaMaxPy: asNum(sp.area_max),
-    reformerMin: asNum(sp.reformer_min),
-    hasParking: asStr(sp.parking) === "1",
-    hasShower: asStr(sp.shower) === "1",
-    ownerDirect: asStr(sp.owner_direct) === "1",
+    hasNaver: asStr(sp.has_naver) === "1",
+    hasKakaoChannel: asStr(sp.has_kchan) === "1",
+    hasInstagram: asStr(sp.has_insta) === "1",
+    hasBlog: asStr(sp.has_blog) === "1",
+    hasHomepage: asStr(sp.has_hp) === "1",
+    hasReviews: asStr(sp.has_rev) === "1",
   };
   const sort = (asStr(sp.sort) as ListingSort) ?? "ad";
   const page = Math.max(1, asNum(sp.page) ?? 1);
@@ -62,7 +62,7 @@ export default async function ListingsPage({ searchParams }: Props) {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-4 flex items-baseline justify-between">
-        <h1 className="text-2xl font-bold">매물 전체 <span className="text-sm font-normal text-gray-500">({total.toLocaleString()}건)</span></h1>
+        <div><h1 className="text-2xl font-bold">잠재매물 전체 <span className="text-sm font-normal text-gray-500">({total.toLocaleString()}건)</span></h1><p className="mt-1 text-xs text-gray-500">전국 운영 중인 필라테스를 카카오·네이버 공개 데이터 기반으로 정리. 권리금·매출은 추정치.</p></div>
         <Link href="/listings" className="text-xs text-gray-500 hover:text-gray-900">전체 매물</Link>
       </div>
 

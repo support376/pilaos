@@ -25,6 +25,7 @@ function Nav() {
         </Link>
         <nav className="flex items-center gap-4 text-sm">
           <Link href="/listings" className="text-gray-700 hover:text-gray-900">매물</Link>
+          <Link href="/me/watchlist" className="text-gray-700 hover:text-gray-900">관심</Link>
           <Link href="/closed" className="hidden text-gray-700 hover:text-gray-900 sm:inline">실거래가</Link>
           <Link href="/calc" className="hidden text-gray-700 hover:text-gray-900 sm:inline">계산기</Link>
           <Link href="/sell/new" className="rounded-md border border-gray-300 px-3 py-1.5 text-xs font-bold text-gray-800 hover:bg-gray-50">매물 등록</Link>
