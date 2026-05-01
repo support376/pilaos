@@ -314,3 +314,45 @@ export function similarListings(l: Listing, n = 4): Listing[] {
     .slice(0, n)
     .map(({ x }) => x);
 }
+
+
+// 시군구 매물의 권리금/매출/수익률 분포 히스토그램용
+export type Histogram = { bins: { from: number; to: number; count: number }[]; min: number; max: number; mean: number; median: number; };
+export function distribution(values: number[], binCount = 8): Histogram {
+  const arr = values.filter((v) => Number.isFinite(v) && v >= 0).sort((a, b) => a - b);
+  if (!arr.length) return { bins: [], min: 0, max: 0, mean: 0, median: 0 };
+  const min = arr[0], max = arr[arr.length - 1];
+  const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
+  const median = arr[Math.floor(arr.length / 2)];
+  const span = Math.max(1, max - min);
+  const step = span / binCount;
+  const bins = Array.from({ length: binCount }, (_, i) => ({ from: min + step * i, to: min + step * (i + 1), count: 0 }));
+  for (const v of arr) {
+    const idx = Math.min(binCount - 1, Math.floor((v - min) / step));
+    bins[idx].count++;
+  }
+  return { bins, min, max, mean, median };
+}
+
+// 전국 분포 (캐시 1회 계산)
+let _natCache: { keyMoney: Histogram; revenue: Histogram; yield_pct: Histogram } | null = null;
+export function nationalDistribution() {
+  if (_natCache) return _natCache;
+  const all = listAllListings();
+  _natCache = {
+    keyMoney: distribution(all.map((l) => l.estimate.key_money.mid)),
+    revenue: distribution(all.map((l) => l.estimate.monthly_revenue.mid)),
+    yield_pct: distribution(all.map((l) => l.estimate.monthly_yield_pct), 10),
+  };
+  return _natCache;
+}
+
+export function sigunguDistribution(sido: string, sigungu: string) {
+  const rows = listingsBySigungu(sido, sigungu, 1000);
+  return {
+    keyMoney: distribution(rows.map((l) => l.estimate.key_money.mid)),
+    revenue: distribution(rows.map((l) => l.estimate.monthly_revenue.mid)),
+    yield_pct: distribution(rows.map((l) => l.estimate.monthly_yield_pct), 10),
+    n: rows.length,
+  };
+}
