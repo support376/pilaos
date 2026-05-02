@@ -42,6 +42,32 @@ export function FilterSidebar({ total, filtered, current, topSigungu }: Props) {
 
         <div>
           <label className="mb-1 block text-xs font-bold text-gray-700">권리금 추정 (만원)</label>
+          <div className="mb-2 flex flex-wrap gap-1">
+            {[
+              { label: "무권리", max: "500" },
+              { label: "3천 ↓", max: "3000" },
+              { label: "5천 ↓", max: "5000" },
+              { label: "1억 ↓", max: "10000" },
+              { label: "3억 ↓", max: "30000" },
+            ].map((c) => {
+              const active = current.key_max === c.max && !current.key_min;
+              const params = new URLSearchParams();
+              for (const [k, v] of Object.entries(current)) {
+                if (k === "key_min" || k === "key_max" || !v) continue;
+                params.set(k, v);
+              }
+              params.set("key_max", c.max);
+              return (
+                <Link
+                  key={c.max}
+                  href={`/listings?${params.toString()}`}
+                  className={`rounded-full px-2.5 py-0.5 text-[11px] ${active ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
+                >
+                  {c.label}
+                </Link>
+              );
+            })}
+          </div>
           <div className="flex items-center gap-1">
             <NumberInput name="key_min" defaultValue={current.key_min} placeholder="최소" />
             <span className="text-xs text-gray-400">~</span>

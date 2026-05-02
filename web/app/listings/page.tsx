@@ -44,7 +44,9 @@ export default async function ListingsPage({ searchParams }: Props) {
   };
   const sort = (asStr(sp.sort) as ListingSort) ?? "ad";
   const page = Math.max(1, asNum(sp.page) ?? 1);
-  const perPage = 24;
+  const perOptions = [20, 30, 40, 50];
+  const perRaw = asNum(sp.per);
+  const perPage = perOptions.includes(perRaw ?? 0) ? (perRaw as number) : 30;
   const offset = (page - 1) * perPage;
 
   const { rows, total } = searchListings(filters, sort, perPage, offset);
@@ -71,9 +73,14 @@ export default async function ListingsPage({ searchParams }: Props) {
         <FilterSidebar total={s.total} filtered={total} current={searchDict} topSigungu={topSigungu} />
 
         <div>
-          <Suspense>
-            <SortBar current={sort} search={searchDict} />
-          </Suspense>
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <Suspense>
+                <SortBar current={sort} search={searchDict} />
+              </Suspense>
+            </div>
+            <PerPageSelect current={perPage} options={perOptions} search={searchDict} />
+          </div>
 
           <div className="mt-4 grid gap-3 md:grid-cols-2">
             {rows.length === 0 ? (
@@ -112,5 +119,28 @@ function Pagination({ current, totalPages, search }: { current: number; totalPag
       ))}
       {current < totalPages ? <Link href={linkFor(current + 1)} className="rounded border px-3 py-1.5 hover:bg-gray-50">→</Link> : null}
     </nav>
+  );
+}
+
+function PerPageSelect({ current, options, search }: { current: number; options: number[]; search: Record<string, string> }) {
+  const linkFor = (n: number) => {
+    const sp = new URLSearchParams(search);
+    sp.set("per", String(n));
+    sp.delete("page");
+    return `/listings?${sp.toString()}`;
+  };
+  return (
+    <div className="flex shrink-0 items-center gap-1 text-xs text-gray-500">
+      <span>페이지당</span>
+      {options.map((n) => (
+        <Link
+          key={n}
+          href={linkFor(n)}
+          className={`rounded px-2 py-1 ${n === current ? "bg-gray-900 text-white" : "border border-gray-300 hover:bg-gray-50"}`}
+        >
+          {n}
+        </Link>
+      ))}
+    </div>
   );
 }

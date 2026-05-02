@@ -154,33 +154,19 @@ export default async function ListingPage({ params }: Params) {
             <Compare label="월수익률" mid={e.monthly_yield_pct} p25={market.yield_p25} p50={market.yield_p50} p75={market.yield_p75} fmt={(n) => `${n}%`} />
           </div>
           {l.sido && l.sigungu ? (
-            <Link href={`/area/${encodeURIComponent(l.sigungu)}/market`} className="mt-3 inline-block text-xs text-emerald-700 underline">전체 시세 분포 보기 →</Link>
+            <Link href={`/listings?sigungu=${encodeURIComponent(l.sigungu)}`} className="mt-3 inline-block text-xs text-emerald-700 underline">같은 지역 매물 보기 →</Link>
           ) : null}
         </section>
       ) : null}
 
       <section className="mt-6 rounded-2xl border border-gray-200 bg-white p-6">
         <h2 className="text-lg font-bold">인증 단계</h2>
-        <p className="mt-1 text-xs text-gray-500">잠재매물 → 주인 등록 → 운영팀 검증 순서로 진행됩니다.</p>
+        <p className="mt-1 text-xs text-gray-500">현재 잠재매물 단계입니다. 매장 운영자가 등록하면 진성정보가 공개됩니다.</p>
         <ol className="mt-4 space-y-2 text-sm">
           <Step done label="공개 데이터 수집 (카카오·네이버)" />
           <Step done={false} label="주인 등록 — 휴대폰·사업자번호 인증" cta="이거 우리 매장" href={`/sell/new?listing=${encodeURIComponent(l.id)}`} />
-          <Step done={false} label="운영팀 본인확인 통화" />
-          <Step done={false} label="현장 실사 + 변호사 1차 법률검토" />
-          <Step done={false} label="검증 매물 배지 부여 — 진성정보 NDA 후 공개" />
+          <Step done={false} label="검증 매물 배지 — 진성정보 NDA 후 공개" />
         </ol>
-      </section>
-
-      <section className="mt-6 rounded-2xl bg-gray-900 p-6 text-white">
-        <h2 className="text-lg font-bold">매수자라면 어떻게 진행되나요?</h2>
-        <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm text-gray-200">
-          <li><strong className="text-white">관심 매물 등록</strong> — ♥ 또는 매수 의향 폼</li>
-          <li><strong className="text-white">운영팀 컨택 대행</strong> — 매도 의사 미등록 매물엔 우리가 대신 연락</li>
-          <li><strong className="text-white">매칭 성사 시 NDA</strong> — 진성정보 공개</li>
-          <li><strong className="text-white">변호사 동반 실사</strong> — 법률·재무·시설·회원 4축</li>
-          <li><strong className="text-white">계약·잔금</strong> — 표준 양수도계약 + 회원 승계</li>
-        </ol>
-        <Link href={`/buy/intent?listing=${encodeURIComponent(l.id)}`} className="mt-5 inline-block rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-bold text-gray-900 hover:bg-amber-400">이 매물 매수 의향 등록 →</Link>
       </section>
 
       {similar.length > 0 ? (

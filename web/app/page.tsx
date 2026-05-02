@@ -63,10 +63,6 @@ export default function Home() {
           <Link href="/buy/intent" className="hover:text-gray-900">매수 의향 등록</Link>
           <span className="text-gray-300">·</span>
           <Link href="/sell/new" className="hover:text-gray-900">매물 등록 (매도)</Link>
-          <span className="text-gray-300">·</span>
-          <Link href="/start/intent" className="hover:text-gray-900">창업 검토</Link>
-          <span className="text-gray-300">·</span>
-          <Link href="/close/intent" className="hover:text-gray-900">폐업 패키지</Link>
         </div>
       </section>
 
@@ -83,15 +79,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 호호요가 차별화 카피 (PIL-32-10) */}
-      <section className="mt-12 rounded-2xl border border-emerald-200 bg-emerald-50/40 p-6">
-        <p className="text-xs font-bold uppercase tracking-widest text-emerald-700">왜 pilaos인가</p>
-        <h2 className="mt-2 text-xl font-bold text-emerald-900">기존 인수 매물은 호호요가 등에서 매도자가 직접 등록한 것뿐</h2>
-        <p className="mt-2 text-sm text-emerald-900/85 leading-relaxed">
-          pilaos는 전국 1만 매장을 자동 수집한 <strong>잠재매물 풀</strong>을 운영하며, 변호사 동반 실사로 분쟁을 사전 예방합니다. 호호요가·점포라인이 다루지 않는 매물도 발굴합니다.
-        </p>
-      </section>
-
       {/* 추천 매물 */}
       <section className="mt-12">
         <div className="mb-3 flex items-baseline justify-between">
@@ -100,29 +87,6 @@ export default function Home() {
         </div>
         <div className="grid gap-3 md:grid-cols-2">
           {featured.map((l) => <ListingCard key={l.id} listing={l} />)}
-        </div>
-      </section>
-
-      {/* 분쟁 박스 */}
-      <section className="mt-12 rounded-2xl border-2 border-rose-200 bg-rose-50/40 p-6">
-        <p className="text-xs font-bold uppercase tracking-widest text-rose-700">왜 실사가 필요한가</p>
-        <h2 className="mt-2 text-xl font-bold">영업양수도 100건 中 30~40건은 분쟁</h2>
-        <p className="mt-3 text-sm text-gray-700 leading-relaxed">
-          매출 부풀리기·임대 갱신 거부·회원 환급·강사 단체 이탈·시설 하자·양도세 누락. 변호사 동반 실사로 사전 예방하세요.
-        </p>
-        <Link href="/why" className="mt-4 inline-block rounded-md bg-rose-700 px-4 py-2 text-sm font-bold text-white hover:bg-rose-800">분쟁 11대 유형 + 실사 자세히 →</Link>
-      </section>
-
-      {/* 시도 분포 (페이지 하단) */}
-      <section className="mt-12">
-        <h2 className="mb-3 text-sm font-bold text-gray-700">시도별 매물 분포</h2>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-6">
-          {s.by_sido.map((r) => (
-            <Link key={r.sido} href={`/listings?sido=${encodeURIComponent(r.sido)}`} className="flex justify-between rounded-md bg-white px-3 py-2 text-xs hover:bg-gray-50">
-              <span className="font-medium">{r.sido}</span>
-              <span className="text-gray-500">{r.n.toLocaleString()}</span>
-            </Link>
-          ))}
         </div>
       </section>
     </div>

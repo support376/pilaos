@@ -47,15 +47,13 @@ function Foot() {
           본 사이트가 제공하는 권리금·매출·수익률·매도 시그널 등 모든 숫자와 평가는 공개 데이터 기반의 <strong>추정·참고용</strong>이며 실제 거래 가격·실거래 매출과 다를 수 있습니다.
           매물 정보의 정확성·최신성·완전성에 대해 보증하지 않으며, 본 정보를 근거로 한 거래·투자 결정의 책임은 전적으로 이용자에게 있습니다.
           pilaos는 거래 당사자 간 분쟁의 직접 당사자가 아니며, 손해가 발생하더라도 정보 제공 범위 내에서 책임이 제한됩니다 (이용약관 제8조).
-          영업양수도는 분쟁 빈도가 높은 거래이므로 <Link href="/why" className="underline">변호사 동반 실사</Link>를 권장합니다.
+          영업양수도는 분쟁 빈도가 높은 거래이므로 변호사 동반 실사를 권장합니다.
         </div>
         <div className="mt-4 flex flex-col gap-2 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
           <div>© 2026 pilaos · 필라테스 영업양수도 마켓플레이스</div>
           <div className="flex flex-wrap gap-3">
             <Link href="/terms" className="hover:text-gray-900">이용약관</Link>
             <Link href="/privacy" className="hover:text-gray-900 font-semibold">개인정보처리방침</Link>
-            <Link href="/why" className="hover:text-gray-900">왜 실사가 필요한가</Link>
-            <Link href="/experts" className="hover:text-gray-900">협업 전문가</Link>
             <Link href="/admin/inbox">운영팀</Link>
           </div>
         </div>

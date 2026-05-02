@@ -86,7 +86,7 @@ export default async function SellNew({ searchParams }: Props) {
 
           <div className="mt-6 flex gap-2 justify-center">
             <Link href={l ? `/listings/${l.id}` : "/listings"} className="rounded-md bg-gray-900 px-4 py-2 text-sm font-bold text-white hover:bg-gray-700">매물 페이지로</Link>
-            <Link href="/me/listings" className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">내 매물 진행상태</Link>
+            
           </div>
         </div>
       </div>
