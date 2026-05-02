@@ -19,7 +19,7 @@ function Nav() {
       <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-5 py-3.5">
         <Link href="/" className="text-black"><Logo size={20} /></Link>
         <nav className="flex items-center gap-3 text-sm">
-          <Link href="/listings" className="text-black/70 hover:text-black">매물</Link>
+          <Link href="/listings" className="text-black/70 hover:text-black">매물 검색</Link>
           <Link href="/process" className="hidden text-black/70 hover:text-black sm:inline">절차</Link>
           <Link href="/pricing" className="text-black/70 hover:text-black">비용</Link>
           <Link href="/inquire?kind=acquire" className="rounded-md bg-black px-3.5 py-1.5 text-xs font-bold text-white hover:bg-black/85">상담 신청</Link>
