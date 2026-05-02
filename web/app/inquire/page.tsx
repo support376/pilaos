@@ -4,7 +4,7 @@ import { getListing, regionTree } from "@/lib/listings";
 import { submitIntent } from "@/lib/intent";
 import { RegionSelect } from "@/components/listing/RegionSelect";
 
-export const metadata = { title: "무료 상담 신청 — pilaos", robots: { index: false } };
+export const metadata = { title: "무료 상담 신청", robots: { index: false } };
 
 type Props = { searchParams: Promise<{ kind?: string; listing?: string; ok?: string; src?: string }> };
 
@@ -80,13 +80,13 @@ export default async function Inquire({ searchParams }: Props) {
   if (sp.ok === "1") {
     return (
       <div className="mx-auto max-w-md px-4 py-12">
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6 text-center">
+        <div className="rounded-2xl border border-blue-200 bg-blue-50 p-6 text-center">
           <div className="text-5xl">✓</div>
-          <h1 className="mt-3 text-xl font-bold text-emerald-900">접수 완료</h1>
-          <p className="mt-2 text-sm text-emerald-800">24시간 내 운영팀이 카톡으로 인사드립니다.<br />30분 무료 상담부터 시작합니다.</p>
+          <h1 className="mt-3 text-xl font-bold text-blue-900">접수 완료</h1>
+          <p className="mt-2 text-sm text-blue-800">24시간 내 운영팀이 카톡으로 인사드립니다.<br />30분 무료 상담부터 시작합니다.</p>
           <div className="mt-5 flex gap-2 justify-center">
-            <Link href="/" className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-bold text-white">홈으로</Link>
-            <Link href="/listings" className="rounded-lg border border-emerald-300 bg-white px-4 py-2 text-sm font-bold text-emerald-800">매물 더 보기</Link>
+            <Link href="/" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white hover:bg-blue-700">홈으로</Link>
+            <Link href="/listings" className="rounded-lg border border-emerald-300 bg-white px-4 py-2 text-sm font-bold text-blue-800">매물 더 보기</Link>
           </div>
         </div>
       </div>
@@ -97,18 +97,18 @@ export default async function Inquire({ searchParams }: Props) {
     // ── 매도자 단순 claim 폼 ──
     return (
       <div className="mx-auto max-w-md px-4 py-6 sm:py-10">
-        <h1 className="text-xl font-bold sm:text-2xl">매물 등록 (매도자)</h1>
-        <p className="mt-1 text-xs text-gray-500">{l ? `이 매물(${l.studio.place_name})의 운영자분이세요?` : "매장 정보만 알려주세요. 운영팀이 카톡으로 확인드립니다."}</p>
+        <h1 className="text-xl font-bold sm:text-2xl">매물 등록</h1>
+        <p className="mt-1 text-xs text-black/50">{l ? `이 매물(${l.studio.place_name})의 운영자분이세요?` : "매장 정보만 알려주세요. 운영팀이 카톡으로 확인드립니다."}</p>
 
-        <form action={sellerAction} className="mt-5 space-y-4 rounded-2xl border border-gray-200 bg-white p-5">
+        <form action={sellerAction} className="mt-5 space-y-4 rounded-2xl border border-black/10 bg-white p-5">
           {l ? <input type="hidden" name="listing_id" value={l.id} /> : null}
 
           <Field label="휴대폰" name="phone" type="tel" required placeholder="010-0000-0000" />
-          <Field label="성함 (선택)" name="name" />
-          <Field label="매장 상호" name="place_name" defaultValue={l?.studio.place_name ?? ""} />
+          <Field label="이름 (선택)" name="name" />
+          <Field label="매장 이름" name="place_name" defaultValue={l?.studio.place_name ?? ""} />
 
           <div>
-            <label className="block text-xs font-bold text-gray-700 mb-1">지역</label>
+            <label className="block text-xs font-bold text-black/70 mb-1">지역</label>
             <RegionSelect metros={tree.metros} dos={tree.dos} defaultSido={l?.sido ?? ""} defaultSigungu={l?.sigungu ?? ""} />
           </div>
 
@@ -121,7 +121,7 @@ export default async function Inquire({ searchParams }: Props) {
             <Field label="월세 (만)" name="monthly_rent" type="number" placeholder="200" />
           </div>
 
-          <RadioGroup label="매도 사유" name="sell_reason" options={[
+          <RadioGroup label="매도 이유" name="sell_reason" options={[
             { v: "health", label: "건강" },
             { v: "relocation", label: "이전" },
             { v: "expansion", label: "확장" },
@@ -129,20 +129,20 @@ export default async function Inquire({ searchParams }: Props) {
             { v: "other", label: "기타" },
           ]} defaultValue="other" />
 
-          <RadioGroup label="희망 시기" name="timing" options={[
+          <RadioGroup label="언제쯤 매도하시려나요?" name="timing" options={[
             { v: "immediate", label: "즉시" },
-            { v: "1m", label: "1개월" },
+            { v: "1m", label: "1개월 안" },
             { v: "3m", label: "3개월" },
             { v: "6m", label: "6개월" },
-            { v: "later", label: "검토 단계" },
+            { v: "later", label: "아직 검토 중" },
           ]} defaultValue="3m" />
 
-          <Field label="메모 (선택)" name="message" textarea rows={2} />
+          <Field label="하시고 싶은 말 (선택)" name="message" textarea rows={2} />
 
-          <button type="submit" className="w-full rounded-lg bg-gray-900 px-5 py-4 text-base font-bold text-white hover:bg-gray-700">
+          <button type="submit" className="w-full rounded-lg bg-black px-5 py-4 text-base font-bold text-white hover:bg-black/85">
             매물 등록 신청
           </button>
-          <p className="text-center text-[11px] text-gray-400">제출 시 <Link href="/terms" className="underline">이용약관</Link> · <Link href="/privacy" className="underline">개인정보처리방침</Link>에 동의합니다.</p>
+          <p className="text-center text-[11px] text-black/40">제출 시 <Link href="/terms" className="underline">이용약관</Link>·<Link href="/privacy" className="underline">개인정보</Link>에 동의합니다.</p>
         </form>
       </div>
     );
@@ -154,27 +154,27 @@ export default async function Inquire({ searchParams }: Props) {
   return (
     <div className="mx-auto max-w-md px-4 py-6 sm:py-10">
       <h1 className="text-xl font-bold sm:text-2xl">
-        {matched ? "이 매물에 관심 있어요" : "매물 살 생각 있어요"}
+        {matched ? "이 매물 신청" : "매물 살 생각 있어요"}
       </h1>
-      <p className="mt-1 text-xs text-gray-500">
+      <p className="mt-1 text-xs text-black/50">
         {matched
-          ? "휴대폰 + 예산만 알려주세요. 운영팀이 매도자에게 컨택 대행합니다."
-          : "조건만 등록하시면 우리 풀에서 매칭 매물을 카톡으로 보내드립니다."}
+          ? "휴대폰만 남기시면 운영팀이 매도자에게 연락합니다."
+          : "조건만 알려주시면 우리가 매물을 찾아 카톡으로 보내드립니다."}
       </p>
 
       {l ? (
-        <div className="mt-3 rounded-lg bg-amber-50 p-3 text-xs text-amber-900">
+        <div className="mt-3 rounded-lg bg-blue-50 p-3 text-xs text-blue-900">
           <strong>관심 매물:</strong> {l.studio.place_name}
-          <div className="text-amber-800/80">{l.sido} {l.sigungu}</div>
+          <div className="text-blue-800/80">{l.sido} {l.sigungu}</div>
         </div>
       ) : null}
 
-      <form action={buyerAction} className="mt-5 space-y-5 rounded-2xl border border-gray-200 bg-white p-5">
+      <form action={buyerAction} className="mt-5 space-y-5 rounded-2xl border border-black/10 bg-white p-5">
         {l ? <input type="hidden" name="listing_id" value={l.id} /> : null}
         <input type="hidden" name="source" value={sp.src ?? "inquire"} />
 
         <Field label="휴대폰 *" name="phone" type="tel" required placeholder="010-0000-0000" />
-        <Field label="성함 (선택)" name="name" />
+        <Field label="이름 (선택)" name="name" />
 
         {/* 역할 */}
         <CheckGroup label="어떤 분이세요?" name="role" options={[
@@ -187,7 +187,7 @@ export default async function Inquire({ searchParams }: Props) {
         {/* 갈래 B에서만: 우선순위 + 지역 */}
         {!matched ? (
           <>
-            <CheckGroup label="우선순위 (1~2개)" name="priorities" options={[
+            <CheckGroup label="우선순위 (1~2개 선택)" name="priorities" options={[
               { v: "region", label: "지역" },
               { v: "price", label: "가격" },
               { v: "yield", label: "수익률" },
@@ -196,7 +196,7 @@ export default async function Inquire({ searchParams }: Props) {
             ]} />
 
             <div>
-              <label className="block text-xs font-bold text-gray-700 mb-1">관심 지역</label>
+              <label className="block text-xs font-bold text-black/70 mb-1">관심 지역</label>
               <RegionSelect metros={tree.metros} dos={tree.dos} />
             </div>
           </>
@@ -204,37 +204,37 @@ export default async function Inquire({ searchParams }: Props) {
 
         {/* 자금 — 두 칸 합계 */}
         <div>
-          <label className="block text-xs font-bold text-gray-700 mb-1">예산 한도 (만원)</label>
+          <label className="block text-xs font-bold text-black/70 mb-1">예산 한도 (만원)</label>
           <div className="grid grid-cols-2 gap-2">
-            <input name="capital_cash" type="number" placeholder="현금 5000" inputMode="numeric"
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none" />
-            <input name="capital_loan" type="number" placeholder="대출 가능 5000" inputMode="numeric"
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none" />
+            <input name="capital_cash" type="number" placeholder="현금 (예: 5000)" inputMode="numeric"
+              className="rounded-md border border-black/15 px-3 py-2 text-sm focus:border-black focus:outline-none" />
+            <input name="capital_loan" type="number" placeholder="대출 가능 (예: 5000)" inputMode="numeric"
+              className="rounded-md border border-black/15 px-3 py-2 text-sm focus:border-black focus:outline-none" />
           </div>
-          <p className="mt-1 text-[11px] text-gray-400">합계가 총 인수자금 한도입니다. 모르시면 비워두셔도 됩니다.</p>
+          <p className="mt-1 text-[11px] text-black/40">합계가 총 인수자금 한도입니다. 모르시면 비워두셔도 됩니다.</p>
         </div>
 
-        <RadioGroup label="시기" name="timing" options={[
+        <RadioGroup label="언제쯤?" name="timing" options={[
           { v: "now", label: "즉시" },
-          { v: "3m", label: "3개월 내" },
-          { v: "6m", label: "6개월 내" },
-          { v: "later", label: "검토 단계" },
+          { v: "3m", label: "3개월 안" },
+          { v: "6m", label: "6개월 안" },
+          { v: "later", label: "아직 검토 중" },
         ]} defaultValue="3m" />
 
         {/* 강사 자격 */}
         <div>
           <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" name="instructor_qualified" value="1" className="accent-gray-900" />
-            강사 자격이 있습니다
+            <input type="checkbox" name="instructor_qualified" value="1" className="accent-black" />
+            강사 자격 보유
           </label>
         </div>
 
-        <Field label="메모 (선택, 200자)" name="message" textarea rows={2} />
+        <Field label="하시고 싶은 말 (선택, 200자)" name="message" textarea rows={2} />
 
-        <button type="submit" className="w-full rounded-lg bg-gray-900 px-5 py-4 text-base font-bold text-white hover:bg-gray-700">
-          {matched ? "매수 의향 등록 →" : "조건 등록 + 매물 추천 받기 →"}
+        <button type="submit" className="w-full rounded-lg bg-black px-5 py-4 text-base font-bold text-white hover:bg-black/85">
+          {matched ? "이 매물 신청 →" : "조건 등록 →"}
         </button>
-        <p className="text-center text-[11px] text-gray-400">제출 시 <Link href="/terms" className="underline">이용약관</Link> · <Link href="/privacy" className="underline">개인정보처리방침</Link>에 동의합니다.</p>
+        <p className="text-center text-[11px] text-black/40">제출 시 <Link href="/terms" className="underline">이용약관</Link>·<Link href="/privacy" className="underline">개인정보</Link>에 동의합니다.</p>
       </form>
     </div>
   );
@@ -246,16 +246,16 @@ function Field({ label, name, type = "text", required, placeholder, defaultValue
 }) {
   return (
     <div>
-      <label htmlFor={name} className="block text-xs font-bold text-gray-700">{label}</label>
+      <label htmlFor={name} className="block text-xs font-bold text-black/70">{label}</label>
       {textarea ? (
         <textarea id={name} name={name} rows={rows} required={required} placeholder={placeholder} defaultValue={defaultValue}
           maxLength={200}
-          className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-3 text-sm focus:border-gray-900 focus:outline-none" />
+          className="mt-1 w-full rounded-lg border border-black/15 px-4 py-3 text-sm focus:border-black focus:outline-none" />
       ) : (
         <input id={name} name={name} type={type} required={required} placeholder={placeholder} defaultValue={defaultValue}
           inputMode={type === "number" ? "numeric" : type === "tel" ? "tel" : "text"}
           autoComplete={type === "tel" ? "tel" : type === "text" ? "name" : undefined}
-          className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-3 text-base focus:border-gray-900 focus:outline-none" />
+          className="mt-1 w-full rounded-lg border border-black/15 px-4 py-3 text-base focus:border-black focus:outline-none" />
       )}
     </div>
   );
@@ -264,10 +264,10 @@ function Field({ label, name, type = "text", required, placeholder, defaultValue
 function CheckGroup({ label, name, options }: { label: string; name: string; options: { v: string; label: string }[] }) {
   return (
     <div>
-      <label className="block text-xs font-bold text-gray-700 mb-2">{label}</label>
+      <label className="block text-xs font-bold text-black/70 mb-2">{label}</label>
       <div className="flex flex-wrap gap-2">
         {options.map((o) => (
-          <label key={o.v} className="flex cursor-pointer items-center gap-1 rounded-full border border-gray-300 px-3 py-1.5 text-xs has-[:checked]:border-gray-900 has-[:checked]:bg-gray-900 has-[:checked]:text-white">
+          <label key={o.v} className="flex cursor-pointer items-center gap-1 rounded-full border border-black/15 px-3 py-1.5 text-xs has-[:checked]:border-black has-[:checked]:bg-black has-[:checked]:text-white">
             <input type="checkbox" name={name} value={o.v} className="hidden" />
             {o.label}
           </label>
@@ -280,10 +280,10 @@ function CheckGroup({ label, name, options }: { label: string; name: string; opt
 function RadioGroup({ label, name, options, defaultValue }: { label: string; name: string; options: { v: string; label: string }[]; defaultValue?: string }) {
   return (
     <fieldset>
-      <legend className="text-xs font-bold text-gray-700 mb-2">{label}</legend>
+      <legend className="text-xs font-bold text-black/70 mb-2">{label}</legend>
       <div className="flex flex-wrap gap-2">
         {options.map((o) => (
-          <label key={o.v} className="flex cursor-pointer items-center gap-1 rounded-lg border border-gray-300 px-3 py-2 text-sm has-[:checked]:border-gray-900 has-[:checked]:bg-gray-900 has-[:checked]:text-white">
+          <label key={o.v} className="flex cursor-pointer items-center gap-1 rounded-lg border border-black/15 px-3 py-2 text-sm has-[:checked]:border-black has-[:checked]:bg-black has-[:checked]:text-white">
             <input type="radio" name={name} value={o.v} defaultChecked={o.v === defaultValue} className="hidden" />
             {o.label}
           </label>

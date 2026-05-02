@@ -77,11 +77,11 @@ export function FavCounterModal() {
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
         {!done ? (
           <>
-            <div className="text-3xl text-center">💝</div>
+            <div className="text-3xl text-center text-red-600">♥</div>
             <h2 className="mt-3 text-center text-lg font-bold">관심 매물 5개 표시하셨네요!</h2>
             <p className="mt-2 text-center text-sm text-gray-600">
-              운영팀이 매물별로 정리해서 카톡으로 보내드릴까요? <br />
-              <span className="text-xs text-gray-500">매수 의향이 있으신지 가볍게 확인만요. 무료입니다.</span>
+              운영팀이 매물을 정리해서 카톡으로 보내드릴까요?<br />
+              <span className="text-xs text-black/55">가볍게 확인만요. 비용은 없습니다.</span>
             </p>
             <form onSubmit={submit} className="mt-5 space-y-3">
               <input
@@ -94,10 +94,10 @@ export function FavCounterModal() {
                 onChange={(e) => setPhone(e.target.value)}
                 className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base focus:border-gray-900 focus:outline-none"
               />
-              <button type="submit" disabled={submitting} className="w-full rounded-lg bg-gray-900 px-5 py-3.5 text-base font-bold text-white hover:bg-gray-700 disabled:opacity-50">
-                {submitting ? "전송 중..." : "정리받기 →"}
+              <button type="submit" disabled={submitting} className="w-full rounded-lg bg-black px-5 py-3.5 text-base font-bold text-white hover:bg-black/85 disabled:opacity-50">
+                {submitting ? "보내는 중..." : "정리해서 받기 →"}
               </button>
-              <button type="button" onClick={dismiss} className="w-full text-xs text-gray-400 hover:text-gray-600">
+              <button type="button" onClick={dismiss} className="w-full text-xs text-black/40 hover:text-black/70">
                 나중에
               </button>
             </form>
@@ -105,9 +105,9 @@ export function FavCounterModal() {
         ) : (
           <div className="text-center py-3">
             <div className="text-4xl">✓</div>
-            <h2 className="mt-3 text-lg font-bold text-emerald-700">접수됐습니다</h2>
-            <p className="mt-2 text-sm text-gray-600">24시간 내 카톡으로 정리해드립니다.</p>
-            <button onClick={dismiss} className="mt-4 rounded-lg bg-gray-900 px-5 py-2 text-sm font-bold text-white">
+            <h2 className="mt-3 text-lg font-bold text-blue-700">접수됐습니다</h2>
+            <p className="mt-2 text-sm text-black/65">24시간 안에 카톡으로 정리해드립니다.</p>
+            <button onClick={dismiss} className="mt-4 rounded-lg bg-black px-5 py-2 text-sm font-bold text-white hover:bg-black/85">
               닫기
             </button>
           </div>
