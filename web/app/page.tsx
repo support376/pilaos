@@ -18,88 +18,128 @@ async function go(formData: FormData) {
 
 export default function Home() {
   const tree = regionTree();
-  const featured = searchListings({}, "yield_desc", 4).rows;
+  const featured = searchListings({}, "yield_desc", 3).rows;
   const s = summary();
 
   return (
     <div className="bg-white text-black">
 
-      {/* HERO — 슬로건 */}
-      <section className="mx-auto max-w-2xl px-5 pt-14 pb-12 sm:pt-24 sm:pb-16">
-        <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">필라테스·요가 인수 자문</div>
-        <h1 className="mt-4 text-[32px] sm:text-[48px] font-extrabold leading-[1.15] tracking-tight">
+      {/* HERO — 슬로건 + 4 액션 */}
+      <section className="mx-auto max-w-3xl px-5 pt-16 pb-10 sm:pt-24 sm:pb-16">
+        <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">필라테스·요가 인수 자문 플랫폼</div>
+        <h1 className="mt-5 text-[34px] sm:text-[56px] font-extrabold leading-[1.1] tracking-tight">
           필라오스와 함께라면,<br />
-          <span className="text-blue-600">이 모든 과정이 깔끔해집니다.</span>
+          <span className="text-blue-600">이 모든 과정이</span><br />
+          <span className="text-blue-600">깔끔해집니다.</span>
         </h1>
-        <p className="mt-6 text-[16px] sm:text-[18px] text-black/65 leading-relaxed">
-          매물 찾기, 권리금 산정, 매도자 컨택, 변호사 마무리까지 — <br className="hidden sm:block" />
-          처음부터 끝까지 운영팀이 옆에서 함께 갑니다.
+        <p className="mt-7 text-[16px] sm:text-[18px] text-black/65 leading-relaxed">
+          매물 찾기, 가격 분석, 매도자 컨택, 변호사 마무리, 1년 점검까지<br className="hidden sm:block" />
+          처음부터 끝까지 운영팀이 사람 1명으로 함께 갑니다.
         </p>
-        <div className="mt-8 flex flex-col gap-2 sm:flex-row">
-          <Link href="/listings" className="rounded-lg bg-black px-7 py-4 text-center text-[16px] font-bold text-white hover:bg-black/85">
-            매물 보러가기 →
-          </Link>
-          <Link href="/inquire?kind=acquire" className="rounded-lg border-2 border-black bg-white px-7 py-4 text-center text-[16px] font-bold text-black hover:bg-black hover:text-white">
-            의뢰하기 →
-          </Link>
+
+        {/* 4 액션 버튼 */}
+        <div className="mt-10 grid grid-cols-2 gap-2 sm:gap-3">
+          <Action href="/listings" title="매물 보러가기" desc={`${s.total.toLocaleString()}+곳`} primary />
+          <Action href="/process" title="절차 보러가기" desc="5단계 어떻게" />
+          <Action href="/pricing" title="비용 보러가기" desc="매수자 / 매도자" />
+          <Action href="/inquire?kind=acquire" title="상담 신청" desc="휴대폰만" highlight />
         </div>
-        <p className="mt-4 text-xs text-black/50">상담은 무료, 휴대폰만 남기시면 24시간 안에 카톡.</p>
+        <p className="mt-5 text-xs text-black/50">상담은 무료. 24시간 안에 카톡 연락.</p>
       </section>
 
-      {/* 1. 위험 6카드 + 해석 */}
-      <section className="border-t border-black/10 bg-white">
-        <div className="mx-auto max-w-2xl px-5 py-14 sm:py-20">
-          <div className="text-[11px] font-bold uppercase tracking-widest text-red-600">혼자 사면 위험합니다</div>
+      {/* 1. 차별점 비교표 */}
+      <section className="border-t border-black/10 bg-black/[.02]">
+        <div className="mx-auto max-w-3xl px-5 py-14 sm:py-20">
+          <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">왜 필라오스인가</div>
           <h2 className="mt-3 text-[26px] sm:text-[32px] font-extrabold leading-tight tracking-tight">
-            인수 후 <span className="text-red-600">실제로 일어나는 일</span>
+            매물만 던져주는 곳과는<br /><span className="text-blue-600">차원이 다릅니다.</span>
           </h2>
-          <p className="mt-3 text-[15px] text-black/65 leading-relaxed">학원 100곳을 사면 30곳은 6개월 안에 분쟁이 생깁니다.</p>
+          <p className="mt-3 text-[15px] text-black/65 leading-relaxed">
+            필라테스·요가 인수만 다루는 전문 운영팀이 처음부터 끝까지 함께합니다.
+          </p>
 
-          <div className="mt-8 grid gap-3 sm:grid-cols-2">
-            <Risk
-              title="회원 환불 폭탄"
-              hit="인수 첫 달부터 환불 요청"
-              detail="기존 회원이 미사용 회원권 환불을 요구합니다. 학원당 5천만~3억 빚을 인수자가 떠안습니다."
-            />
-            <Risk
-              title="임대인이 갱신 거부"
-              hit="권리금 줬는데 새 계약 안 해줌"
-              detail="권리금 1억을 지불했지만 임대인이 보증금 인상이나 신규 계약을 거부하면 회수가 어렵습니다."
-            />
-            <Risk
-              title="강사가 단체로 그만둠"
-              hit="인수했더니 빈 기구만"
-              detail="인수 즉시 강사들이 인근에 새 학원을 열고, 회원을 그룹챗으로 데려갑니다."
-            />
-            <Risk
-              title="실제 매출이 다름"
-              hit='"월 8천"이 실제 4천'
-              detail="매도자가 보여주는 카톡 캡처는 누구나 만들 수 있습니다. 진짜 매출 검증이 필수입니다."
-            />
-            <Risk
-              title="세금 추징"
-              hit="부가세 10% 폭탄"
-              detail="포괄양수도 신고를 빠뜨리면 매매가의 10%를 부가세로 추징당합니다."
-            />
-            <Risk
-              title="기구 노후"
-              hit="추가 비용 3천만"
-              detail="리포머 스프링·프레임 노후가 인수 후 발견되면 전체 교체가 필요합니다."
-            />
+          <div className="mt-8 overflow-x-auto -mx-5 px-5 sm:mx-0 sm:px-0">
+            <table className="w-full min-w-[480px] text-sm">
+              <thead>
+                <tr className="border-b-2 border-black">
+                  <th className="text-left px-2 py-3 text-[12px] font-bold text-black/55">항목</th>
+                  <th className="text-center px-2 py-3 text-[12px] font-bold text-black/55">호호요가</th>
+                  <th className="text-center px-2 py-3 text-[12px] font-bold text-black/55">점포라인</th>
+                  <th className="text-center px-2 py-3 text-[12px] font-bold text-blue-600">필라오스</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white">
+                <CmpRow label="매출·POS 진성 검증" a="×" b="△" c="✓" />
+                <CmpRow label="회원권 잠재 부채 산정" a="×" b="×" c="✓" />
+                <CmpRow label="플레이스·SNS 운영 점검" a="×" b="×" c="✓" />
+                <CmpRow label="강사 단체 이탈 방어" a="×" b="×" c="✓" />
+                <CmpRow label="임대인 동의서 동시 체결" a="×" b="△" c="✓" />
+                <CmpRow label="변호사·세무사 매칭" a="×" b="△" c="✓" />
+                <CmpRow label="포괄양수도 세무 처리" a="×" b="×" c="✓" />
+                <CmpRow label="인수 후 1년 점검" a="×" b="×" c="✓" />
+              </tbody>
+            </table>
           </div>
 
-          <div className="mt-6 rounded-2xl bg-red-50 border border-red-200 p-5">
-            <p className="text-sm text-red-900 leading-relaxed">
-              <strong>이 6가지 중 4가지는</strong> 매수자가 인수 전에 절대 알 수 없는 항목입니다.
-              그래서 우리가 미리 점검해드립니다.
+          <div className="mt-6 grid gap-2 sm:grid-cols-2">
+            <Bad title="호호요가는 게시판입니다" desc="매도자가 글 한 개 올리면 끝. 매물 검증·거래 보호·분쟁 처리 인프라가 없어요." />
+            <Bad title="점포라인은 일반 점포 중개" desc="필라테스·요가 도메인을 모릅니다. 회원권 부채, 강사 이탈 같은 핵심 위험을 못 봐요." />
+          </div>
+        </div>
+      </section>
+
+      {/* 2. 운영현황 통합 점검 - 도메인 차별점 */}
+      <section className="border-t border-black/10 bg-white">
+        <div className="mx-auto max-w-3xl px-5 py-14 sm:py-20">
+          <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">우리만의 도구</div>
+          <h2 className="mt-3 text-[26px] sm:text-[32px] font-extrabold leading-tight tracking-tight">
+            플레이스·SNS 운영 현황을<br /><span className="text-blue-600">한 화면에서</span>
+          </h2>
+          <p className="mt-3 text-[15px] text-black/65 leading-relaxed">
+            매수자분이 매물을 평가할 때 가장 궁금한 것 — "이 학원이 온라인을 잘 운영하고 있나?"
+          </p>
+
+          <div className="mt-8 grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <Channel name="네이버 플레이스" />
+            <Channel name="네이버 블로그" />
+            <Channel name="카카오 플레이스" />
+            <Channel name="카카오톡 채널" />
+            <Channel name="인스타그램" />
+            <Channel name="홈페이지·구글" />
+          </div>
+
+          <div className="mt-6 rounded-2xl border border-blue-200 bg-blue-50/50 p-5">
+            <div className="text-[15px] font-bold text-blue-900">디지털 운영 점수</div>
+            <p className="mt-2 text-[13px] text-blue-900/80 leading-relaxed">
+              6개 채널 운영 여부 + 리뷰 수 + 게시물 수 + 응답률을 종합해 0~100점으로 표시. 매수자분이 매물 페이지에서 한 눈에.
             </p>
           </div>
         </div>
       </section>
 
-      {/* 2. 가로 5단계 절차 */}
+      {/* 3. 위험 6카드 */}
       <section className="border-t border-black/10 bg-black/[.02]">
-        <div className="mx-auto max-w-2xl px-5 py-14 sm:py-20">
+        <div className="mx-auto max-w-3xl px-5 py-14 sm:py-20">
+          <div className="text-[11px] font-bold uppercase tracking-widest text-red-600">왜 우리가 필요한가</div>
+          <h2 className="mt-3 text-[26px] sm:text-[32px] font-extrabold leading-tight tracking-tight">
+            인수 후 <span className="text-red-600">실제로 일어나는 일</span>
+          </h2>
+          <p className="mt-3 text-[15px] text-black/65 leading-relaxed">학원 100곳 인수하면 30곳은 6개월 안에 분쟁. 우리는 이 6가지를 사전에 막아드립니다.</p>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+            <Risk title="회원 환불 폭탄" hit="첫 달부터 환불 요청" detail="학원당 5천만~3억 잠재 빚. 인수자가 떠안습니다." />
+            <Risk title="임대인이 갱신 거부" hit="권리금 지불 후 새 계약 X" detail="권리금 회수 어려움. 동의서 사전 체결 필수." />
+            <Risk title="강사 단체 이탈" hit="인수했더니 빈 기구만" detail="강사가 인근 새 학원 오픈, 회원 그룹챗 이전." />
+            <Risk title="실제 매출이 다름" hit='"월 8천"이 실제 4천' detail="카톡 캡처는 누구나. POS·카드사 검증 필수." />
+            <Risk title="세금 추징" hit="부가세 10% 폭탄" detail="포괄양수도 신고 누락 시 매매가 10% 추징." />
+            <Risk title="기구 노후 발견" hit="추가 비용 3천만" detail="리포머·캐딜락 노후. 인수 후 발견 시 전체 교체." />
+          </div>
+        </div>
+      </section>
+
+      {/* 4. 가로 5단계 */}
+      <section className="border-t border-black/10 bg-white">
+        <div className="mx-auto max-w-3xl px-5 py-14 sm:py-20">
           <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">우리는 이렇게 해드립니다</div>
           <h2 className="mt-3 text-[26px] sm:text-[32px] font-extrabold leading-tight tracking-tight">
             5단계로 <span className="text-blue-600">차근차근</span>
@@ -128,129 +168,71 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. 결과물 (80% 받는 것) */}
-      <section className="border-t border-black/10 bg-white">
-        <div className="mx-auto max-w-2xl px-5 py-14 sm:py-20">
+      {/* 5. 결과물 */}
+      <section className="border-t border-black/10 bg-black/[.02]">
+        <div className="mx-auto max-w-3xl px-5 py-14 sm:py-20">
           <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">받게 되는 것</div>
           <h2 className="mt-3 text-[26px] sm:text-[32px] font-extrabold leading-tight tracking-tight">
-            의뢰하시면 <span className="text-blue-600">이런 게</span> 손에 들어옵니다.
+            의뢰하시면 <span className="text-blue-600">이런 게</span> 손에.
           </h2>
 
-          <div className="mt-8 space-y-3">
-            <Result
-              n="01"
-              title="진짜 매출이 적힌 권리금 계산서"
-              desc='"월 8천 매출"이 진짜인지 POS·카드사·세금계산서로 확인해 보고서로. 적정 권리금 ± 10% 제시.'
-              against="매도자 자랑이 진짜인지 모르는 문제"
-            />
-            <Result
-              n="02"
-              title="회원 환불 폭탄 막는 방어 조항"
-              desc="인수 후 회원 환불을 매도자가 책임지는 표준 계약 조항. 변호사가 직접 작성."
-              against="인수 첫 달 환불 폭탄 5천만~3억"
-            />
-            <Result
-              n="03"
-              title="임대인 동의서 동시 체결"
-              desc="권리금 지불 전에 임대인 도장을 미리. 갱신 거부 위험 사전 차단."
-              against="권리금 줬는데 임대 거부당하는 케이스"
-            />
-            <Result
-              n="04"
-              title="강사 잔류 약속 + 경업금지 약정"
-              desc="핵심 강사 위약금 200% 반환 조항. 인근 1~2km 1년 경쟁금지."
-              against="인수했더니 강사 단체 이탈"
-            />
-            <Result
-              n="05"
-              title="포괄양수도 세무 처리"
-              desc="제휴 세무사가 부가세 10% 추징 차단 + 양도소득세 정확히 처리."
-              against="세금 추징 폭탄"
-            />
-            <Result
-              n="06"
-              title="1년간 사후 점검 카톡"
-              desc="3·6·12개월에 운영팀이 회원·매출·강사·임대·세금 점검을 무료로."
-              against="인수 후에도 모르는 분쟁"
-            />
-          </div>
-
-          <div className="mt-6 rounded-xl bg-blue-50 border border-blue-200 p-5">
-            <p className="text-sm text-blue-900 leading-relaxed">
-              <strong>왜 이게 가능한가요?</strong><br />
-              필라테스·요가 인수만 다루는 전문 운영팀 + 제휴 변호사·세무사 디렉토리. 매수자 한 분에게 운영팀 1명이 카톡으로 끝까지 담당합니다.
-            </p>
+          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+            <Result n="01" title="진짜 매출 권리금 계산서" against="매도자 자랑이 진짜인지 모름" />
+            <Result n="02" title="회원 환불 폭탄 방어 조항" against="첫 달 환불 5천만~3억" />
+            <Result n="03" title="임대인 동의서 동시 체결" against="권리금 줬는데 임대 거부" />
+            <Result n="04" title="강사 잔류·경업금지 약정" against="인수 후 강사 단체 이탈" />
+            <Result n="05" title="포괄양수도 세무 처리" against="부가세 10% 추징" />
+            <Result n="06" title="1년간 사후 점검 카톡" against="인수 후에도 모르는 분쟁" />
           </div>
         </div>
       </section>
 
-      {/* 4. 사회적 증거 */}
+      {/* 6. 사회적 증거 */}
       <section className="border-t border-black/10 bg-black text-white">
-        <div className="mx-auto max-w-2xl px-5 py-14 sm:py-16 text-center">
-          <div className="text-[11px] font-bold uppercase tracking-widest text-blue-400">이미 많은 분이 함께하고 있어요</div>
+        <div className="mx-auto max-w-3xl px-5 py-14 sm:py-16 text-center">
+          <div className="text-[11px] font-bold uppercase tracking-widest text-blue-400">이미 함께하는 분들</div>
           <div className="mt-6 grid grid-cols-3 gap-4">
-            <Stat n={s.total.toLocaleString()} label="자동 발굴 매물" />
+            <Stat n={s.total.toLocaleString() + "+"} label="자동 발굴 매물" />
             <Stat n="1,200+" label="누적 상담 신청" />
-            <Stat n="180+" label="권리금 분석 의뢰" />
+            <Stat n="180+" label="권리금 분석" />
           </div>
-          <p className="mt-8 text-sm text-white/70 leading-relaxed">
-            전국 필라테스·요가 학원 데이터를 매일 자동 업데이트.<br />
+          <p className="mt-8 text-sm text-white/65 leading-relaxed">
+            전국 필라테스·요가 학원을 매일 자동 업데이트.<br />
             카카오·네이버·점포라인·호호요가 매물까지 한 화면에.
           </p>
         </div>
       </section>
 
-      {/* 5. 매물 검색 + 추천 */}
+      {/* 7. 매물 요약 */}
       <section className="border-t border-black/10 bg-white">
-        <div className="mx-auto max-w-2xl px-5 py-14 sm:py-20">
-          <div className="text-[11px] font-bold uppercase tracking-widest text-black/55">매물 둘러보기</div>
+        <div className="mx-auto max-w-3xl px-5 py-14 sm:py-20">
+          <div className="text-[11px] font-bold uppercase tracking-widest text-black/55">미리보기</div>
           <h2 className="mt-3 text-[26px] sm:text-[32px] font-extrabold leading-tight tracking-tight">
-            지금 등록된 <span className="text-blue-600">{s.total.toLocaleString()}+곳</span>
+            지금 등록된 매물 <span className="text-blue-600">일부</span>
           </h2>
-          <p className="mt-3 text-[15px] text-black/65 leading-relaxed">지역·가격대로 검색하시거나, 추천 매물을 둘러보세요.</p>
-
-          <form action={go} className="mt-6 space-y-2 rounded-xl border border-black/15 bg-white p-3">
-            <input
-              name="q" type="text" placeholder="상호 · 동 · 주소"
-              className="w-full rounded-lg border border-black/15 bg-black/[.03] px-4 py-3 text-[16px] focus:bg-white focus:border-black focus:outline-none"
-            />
-            <RegionSelect metros={tree.metros} dos={tree.dos} />
-            <button className="w-full rounded-lg bg-black px-4 py-3 text-[16px] font-bold text-white hover:bg-black/85">매물 검색</button>
-          </form>
 
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             {featured.map((l) => <ListingCard key={l.id} listing={l} />)}
           </div>
-          <div className="mt-4 text-center">
-            <Link href="/listings" className="text-sm text-black/55 underline underline-offset-4 hover:text-black">전체 매물 보기 →</Link>
+          <div className="mt-5 text-center">
+            <Link href="/listings" className="inline-block rounded-lg bg-black px-7 py-3 text-sm font-bold text-white hover:bg-black/85">
+              전체 {s.total.toLocaleString()}+곳 보러가기 →
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* CTA — 두 개 */}
+      {/* CTA */}
       <section className="border-t border-black/10 bg-blue-50">
-        <div className="mx-auto max-w-2xl px-5 py-14 sm:py-20">
-          <h2 className="text-[26px] sm:text-[32px] font-extrabold leading-tight tracking-tight text-center">
+        <div className="mx-auto max-w-3xl px-5 py-14 sm:py-20 text-center">
+          <h2 className="text-[26px] sm:text-[32px] font-extrabold leading-tight tracking-tight">
             지금 시작하세요.
           </h2>
-          <p className="mt-3 text-center text-[15px] text-black/65">매물부터 둘러보셔도 좋고, 바로 의뢰하셔도 좋아요.</p>
+          <p className="mt-3 text-[15px] text-black/65">매수·매도·창업·폐업 어떤 상황이든 휴대폰 한 줄로 시작.</p>
 
-          <div className="mt-8 grid gap-3 sm:grid-cols-2">
-            <Link href="/listings" className="group rounded-2xl border-2 border-black bg-white p-6 hover:bg-black hover:text-white transition">
-              <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600 group-hover:text-blue-300">둘러보기</div>
-              <div className="mt-2 text-xl font-extrabold">매물 보러가기 →</div>
-              <div className="mt-2 text-sm text-black/65 group-hover:text-white/75">전국 {s.total.toLocaleString()}+곳에서 마음에 드는 매물 찾기</div>
-            </Link>
-            <Link href="/inquire?kind=acquire" className="group rounded-2xl bg-black p-6 text-white hover:bg-blue-600 transition">
-              <div className="text-[11px] font-bold uppercase tracking-widest text-blue-300 group-hover:text-blue-100">의뢰하기</div>
-              <div className="mt-2 text-xl font-extrabold">상담 신청하기 →</div>
-              <div className="mt-2 text-sm text-white/75 group-hover:text-white/90">휴대폰만 남기시면 운영팀이 24시간 안에 카톡 드림</div>
-            </Link>
-          </div>
-
-          <p className="mt-6 text-center text-xs text-black/50">
-            매도자세요? <Link href="/inquire?kind=sell" className="underline underline-offset-2 hover:text-black">매물 등록도 무료</Link>
-          </p>
+          <Link href="/inquire?kind=acquire" className="mt-8 inline-block rounded-lg bg-black px-10 py-4 text-base font-bold text-white hover:bg-black/85">
+            상담 신청 →
+          </Link>
         </div>
       </section>
     </div>
@@ -258,6 +240,43 @@ export default function Home() {
 }
 
 /* ── helpers ── */
+function Action({ href, title, desc, primary, highlight }: { href: string; title: string; desc: string; primary?: boolean; highlight?: boolean }) {
+  const cls = highlight
+    ? "bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
+    : primary
+      ? "bg-black text-white border-black hover:bg-black/85"
+      : "bg-white text-black border-black/15 hover:bg-black/5";
+  return (
+    <Link href={href} className={`rounded-2xl border-2 px-5 py-5 sm:py-6 text-left transition ${cls}`}>
+      <div className="text-[16px] sm:text-[18px] font-extrabold">{title}</div>
+      <div className={`mt-1 text-[12px] sm:text-[13px] ${highlight ? "text-white/80" : primary ? "text-white/70" : "text-black/55"}`}>{desc}</div>
+    </Link>
+  );
+}
+function CmpRow({ label, a, b, c }: { label: string; a: string; b: string; c: string }) {
+  const cell = (v: string) => v === "✓" ? "text-blue-600 font-extrabold" : v === "△" ? "text-amber-600 font-bold" : "text-black/30";
+  return (
+    <tr className="border-b border-black/10">
+      <td className="px-2 py-3 text-[13px] sm:text-[14px] text-black/85">{label}</td>
+      <td className={`px-2 py-3 text-center text-base ${cell(a)}`}>{a}</td>
+      <td className={`px-2 py-3 text-center text-base ${cell(b)}`}>{b}</td>
+      <td className={`px-2 py-3 text-center text-base bg-blue-50/40 ${cell(c)}`}>{c}</td>
+    </tr>
+  );
+}
+function Bad({ title, desc }: { title: string; desc: string }) {
+  return (
+    <div className="rounded-xl border border-red-200 bg-red-50/40 p-4">
+      <div className="text-[14px] font-extrabold text-red-700">{title}</div>
+      <p className="mt-1.5 text-[12px] text-black/65 leading-relaxed">{desc}</p>
+    </div>
+  );
+}
+function Channel({ name }: { name: string }) {
+  return (
+    <div className="rounded-xl border border-black/10 bg-white px-4 py-3 text-center text-[13px] font-bold">{name}</div>
+  );
+}
 function Risk({ title, hit, detail }: { title: string; hit: string; detail: string }) {
   return (
     <div className="rounded-2xl border border-red-200 bg-red-50/50 p-5">
@@ -267,17 +286,15 @@ function Risk({ title, hit, detail }: { title: string; hit: string; detail: stri
     </div>
   );
 }
-
 function Step({ n, name, desc }: { n: number; name: string; desc: string }) {
   return (
-    <div className="flex flex-col items-center text-center w-[120px] sm:w-auto">
+    <div className="flex flex-col items-center text-center w-[110px] sm:w-auto">
       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black text-base font-extrabold text-white">{n}</div>
       <div className="mt-2 text-[13px] font-extrabold text-black">{name}</div>
       <div className="mt-1 text-[11px] text-black/55 leading-tight">{desc}</div>
     </div>
   );
 }
-
 function StepArrow() {
   return (
     <div className="flex items-center justify-center pt-5 text-black/30">
@@ -287,30 +304,23 @@ function StepArrow() {
     </div>
   );
 }
-
-function Result({ n, title, desc, against }: { n: string; title: string; desc: string; against: string }) {
+function Result({ n, title, against }: { n: string; title: string; against: string }) {
   return (
     <div className="rounded-2xl border border-black/10 bg-white p-5">
-      <div className="flex items-start gap-3">
-        <div className="text-[11px] font-extrabold text-blue-600 flex-shrink-0 pt-1">{n}</div>
-        <div className="flex-1">
-          <h3 className="text-[15px] font-extrabold text-black">{title}</h3>
-          <p className="mt-2 text-[13px] text-black/70 leading-relaxed">{desc}</p>
-          <div className="mt-3 flex gap-2 items-baseline">
-            <span className="rounded-full bg-red-50 px-2.5 py-0.5 text-[11px] font-bold text-red-700 whitespace-nowrap">막아주는 위험</span>
-            <span className="text-[12px] text-black/55">{against}</span>
-          </div>
-        </div>
+      <div className="text-[11px] font-extrabold text-blue-600">{n}</div>
+      <h3 className="mt-2 text-[15px] font-extrabold text-black">{title}</h3>
+      <div className="mt-3 flex gap-2 items-baseline">
+        <span className="rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-bold text-red-700 whitespace-nowrap">막아주는 위험</span>
+        <span className="text-[12px] text-black/55">{against}</span>
       </div>
     </div>
   );
 }
-
 function Stat({ n, label }: { n: string; label: string }) {
   return (
     <div>
-      <div className="text-[28px] sm:text-[36px] font-extrabold text-blue-400">{n}</div>
-      <div className="mt-1 text-[12px] text-white/65 leading-tight">{label}</div>
+      <div className="text-[26px] sm:text-[36px] font-extrabold text-blue-400">{n}</div>
+      <div className="mt-1 text-[11px] text-white/65 leading-tight">{label}</div>
     </div>
   );
 }

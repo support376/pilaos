@@ -76,6 +76,27 @@ export default async function Inquire({ searchParams }: Props) {
   const tree = regionTree();
   const l = sp.listing ? getListing(sp.listing) : null;
   const isSell = sp.kind === "sell";
+  const hasKind = ["acquire", "sell", "start", "close"].includes(sp.kind || "");
+
+  // 첫 진입 (kind 없음, listing 없음) — 4분기 picker
+  if (!hasKind && !l && sp.ok !== "1") {
+    return (
+      <div className="bg-white">
+        <div className="mx-auto max-w-2xl px-5 pt-14 pb-12 sm:pt-20">
+          <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">상담 신청</div>
+          <h1 className="mt-3 text-[28px] sm:text-[36px] font-extrabold leading-tight tracking-tight">어떻게 도와드릴까요?</h1>
+          <p className="mt-3 text-[15px] text-black/65">상황에 맞는 칸을 선택하세요. 휴대폰만 남기시면 24시간 안에 카톡 드립니다.</p>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+            <KindCard href="/inquire?kind=acquire" title="매수 (인수)" desc="필라테스·요가 학원을 사고 싶어요" main />
+            <KindCard href="/inquire?kind=sell" title="매도 (양도)" desc="제 학원을 팔고 싶어요" />
+            <KindCard href="/inquire?kind=start" title="창업 (신규)" desc="새로 학원을 차리고 싶어요" />
+            <KindCard href="/inquire?kind=close" title="폐업 정리" desc="학원을 정리하고 싶어요" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (sp.ok === "1") {
     return (
@@ -290,5 +311,19 @@ function RadioGroup({ label, name, options, defaultValue }: { label: string; nam
         ))}
       </div>
     </fieldset>
+  );
+}
+
+
+function KindCard({ href, title, desc, main }: { href: string; title: string; desc: string; main?: boolean }) {
+  const cls = main
+    ? "bg-black text-white border-black hover:bg-black/85"
+    : "bg-white text-black border-black/15 hover:bg-black hover:text-white hover:border-black";
+  return (
+    <a href={href} className={`block rounded-2xl border-2 p-6 transition ${cls}`}>
+      <div className="text-[18px] sm:text-[20px] font-extrabold">{title}</div>
+      <div className={`mt-2 text-[13px] sm:text-[14px] ${main ? "text-white/75" : "text-black/55"}`}>{desc}</div>
+      <div className={`mt-4 text-[12px] font-bold ${main ? "text-white" : "text-blue-600"}`}>시작하기 →</div>
+    </a>
   );
 }

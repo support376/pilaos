@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 import { FavCounterModal } from "@/components/listing/FavCounterModal";
+import { Logo } from "@/components/Logo";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://pilaos.vercel.app"),
@@ -16,9 +17,7 @@ function Nav() {
   return (
     <header className="border-b border-black/10 bg-white sticky top-0 z-30">
       <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-5 py-3.5">
-        <Link href="/" className="text-lg font-extrabold tracking-tight text-black">
-          pilaos
-        </Link>
+        <Link href="/" className="text-black"><Logo size={20} /></Link>
         <nav className="flex items-center gap-3 text-sm">
           <Link href="/listings" className="text-black/70 hover:text-black">매물</Link>
           <Link href="/process" className="hidden text-black/70 hover:text-black sm:inline">절차</Link>
