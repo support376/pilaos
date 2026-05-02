@@ -8,6 +8,7 @@ import { ListingCard } from "@/components/listing/ListingCard";
 import { ConfidencePill } from "@/components/listing/ConfidencePill";
 import { PotentialBadge } from "@/components/listing/PotentialBadge";
 import { FavButton } from "@/components/listing/FavButton";
+import { InlineLeadForm } from "@/components/listing/InlineLeadForm";
 import { ChannelLinks } from "@/components/listing/ChannelLinks";
 import { EstimateNote } from "@/components/listing/EstimateNote";
 import { EstimateBasis } from "@/components/listing/EstimateBasis";
@@ -92,13 +93,10 @@ export default async function ListingPage({ params }: Params) {
           <EstimateNote listing={l} />
           <EstimateBasis listing={l} />
 
-          <div className="mt-5 space-y-2">
-            <Link href={`/inquire?listing=${encodeURIComponent(l.id)}&kind=acquire`} className="block rounded-xl bg-gray-900 px-5 py-4 text-center text-white transition hover:bg-gray-700">
-              <div className="text-base font-bold">이 매물 신청하기 →</div>
-              <div className="mt-0.5 text-[11px] text-gray-300">휴대폰만 남기면 운영팀이 카톡으로 회신</div>
-            </Link>
-            <Link href={`/inquire?listing=${encodeURIComponent(l.id)}&kind=sell`} className="block rounded-xl border-2 border-amber-300 bg-amber-50 px-5 py-3 text-center hover:bg-amber-100">
-              <div className="text-sm font-bold text-amber-900">이거 우리 매장입니다 (원장·강사)</div>
+          <div className="mt-5 space-y-3">
+            <InlineLeadForm listingId={l.id} placeName={l.studio.place_name} />
+            <Link href={`/inquire?listing=${encodeURIComponent(l.id)}&kind=sell`} className="block rounded-xl border border-amber-300 bg-amber-50 px-4 py-2.5 text-center hover:bg-amber-100 text-xs">
+              <span className="font-bold text-amber-900">이거 우리 매장입니다 (원장·강사 claim)</span>
             </Link>
           </div>
         </div>

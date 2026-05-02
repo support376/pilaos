@@ -37,6 +37,17 @@ export default function AdminInbox() {
       <h1 className="text-2xl font-bold">운영팀 인박스 — 콜드 컨택 큐</h1>
       <p className="mt-1 text-sm text-gray-600">매도 시그널 강도 상위 50. 카톡/통화로 의향 확인 → 인증 안내 → 매칭.</p>
 
+      <div className="mt-4 rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-900">
+        <strong>매수자/매도자 lead 알림</strong>: 신규 신청은 Discord/Slack webhook 또는 Supabase intent 테이블에 적재됩니다. (lib/intent.ts) 다음 분류로 들어와요:
+        <ul className="mt-1.5 space-y-0.5 list-disc pl-5">
+          <li><b>kind=buyer · mode=matched</b>: 특정 매물에 관심 표한 매수자 (매물 ID 첨부)</li>
+          <li><b>kind=buyer · mode=open</b>: 조건만 등록한 매수자 (지역·예산·시기)</li>
+          <li><b>kind=buyer · mode=favs</b>: ♥ 5개 이상 모은 매수자 (매물 ID 리스트 첨부)</li>
+          <li><b>kind=seller</b>: 매도자 직접 등록 또는 매물 claim</li>
+        </ul>
+        <div className="mt-2">우선 처리 순서: <b>buyer/matched</b> &gt; <b>buyer/favs</b> &gt; <b>buyer/open</b> &gt; <b>seller</b> &gt; <b>콜드 컨택 큐 (아래)</b></div>
+      </div>
+
       <div className="mt-6 grid gap-3 sm:grid-cols-4">
         <Stat label="대기 매물" v={queue.length.toLocaleString()} />
         <Stat label="P0 (≥80)" v={byTier.p0.toString()} accent="rose" />

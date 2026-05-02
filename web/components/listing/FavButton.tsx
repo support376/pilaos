@@ -23,6 +23,8 @@ export function FavButton({ listingId, variant = "card" }: { listingId: string; 
     if (next) favs[listingId] = true; else delete favs[listingId];
     writeFavs(favs);
     setOn(next);
+    // FavCounterModal에 알림
+    try { window.dispatchEvent(new CustomEvent("pilaos:fav-changed")); } catch {}
     // fire-and-forget API
     try {
       fetch(`/api/listings/${listingId}/fav`, { method: next ? "POST" : "DELETE" });

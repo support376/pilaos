@@ -65,6 +65,7 @@ export async function submitIntent(intent: Intent): Promise<Result> {
 function humanize(i: Intent): string {
   const tag: Record<Intent["kind"], string> = {
     sell: "매도", acquire: "인수", start: "창업", close: "폐업", inquire: "통합문의",
+    buyer: "매수자Lead", seller: "매도자Claim",
   };
   const lines = [
     `[pilaos] ${tag[i.kind]} — ${i.contact_name || "(이름 미기재)"} ${i.contact_phone}`,
@@ -81,6 +82,23 @@ function humanize(i: Intent): string {
     lines.push(`예산 ${i.budget_total}만 · 지역 ${i.region_filters.join(", ")} · 시점 ${i.timing}`);
   } else if (i.kind === "close") {
     lines.push(`매물: ${i.listing_id} · 임대잔여 ${i.lease_remaining_months ?? "?"}m · 회원 ${i.active_member_count ?? "?"}`);
+  } else if (i.kind === "buyer") {
+    const cap = (i.capital_cash ?? 0) + (i.capital_loan ?? 0);
+    const region = [i.sido, i.sigungu].filter(Boolean).join(" ") || "-";
+    const role = i.role?.join("/") || "-";
+    const prio = i.priorities?.join("/") || "-";
+    lines.push(`모드: ${i.mode} · 역할: ${role} · 지역: ${region}`);
+    lines.push(`자금: 현금 ${i.capital_cash ?? 0}만 + 대출 ${i.capital_loan ?? 0}만 = ${cap}만 · 시기: ${i.timing}`);
+    lines.push(`우선순위: ${prio} · 강사자격: ${i.instructor_qualified ? "Y" : "N"}`);
+    if (i.listing_id) lines.push(`관심 매물: ${i.listing_id}`);
+    if (i.fav_listing_ids?.length) lines.push(`♥ 매물 ${i.fav_listing_ids.length}개: ${i.fav_listing_ids.slice(0, 5).join(", ")}`);
+    if (i.source) lines.push(`출처: ${i.source}`);
+  } else if (i.kind === "seller") {
+    const region = [i.sido, i.sigungu].filter(Boolean).join(" ") || "-";
+    lines.push(`매장: ${i.place_name || "(미기재)"} · 지역: ${region} · 평수: ${i.area_pyeong ?? "?"}`);
+    lines.push(`보증금 ${i.deposit ?? "?"}만 / 월세 ${i.monthly_rent ?? "?"}만 / 희망권리금 ${i.asking_key_money ?? "협의"}만`);
+    lines.push(`사유: ${i.sell_reason} · 시기: ${i.timing}`);
+    if (i.listing_id) lines.push(`매물 ID: ${i.listing_id}`);
   }
   if (i.message) lines.push(`메모: ${i.message}`);
   return lines.join("\n");

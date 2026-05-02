@@ -143,7 +143,7 @@ export type Listing = {
 
 // === intents ===
 
-export type IntentKind = "sell" | "acquire" | "start" | "close" | "inquire";
+export type IntentKind = "sell" | "acquire" | "start" | "close" | "inquire" | "buyer" | "seller";
 
 export type IntentBase = {
   kind: IntentKind;
@@ -201,7 +201,44 @@ export type GeneralInquiry = IntentBase & {
   listing_id?: string;
 };
 
-export type Intent = SellIntent | AcquireIntent | StartIntent | CloseIntent | GeneralInquiry;
+/** v5.4 매수자 lead — 갈래 A(매물 첨부) / 갈래 B(조건만) / 갈래 C(♥ 모음) */
+export type BuyerIntent = IntentBase & {
+  kind: "buyer";
+  /** matched=특정 매물에 관심 / open=조건만 / favs=♥모음 */
+  mode: "matched" | "open" | "favs";
+  listing_id?: string;
+  fav_listing_ids?: string[];
+  role: ("instructor" | "owner" | "first_time" | "investor")[];
+  sido?: string;
+  sigungu?: string;
+  /** 우선순위 1~2개 */
+  priorities?: ("region" | "price" | "yield" | "facility" | "operating")[];
+  /** 자금 (만원) */
+  capital_cash?: number;
+  capital_loan?: number;
+  /** 시기 */
+  timing: "now" | "3m" | "6m" | "later";
+  /** 강사 자격 */
+  instructor_qualified?: boolean;
+  source?: string;  // "home" | "listing" | "favs_modal" | "match_form"
+};
+
+/** v5.4 매도자 단순 claim */
+export type SellerClaim = IntentBase & {
+  kind: "seller";
+  listing_id?: string;
+  place_name?: string;
+  sido?: string;
+  sigungu?: string;
+  area_pyeong?: number;
+  deposit?: number;       // 만원
+  monthly_rent?: number;  // 만원
+  asking_key_money?: number; // 만원
+  sell_reason: "health" | "relocation" | "expansion" | "liquidation" | "other";
+  timing: "immediate" | "1m" | "3m" | "6m" | "later";
+};
+
+export type Intent = SellIntent | AcquireIntent | StartIntent | CloseIntent | GeneralInquiry | BuyerIntent | SellerClaim;
 
 
 // === marketplace meta ===
