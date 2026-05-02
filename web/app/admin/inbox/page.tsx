@@ -79,7 +79,7 @@ export default function AdminInbox() {
                     <td className="px-3 py-2 text-right">{fmtMan(l.estimate.key_money.mid)}</td>
                     <td className="px-3 py-2 text-right text-xs">{l.digital_grade}({l.digital_score})</td>
                     <td className="px-3 py-2 text-xs">
-                      {phoneTel ? <a href={`tel:${phoneTel}`} className="text-sky-700 underline">{l.studio.phone}</a> : "—"}
+                      {phoneTel ? <PhoneMasked phone={l.studio.phone!} tel={phoneTel} /> : "—"}
                     </td>
                     <td className="px-3 py-2">
                       <details>
@@ -113,3 +113,17 @@ function Stat({ label, v, accent }: { label: string; v: string; accent?: "rose" 
 }
 
 export const metadata = { title: "운영팀 인박스", robots: { index: false } };
+
+function PhoneMasked({ phone, tel }: { phone: string; tel: string }) {
+  // 마지막 4자리 마스킹: 010-1234-5678 → 010-1234-****
+  const masked = phone.replace(/(\d{2,4})$/, (m) => "*".repeat(m.length));
+  return (
+    <details className="inline">
+      <summary className="cursor-pointer text-sky-700 underline list-none">
+        {masked} <span className="text-gray-400 text-[10px]">[unlock]</span>
+      </summary>
+      <a href={`tel:${tel}`} className="ml-2 text-rose-700 underline text-[11px]">{phone} 통화</a>
+    </details>
+  );
+}
+

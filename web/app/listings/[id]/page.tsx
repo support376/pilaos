@@ -191,6 +191,11 @@ export default async function ListingPage({ params }: Params) {
           </div>
         </section>
       ) : null}
+
+      <section className="mt-10 text-center text-xs text-gray-500">
+        <p>이 매물은 카카오·네이버 공개 데이터 기반의 잠재매물입니다.</p>
+        <p className="mt-1">매장 운영자이신가요? <Link href={`/listings/${l.id}/takedown`} className="underline hover:text-gray-700">이 매물 노출 거부 신청</Link> · <Link href={`/sell/new?listing=${l.id}`} className="underline hover:text-gray-700">매물 등록(주인 인증)</Link></p>
+      </section>
     </div>
   );
 }

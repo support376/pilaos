@@ -39,14 +39,21 @@ function Nav() {
 function Foot() {
   return (
     <footer className="border-t border-gray-200 bg-white">
-      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-6 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
-        <div>© 2026 pilaos · 필라테스 영업양수도 마켓플레이스</div>
-        <div className="flex gap-3">
-          <Link href="/start/intent">창업 의향</Link>
-          <Link href="/close/intent">폐업 의향</Link>
-          <Link href="/admin/inbox">운영팀 인박스</Link>
+      <div className="mx-auto max-w-6xl px-4 py-6">
+        <div className="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-900 leading-relaxed">
+          <strong>잠재매물 안내.</strong> 본 사이트의 매물은 카카오·네이버 공개 데이터를 기반으로 자동 수집된 잠재매물입니다. 매장 운영자가 직접 등록한 매물이 아니며 권리금·매출 등 모든 숫자는 추정치입니다.
+          <span className="font-semibold"> 매장 운영자께서 노출을 거부하시려면 매물 페이지의 "노출 거부 신청" 또는 운영팀 카톡 채널로 연락 주세요. 24시간 내 처리합니다.</span>
         </div>
-        <div>모든 추정치는 공개 데이터 기반이며 실사 후 검증됩니다.</div>
+        <div className="mt-4 flex flex-col gap-2 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
+          <div>© 2026 pilaos · 필라테스 영업양수도 마켓플레이스</div>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/terms" className="hover:text-gray-900">이용약관</Link>
+            <Link href="/privacy" className="hover:text-gray-900 font-semibold">개인정보처리방침</Link>
+            <Link href="/start/intent">창업 의향</Link>
+            <Link href="/close/intent">폐업 의향</Link>
+            <Link href="/admin/inbox">운영팀 인박스</Link>
+          </div>
+        </div>
       </div>
     </footer>
   );
