@@ -19,13 +19,13 @@ export async function InterestCounter({ listingId }: { listingId: string }) {
   const n = await fetchCount(listingId);
   if (n === 0) {
     return (
-      <span className="inline-flex items-center gap-1 rounded-md bg-gray-50 px-2 py-1 text-[11px] text-gray-600">
+      <span className="inline-flex items-center gap-1 rounded-md bg-black/[.03] px-2 py-1 text-[11px] text-black/65">
         ♡ 첫 관심을 표시하세요
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 rounded-md bg-rose-50 px-2 py-1 text-[11px] font-bold text-rose-700">
+    <span className="inline-flex items-center gap-1 rounded-md bg-red-50 px-2 py-1 text-[11px] font-bold text-red-700">
       ♥ {n}명이 관심 표시
     </span>
   );

@@ -173,17 +173,14 @@ export default async function ListingPage({ params }: Params) {
         </section>
       ) : null}
 
-      {/* 매도자 claim 영역 — 작게, 매수자 시야 밖 */}
+      {/* 매도자 영역 — 작게 */}
       <section className="mt-10 rounded-xl border border-black/10 bg-black/[.02] p-4">
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div>
             <div className="text-[12px] font-bold text-black/85">이 학원의 운영자세요?</div>
-            <div className="mt-0.5 text-[11px] text-black/55">매도 의향을 직접 등록하시거나, 노출 거부를 신청할 수 있어요.</div>
+            <div className="mt-0.5 text-[11px] text-black/55">매도 의향을 등록하시면 진성 매수자분들께 컨택받을 수 있어요.</div>
           </div>
-          <div className="flex gap-2">
-            <Link href={`/inquire?listing=${encodeURIComponent(l.id)}&kind=sell`} className="rounded-md border border-black/15 bg-white px-3 py-1.5 text-[11px] font-bold text-black hover:bg-black/5">매도 등록</Link>
-            <Link href={`/listings/${l.id}/takedown`} className="rounded-md border border-black/15 bg-white px-3 py-1.5 text-[11px] font-bold text-black/55 hover:bg-black/5">노출 거부</Link>
-          </div>
+          <Link href={`/inquire?listing=${encodeURIComponent(l.id)}&kind=sell`} className="rounded-md bg-black px-3.5 py-2 text-[11px] font-bold text-white hover:bg-black/85">매도 등록 →</Link>
         </div>
       </section>
 

@@ -1,12 +1,12 @@
 import { ListingBadge } from "@/lib/types";
 
 const STYLES: Record<ListingBadge, { bg: string; fg: string; label: string }> = {
-  urgent:       { bg: "bg-rose-100",    fg: "text-rose-800",    label: "긴급매각" },
-  price_cut:    { bg: "bg-amber-100",   fg: "text-amber-800",   label: "가격인하" },
-  new:          { bg: "bg-sky-100",     fg: "text-sky-800",     label: "신규" },
-  verified:     { bg: "bg-emerald-100", fg: "text-emerald-800", label: "검증 매물" },
+  urgent:       { bg: "bg-red-100",    fg: "text-red-800",    label: "긴급매각" },
+  price_cut:    { bg: "bg-blue-100",   fg: "text-blue-800",   label: "가격인하" },
+  new:          { bg: "bg-blue-100",     fg: "text-sky-800",     label: "신규" },
+  verified:     { bg: "bg-blue-100", fg: "text-blue-800", label: "검증 매물" },
   owner_direct: { bg: "bg-violet-100",  fg: "text-violet-800",  label: "직거래" },
-  agent:        { bg: "bg-gray-100",    fg: "text-gray-700",    label: "중개" },
+  agent:        { bg: "bg-black/5",    fg: "text-black/75",    label: "중개" },
   premium:      { bg: "bg-yellow-100",  fg: "text-yellow-800",  label: "최상단" },
 };
 

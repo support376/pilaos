@@ -34,7 +34,7 @@ export function FavButton({ listingId, variant = "card" }: { listingId: string; 
   if (variant === "hero") {
     return (
       <button onClick={toggle} type="button"
-        className={`inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-bold ring-1 transition ${on ? "bg-rose-50 text-rose-700 ring-rose-300 hover:bg-rose-100" : "bg-white text-gray-700 ring-gray-300 hover:bg-gray-50"}`}>
+        className={`inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-bold ring-1 transition ${on ? "bg-red-50 text-red-700 ring-red-300 hover:bg-red-100" : "bg-white text-black/75 ring-black/15 hover:bg-black/[.03]"}`}>
         <span aria-hidden>{on ? "♥" : "♡"}</span>
         {on ? "관심 매물에 저장됨" : "관심 매물에 저장"}
       </button>
@@ -42,7 +42,7 @@ export function FavButton({ listingId, variant = "card" }: { listingId: string; 
   }
   return (
     <button onClick={toggle} type="button" aria-label={on ? "관심 매물에서 제거" : "관심 매물에 추가"}
-      className={`inline-flex h-8 w-8 items-center justify-center rounded-full ring-1 ${on ? "bg-rose-50 text-rose-600 ring-rose-300" : "bg-white text-gray-400 ring-gray-200 hover:text-rose-600 hover:ring-rose-300"}`}>
+      className={`inline-flex h-8 w-8 items-center justify-center rounded-full ring-1 ${on ? "bg-red-50 text-red-600 ring-red-300" : "bg-white text-black/40 ring-black/10 hover:text-red-600 hover:ring-red-300"}`}>
       <span aria-hidden className="text-base leading-none">{on ? "♥" : "♡"}</span>
     </button>
   );

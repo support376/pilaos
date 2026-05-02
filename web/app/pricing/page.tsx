@@ -39,16 +39,17 @@ export default async function Pricing({ searchParams }: Props) {
 
           <div className="mt-6 rounded-2xl border-2 border-black bg-white p-7">
             <div className="text-5xl font-black text-blue-600">50<span className="text-2xl text-black/50">만원</span></div>
-            <div className="mt-3 text-sm text-black/70">매수자 예약금 (2단계 진입 시)</div>
+            <div className="mt-3 text-sm text-black/70">자료 수령 디파짓 — 비밀유지 약속 후 진성정보 일체 수령</div>
             <ul className="mt-5 space-y-2 text-sm text-black/85">
+              <li className="flex gap-2"><Check />매도자가 이미 인증받은 권리금 계산서 수령 (3~6개월 유효)</li>
+              <li className="flex gap-2"><Check />POS·카드사·세금계산서 진성 자료 일체</li>
               <li className="flex gap-2"><Check />운영팀 1명이 전담으로 배정</li>
-              <li className="flex gap-2"><Check />매도자 자료 (비밀유지 약속 후 수령)</li>
               <li className="flex gap-2"><Check />변호사·세무사·금융사 매칭 무료</li>
-              <li className="flex gap-2"><Check />임대인·강사 컨택을 우리가 대행</li>
               <li className="flex gap-2"><Check />1년간 사후 운영 점검 무료</li>
             </ul>
             <p className="mt-5 rounded-lg bg-blue-50 p-3 text-xs text-blue-900 leading-relaxed">
-              <strong>환불 정책 :</strong> 매수자가 단순 변심하시면 환불되지 않습니다 (자료가 이미 공개됨). 매도자가 잠적하거나 자료 거짓이 입증되면 다음 매물 매칭에 활용하거나 환불해드립니다.
+              <strong>왜 디파짓을 받나요?</strong><br />
+              매도자가 들인 시간과 자료에는 가치가 있습니다. 진성 매수자만 자료를 수령하도록 비밀유지 약속과 함께 디파짓을 받습니다. 변심 시 환불 X (자료 공개 완료). 매도자 잠적·자료 거짓 시 100% 환불 또는 다음 매물 매칭에 활용.
             </p>
           </div>
 
@@ -76,7 +77,10 @@ export default async function Pricing({ searchParams }: Props) {
       {tab === "seller" ? (
         <section className="mx-auto max-w-3xl px-5 py-10">
           <h2 className="text-xl font-extrabold">매도자 비용</h2>
-          <p className="mt-2 text-sm text-black/65">시작 비용 <strong className="text-black">착수금 150만원</strong> + 거래 성사 시 권리금의 일정 %.</p>
+          <p className="mt-2 text-sm text-black/65">착수금 <strong className="text-black">150만원</strong>으로 권리금 계산서 1회 인증 → <strong className="text-black">3~6개월 유효</strong>. 거래 성사 시 권리금의 일정 % 추가.</p>
+          <div className="mt-3 rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-xs text-blue-900 leading-relaxed">
+            <strong>이미 인증받은 자료는 재사용됩니다.</strong> 다른 매수자가 같은 매물에 디파짓을 걸면 매도자분은 추가 비용 없이 자료가 그대로 활용됩니다.
+          </div>
 
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-black/15 bg-white p-6">

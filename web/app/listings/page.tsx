@@ -64,17 +64,22 @@ export default async function ListingsPage({ searchParams }: Props) {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <div className="mb-4 flex items-baseline justify-between">
-        <div><h1 className="text-2xl font-bold">잠재매물 전체 <span className="text-sm font-normal text-gray-500">({total.toLocaleString()}건)</span></h1><p className="mt-1 text-xs text-gray-500">전국 운영 중인 필라테스를 카카오·네이버 공개 데이터 기반으로 정리. 권리금·매출은 추정치.</p></div>
-        <Link href="/listings" className="text-xs text-gray-500 hover:text-gray-900">전체 매물</Link>
+      <div className="mb-6 sm:mb-8">
+        <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">매물 검색</div>
+        <h1 className="mt-2 text-[26px] sm:text-[32px] font-extrabold tracking-tight">
+          전국 <span className="text-blue-600">{total.toLocaleString()}곳</span>
+        </h1>
+        <p className="mt-2 text-[13px] sm:text-sm text-black/60 leading-relaxed">
+          카카오·네이버 공개 데이터 기반의 잠재매물입니다. 권리금·매출은 모두 추정값.
+        </p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-[260px_1fr]">
-        <details className="md:hidden rounded-lg border border-gray-200 bg-white">
-          <summary className="cursor-pointer px-4 py-3 text-sm font-bold text-gray-800">
+        <details className="md:hidden rounded-lg border border-black/10 bg-white">
+          <summary className="cursor-pointer px-4 py-3 text-sm font-bold text-black/85">
             🔍 필터 ({total.toLocaleString()}건)
           </summary>
-          <div className="border-t border-gray-100 p-3">
+          <div className="border-t border-black/5 p-3">
             <FilterSidebar total={s.total} filtered={total} current={searchDict} metros={tree.metros} dos={tree.dos} />
           </div>
         </details>
@@ -94,8 +99,9 @@ export default async function ListingsPage({ searchParams }: Props) {
 
           <div className="mt-4 grid gap-3 md:grid-cols-2">
             {rows.length === 0 ? (
-              <div className="md:col-span-2 rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center text-sm text-gray-500">
-                조건에 맞는 매물이 없습니다. 필터를 완화해보세요.
+              <div className="md:col-span-2 rounded-xl border border-dashed border-black/15 bg-white p-10 text-center">
+                <div className="text-sm font-bold text-black">조건에 맞는 매물이 없습니다.</div>
+                <p className="mt-1 text-xs text-black/55">필터를 완화하시거나, <a href="/inquire?kind=acquire" className="text-blue-600 underline">조건만 등록</a>하시면 매칭해드립니다.</p>
               </div>
             ) : (
               rows.map((l) => <ListingCard key={l.id} listing={l} />)
@@ -123,11 +129,11 @@ function Pagination({ current, totalPages, search }: { current: number; totalPag
   for (let i = start; i <= end; i++) items.push(i);
   return (
     <nav className="mt-6 flex items-center justify-center gap-1 text-sm">
-      {current > 1 ? <Link href={linkFor(current - 1)} className="rounded border px-3 py-1.5 hover:bg-gray-50">←</Link> : null}
+      {current > 1 ? <Link href={linkFor(current - 1)} className="rounded-md border border-black/15 px-3 py-1.5 text-sm hover:bg-black/5">←</Link> : null}
       {items.map((p) => (
-        <Link key={p} href={linkFor(p)} className={`rounded px-3 py-1.5 ${p === current ? "bg-gray-900 text-white" : "border hover:bg-gray-50"}`}>{p}</Link>
+        <Link key={p} href={linkFor(p)} className={`min-w-[36px] text-center rounded-md px-2.5 py-1.5 text-sm font-medium ${p === current ? "bg-black text-white" : "border border-black/15 hover:bg-black/5"}`}>{p}</Link>
       ))}
-      {current < totalPages ? <Link href={linkFor(current + 1)} className="rounded border px-3 py-1.5 hover:bg-gray-50">→</Link> : null}
+      {current < totalPages ? <Link href={linkFor(current + 1)} className="rounded-md border border-black/15 px-3 py-1.5 text-sm hover:bg-black/5">→</Link> : null}
     </nav>
   );
 }
@@ -140,13 +146,13 @@ function PerPageSelect({ current, options, search }: { current: number; options:
     return `/listings?${sp.toString()}`;
   };
   return (
-    <div className="flex shrink-0 items-center gap-1 text-xs text-gray-500">
+    <div className="flex shrink-0 items-center gap-1 text-xs text-black/55">
       <span>페이지당</span>
       {options.map((n) => (
         <Link
           key={n}
           href={linkFor(n)}
-          className={`rounded px-2 py-1 ${n === current ? "bg-gray-900 text-white" : "border border-gray-300 hover:bg-gray-50"}`}
+          className={`rounded px-2 py-1 ${n === current ? "bg-black text-white" : "border border-black/15 hover:bg-black/[.03]"}`}
         >
           {n}
         </Link>

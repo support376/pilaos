@@ -13,10 +13,10 @@ export function MetricStack({ listing, compact = false }: { listing: Listing; co
   return (
     <div className={`grid ${compact ? "grid-cols-3 sm:grid-cols-5" : "grid-cols-2 sm:grid-cols-5"} gap-2`}>
       {items.map((it) => (
-        <div key={it.label} className="rounded-lg bg-gray-50 px-3 py-2">
-          <div className="text-[10px] uppercase tracking-wide text-gray-500">{it.label}</div>
-          <div className={`mt-0.5 ${compact ? "text-sm" : "text-base"} font-bold text-gray-900`}>{it.value}</div>
-          {!compact ? <div className="text-[10px] text-gray-400 mt-0.5 truncate">{it.sub}</div> : null}
+        <div key={it.label} className="rounded-lg bg-black/[.03] px-3 py-2">
+          <div className="text-[10px] uppercase tracking-wide text-black/55">{it.label}</div>
+          <div className={`mt-0.5 ${compact ? "text-sm" : "text-base"} font-bold text-black`}>{it.value}</div>
+          {!compact ? <div className="text-[10px] text-black/40 mt-0.5 truncate">{it.sub}</div> : null}
         </div>
       ))}
     </div>

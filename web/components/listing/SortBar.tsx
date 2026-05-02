@@ -36,13 +36,13 @@ export function SortBar({ current, search }: { current: string; search: Record<s
     return `/listings?${sp.toString()}`;
   };
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border border-gray-200 bg-white p-2">
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border border-black/10 bg-white p-2">
       {GROUPS.map((g, gi) => (
-        <div key={g.label} className={`flex items-center gap-1 ${gi > 0 ? "border-l border-gray-200 pl-4" : ""}`}>
-          <span className="text-[10px] font-bold uppercase text-gray-400 mr-1">{g.label}</span>
+        <div key={g.label} className={`flex items-center gap-1 ${gi > 0 ? "border-l border-black/10 pl-4" : ""}`}>
+          <span className="text-[10px] font-bold uppercase text-black/40 mr-1">{g.label}</span>
           {g.options.map((o) => (
             <Link key={o.value} href={buildHref(o.value)}
-              className={`rounded px-2.5 py-1 text-xs font-medium ${current === o.value ? "bg-gray-900 text-white" : "text-gray-700 hover:bg-gray-100"}`}>
+              className={`rounded px-2.5 py-1 text-xs font-medium ${current === o.value ? "bg-black text-white" : "text-black/75 hover:bg-black/5"}`}>
               {o.label}
             </Link>
           ))}

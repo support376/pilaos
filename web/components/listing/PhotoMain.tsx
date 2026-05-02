@@ -44,7 +44,7 @@ function SVGPlaceholder({ alt, color, size }: { alt: string; color: string; size
 export async function PhotoMain({ kakaoPlaceId, lng, lat, naverUrl, alt, size = "card", sigungu }: Props) {
   const photo = await getMainPhoto(kakaoPlaceId, lng, lat, naverUrl ?? null, size);
   const dimensions = size === "hero"
-    ? { containerClass: "relative h-64 w-full overflow-hidden bg-gray-100 sm:h-96", imgSizes: "(min-width: 768px) 1080px, 100vw" }
+    ? { containerClass: "relative h-64 w-full overflow-hidden bg-black/5 sm:h-96", imgSizes: "(min-width: 768px) 1080px, 100vw" }
     : { containerClass: "absolute inset-0", imgSizes: "(min-width: 768px) 480px, 100vw" };
 
   if (photo.source === "placeholder" || !photo.url) {
