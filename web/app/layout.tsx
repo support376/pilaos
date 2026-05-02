@@ -26,7 +26,8 @@ function Nav() {
         </Link>
         <nav className="flex items-center gap-2 text-sm sm:gap-3">
           <Link href="/listings" className="text-gray-700 hover:text-gray-900">매물</Link>
-          <Link href="/me/watchlist" className="hidden text-gray-700 hover:text-gray-900 sm:inline">관심</Link>
+          <Link href="/process" className="hidden text-gray-700 hover:text-gray-900 sm:inline">절차</Link>
+          <Link href="/pricing" className="text-gray-700 hover:text-gray-900">가격</Link>
           <Link href="/inquire?kind=acquire" className="rounded-md bg-gray-900 px-3 py-1.5 text-xs font-bold text-white hover:bg-gray-700">무료 상담</Link>
         </nav>
       </div>
@@ -52,9 +53,12 @@ function Foot() {
         <div className="mt-4 flex flex-col gap-2 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
           <div>© 2026 pilaos · 필라테스 영업양수도 마켓플레이스</div>
           <div className="flex flex-wrap gap-3">
+            <Link href="/process" className="hover:text-gray-900">5단계 절차</Link>
+            <Link href="/pricing" className="hover:text-gray-900">가격</Link>
+            <Link href="/risk" className="hover:text-gray-900">7가지 위험</Link>
             <Link href="/terms" className="hover:text-gray-900">이용약관</Link>
-            <Link href="/privacy" className="hover:text-gray-900 font-semibold">개인정보처리방침</Link>
-            <Link href="/admin/inbox">운영팀</Link>
+            <Link href="/privacy" className="hover:text-gray-900">개인정보</Link>
+            <Link href="/admin/inbox" className="text-gray-400">운영팀</Link>
           </div>
         </div>
       </div>

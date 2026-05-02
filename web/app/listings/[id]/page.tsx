@@ -95,8 +95,14 @@ export default async function ListingPage({ params }: Params) {
 
           <div className="mt-5 space-y-3">
             <InlineLeadForm listingId={l.id} placeName={l.studio.place_name} />
-            <Link href={`/inquire?listing=${encodeURIComponent(l.id)}&kind=sell`} className="block rounded-xl border border-amber-300 bg-amber-50 px-4 py-2.5 text-center hover:bg-amber-100 text-xs">
-              <span className="font-bold text-amber-900">이거 우리 매장입니다 (원장·강사 claim)</span>
+            <Link href={`/inquire?listing=${encodeURIComponent(l.id)}&kind=sell`} className="block rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 hover:bg-amber-100">
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <div className="text-sm font-bold text-amber-900">이거 우리 매장입니다 →</div>
+                  <div className="mt-0.5 text-[11px] text-amber-800/80">원장·강사 claim · 매도 의향 등록 무료 · Retainer 150만 시작 시 권리금 산정 PDF 제작</div>
+                </div>
+                <span className="rounded-full bg-amber-200 px-2.5 py-1 text-[10px] font-bold text-amber-900 whitespace-nowrap">Retainer 150만~</span>
+              </div>
             </Link>
           </div>
         </div>

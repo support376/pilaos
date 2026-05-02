@@ -1,100 +1,108 @@
 import Link from "next/link";
 
-export const metadata = { title: "이용약관" };
+export const metadata = { title: "이용약관 — pilaos" };
 
 export default function Terms() {
   return (
-    <article className="mx-auto max-w-3xl px-4 py-10 prose prose-sm">
-      <h1 className="text-2xl font-bold">pilaos 이용약관</h1>
-      <p className="text-xs text-gray-500 mt-1">시행일: 2026-05-02 · v1.0</p>
+    <div className="mx-auto max-w-3xl px-5 py-12">
+      <h1 className="text-2xl font-bold sm:text-3xl">이용약관 (v3)</h1>
+      <p className="mt-2 text-xs text-stone-500">최종 개정: 2026년 5월 2일 · 시행: 2026년 5월 2일</p>
 
-      <h2 className="mt-8 text-lg font-bold">제1조 (목적)</h2>
-      <p className="mt-2 text-sm text-gray-700 leading-relaxed">
-        본 약관은 pilaos (이하 "서비스")의 운영자와 이용자 간의 권리·의무·책임 사항을 규정합니다.
-        서비스는 전국 필라테스 영업양수도(M&amp;A) 정보 제공 및 매수·매도 의향 매칭 플랫폼입니다.
-      </p>
+      <div className="mt-8 space-y-6 text-sm leading-relaxed text-stone-700">
 
-      <h2 className="mt-6 text-lg font-bold">제2조 (서비스 성격 — 잠재매물)</h2>
-      <ol className="mt-2 list-decimal pl-5 text-sm text-gray-700 leading-relaxed space-y-1.5">
-        <li>본 서비스에 노출되는 매물은 카카오·네이버 등의 공개 데이터를 기반으로 자동 수집된 <strong>잠재매물</strong>입니다.</li>
-        <li>매장 운영자가 직접 등록한 매물이 아니며, 권리금·매출·수익률 등 모든 숫자는 <strong>공개 데이터 기반 추정치</strong>입니다.</li>
-        <li>서비스는 매장 운영자가 매물 노출 거부, 정보 정정, 익명 처리, 즉시 삭제를 요청할 수 있는 절차를 제공합니다 (제5조).</li>
-        <li>서비스가 제공하는 가치 평가·매칭은 매도/매수 의사결정의 참고 자료이며, 거래의 결과를 보장하지 않습니다.</li>
-      </ol>
+        <Article num="1" title="플랫폼의 성격">
+          <p>pilaos(이하 "회사")는 필라테스·요가 영업양수도(권리금 거래)에 대한 <strong>거래 자문 플랫폼(M&amp;A advisory marketplace)</strong>입니다. 회사는 변호사·세무사·공인중개사·금융기관이 아니며, 법률·세무·중개·금융 자문을 직접 제공하지 않습니다.</p>
+        </Article>
 
-      <h2 className="mt-6 text-lg font-bold">제3조 (이용자의 구분)</h2>
-      <ul className="mt-2 list-disc pl-5 text-sm text-gray-700 leading-relaxed space-y-1.5">
-        <li><strong>매수자</strong> — 필라테스 매장 인수 또는 창업을 검토하는 자</li>
-        <li><strong>매도자</strong> — 본인 운영 매장의 양도·이전·폐업을 검토하는 자</li>
-        <li><strong>일반 방문자</strong> — 매물 정보·시세·통계를 열람하는 자</li>
-      </ul>
+        <Article num="2" title="제공 서비스">
+          <ul className="list-disc pl-5 space-y-1">
+            <li>매물 자동 시드 검색·매칭 (무료)</li>
+            <li>권리금 산정 PDF 제작 (Retainer 결제 후 제공)</li>
+            <li>매도자·매수자 카톡 컨택 대행</li>
+            <li>변호사·세무사·금융사 매칭(무료, 자문료 미관여)</li>
+            <li>거래 성사 시 Success Fee 청구</li>
+            <li>인수 후 12개월 운영 점검 (무료)</li>
+          </ul>
+        </Article>
 
-      <h2 className="mt-6 text-lg font-bold">제4조 (제공 서비스)</h2>
-      <ul className="mt-2 list-disc pl-5 text-sm text-gray-700 leading-relaxed space-y-1.5">
-        <li>매물 디렉토리·검색·필터·시세 통계</li>
-        <li>매수·매도·창업·폐업 4 인텐트 등록</li>
-        <li>운영팀의 매도 측 컨택 대행 (정보 제공 목적)</li>
-        <li>NDA 후 진성정보 매칭 (선택)</li>
-        <li>변호사 동반 실사 패키지 (선택)</li>
-        <li>표준 영업양수도 계약 템플릿 (변호사 검토판)</li>
-      </ul>
+        <Article num="3" title="단계별 비용 정책">
+          <p><strong>매수자</strong>: Stage 2 진입 시 디파짓 50만원. 변호사·세무사·공증·금융 비용은 의뢰인이 해당 사무소에 직접 결제합니다.</p>
+          <p className="mt-2"><strong>매도자</strong>: Stage 1 Engagement Retainer 150만원. 거래 성사 시 권리금 구간별 Success Fee:</p>
+          <ul className="mt-1.5 list-disc pl-5 space-y-0.5 text-xs">
+            <li>1억 미만: 정액 300만원</li>
+            <li>1억~3억: 4%</li>
+            <li>3억~10억: 3%</li>
+            <li>10억 이상: 2%</li>
+          </ul>
+          <p className="mt-2 text-xs text-stone-500">자세히는 <Link href="/pricing" className="underline">/pricing</Link> 참조.</p>
+        </Article>
 
-      <h2 className="mt-6 text-lg font-bold">제5조 (매장 운영자의 권리)</h2>
-      <p className="mt-2 text-sm text-gray-700 leading-relaxed">매장 운영자(매도자)는 다음 권리를 행사할 수 있습니다.</p>
-      <ul className="mt-2 list-disc pl-5 text-sm text-gray-700 leading-relaxed space-y-1.5">
-        <li><strong>노출 거부 (Take-down)</strong> — 매물 페이지에서 "노출 거부 신청" → 휴대폰·사업자번호 인증 → 24시간 내 hide</li>
-        <li><strong>정보 정정</strong> — 본인확인 후 평수·층·시설·전화번호 등 잘못된 정보 정정 요청</li>
-        <li><strong>익명 노출</strong> — 상호 비공개, 시군구·동까지만 노출</li>
-        <li><strong>매도 의향 등록</strong> — "이거 우리 매장입니다" 5단계 위저드</li>
-        <li><strong>개인정보 삭제</strong> — 휴대폰번호·사업자번호 등 본인 식별 가능 정보의 즉시 삭제</li>
-      </ul>
+        <Article num="4" title="환불 정책">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><strong>Retainer (매도자 150만)</strong>: 작업 시작 전 100% 환불, PDF 제작 50% 진행 후 50% 환불, 완료 후 환불 X.</li>
+            <li><strong>디파짓 (매수자 50만)</strong>: NDA 진행 전 100% 환불. NDA·자료 수령 후 매수자 단순 변심은 환불 X. 매도자 잠적·자료 거짓 입증 시 다음 매물 매칭에 활용 또는 100% 환불.</li>
+            <li><strong>Success Fee</strong>: 거래 성사 시점에만 발생. 미성사 시 0.</li>
+          </ul>
+        </Article>
 
-      <h2 className="mt-6 text-lg font-bold">제6조 (운영팀 컨택 정책)</h2>
-      <ol className="mt-2 list-decimal pl-5 text-sm text-gray-700 leading-relaxed space-y-1.5">
-        <li>운영팀은 매수자가 의향 등록한 매물의 매도자에게 "잠재 매수자 N명이 있다"는 정보 제공 목적의 1회 컨택을 진행할 수 있습니다.</li>
-        <li>매도자가 응답하지 않으면 90일 후 1회 추가 컨택만 가능합니다.</li>
-        <li>매도자가 거절 의사를 밝히면 영구적으로 do-not-contact 리스트에 등록됩니다.</li>
-        <li>본 컨택은 1:1 비즈니스 제안이며 광고성 정보가 아닙니다.</li>
-      </ol>
+        <Article num="5" title="변호사·세무사 자문료 분리 원칙">
+          <p>회사는 변호사법 §109 및 §34를 준수하기 위해 다음을 지킵니다:</p>
+          <ul className="mt-2 list-disc pl-5 space-y-1">
+            <li>변호사·세무사 자문료를 회사가 청구하거나 수령하지 않습니다.</li>
+            <li>변호사·세무사 디렉토리는 정액 월 광고비 모델로 운영됩니다(헌재 2022.5.26. 2021헌마619).</li>
+            <li>매수자/매도자가 변호사·세무사를 직접 선택하고, 자문료는 변호사·세무사 사무소에 직접 결제합니다.</li>
+            <li>회사는 매칭과 일정 조율, 자료 전달만 수행하며 자문료에 일절 관여하지 않습니다.</li>
+          </ul>
+        </Article>
 
-      <h2 className="mt-6 text-lg font-bold">제7조 (수수료 및 비용)</h2>
-      <ul className="mt-2 list-disc pl-5 text-sm text-gray-700 leading-relaxed space-y-1.5">
-        <li>매물 등록·검색·의향 등록은 <strong>무료</strong>입니다.</li>
-        <li>거래 성공 시 매도가의 1~3% 성공보수 (매도자 부담)</li>
-        <li>실사 패키지 (선택) 별도 정액 — 시설·재무·회원 검증</li>
-        <li>변호사 자문은 의뢰인이 변호사와 직접 위임 계약 체결, pilaos는 자문료를 받지 않습니다 (변호사법 제109조 준수)</li>
-      </ul>
+        <Article num="6" title="자금 보관 금지 원칙">
+          <p>회사는 권리금·매매대금·에스크로 자금을 직접 보관하지 않습니다. 권리금 분할지급·에스크로가 필요한 경우 다음 중 하나로 안내합니다:</p>
+          <ul className="mt-2 list-disc pl-5 space-y-1">
+            <li>제휴 법무법인 예치계좌 (변호사 위임)</li>
+            <li>은행 신탁계좌 (KB·하나·우리 등)</li>
+            <li>3자 약정 은행계좌 (매수자·매도자·은행 약정)</li>
+          </ul>
+          <p className="mt-2">이는 특정금융정보법(특금법) 및 유사수신행위 규제에 따른 것입니다.</p>
+        </Article>
 
-      <h2 className="mt-6 text-lg font-bold">제8조 (책임의 한계)</h2>
-      <ul className="mt-2 list-disc pl-5 text-sm text-gray-700 leading-relaxed space-y-1.5">
-        <li>매물의 권리금·매출·수익률 등 모든 추정치는 공개 데이터 기반이며, 정확성을 보장하지 않습니다.</li>
-        <li>거래 당사자 간 분쟁에 대해 pilaos는 중개·조정 역할만 수행하며, 거래의 효력·이행 책임은 당사자에게 귀속됩니다.</li>
-        <li>서비스 일시 중단·데이터 오류로 인한 간접 손해에 대해 책임을 지지 않습니다.</li>
-      </ul>
+        <Article num="7" title="매물 정보의 성격">
+          <p>회사가 노출하는 매물 정보 중 자동 시드 매물(잠재매물)은 카카오·네이버 등 공개 데이터를 기반으로 자동 수집된 것이며, 매장 운영자가 직접 등록한 매물이 아닙니다. 권리금·매출·수익률·매도 시그널 등 모든 숫자와 평가는 <strong>추정·참고용</strong>이며 실제 거래가를 보증하지 않습니다.</p>
+          <p className="mt-2">매장 운영자께서 노출 거부를 원하시면 매물 페이지의 "노출 거부 신청" 또는 운영팀 카톡으로 연락 주시면 24시간 내 처리합니다.</p>
+        </Article>
 
-      <h2 className="mt-6 text-lg font-bold">제9조 (지적재산권 · 데이터 출처)</h2>
-      <ul className="mt-2 list-disc pl-5 text-sm text-gray-700 leading-relaxed space-y-1.5">
-        <li>매장 사진은 카카오맵·네이버 플레이스의 공개 데이터를 hotlinking 방식으로 노출하며, 출처를 명시합니다 (자체 저장 X).</li>
-        <li>pilaos가 자체 산출한 가치 평가 알고리즘·매칭 모델은 pilaos의 지적재산입니다.</li>
-        <li>매장 운영자는 본인 매장 사진의 노출 거부 또는 자체 사진 업로드를 요청할 수 있습니다.</li>
-      </ul>
+        <Article num="8" title="면책">
+          <p>회사가 제공하는 권리금·매출·수익률 등의 추정값과 평가, 변호사·세무사·금융사 매칭은 거래 의사결정의 <strong>참고 자료</strong>이며, 회사는 거래 당사자 간 분쟁의 직접 당사자가 아닙니다. 매수자·매도자 간 거래 결정의 책임은 전적으로 이용자에게 있습니다.</p>
+          <p className="mt-2">단, 회사가 제작한 권리금 산정 PDF에 매도자 자료와 무관한 산정 오류가 있는 경우 100% 환불합니다 (Retainer 한정).</p>
+        </Article>
 
-      <h2 className="mt-6 text-lg font-bold">제10조 (분쟁 해결)</h2>
-      <ul className="mt-2 list-disc pl-5 text-sm text-gray-700 leading-relaxed space-y-1.5">
-        <li>이용 중 분쟁은 우선 운영팀과의 협의로 해결합니다.</li>
-        <li>협의가 어려운 경우 한국소비자원 또는 관할 법원의 조정·소송으로 진행합니다.</li>
-        <li>관할 법원: 서울중앙지방법원</li>
-      </ul>
+        <Article num="9" title="개인정보">
+          <p>회사는 신청 단계에서 휴대폰 번호와 자유 입력 정보만 수집하며, 매도자가 제출하는 회원·강사 명단은 마스킹 후 전달받습니다. 자세한 내용은 <Link href="/privacy" className="underline">개인정보처리방침</Link> 참조.</p>
+        </Article>
 
-      <h2 className="mt-6 text-lg font-bold">제11조 (약관 변경)</h2>
-      <p className="mt-2 text-sm text-gray-700 leading-relaxed">
-        약관 변경 시 시행일 7일 전 사이트 공지. 중대 변경(수수료·서비스 범위)은 30일 전 공지 + 이용자 동의 절차.
-      </p>
+        <Article num="10" title="분쟁 해결">
+          <p>본 약관에 관한 분쟁은 서울중앙지방법원을 1심 관할법원으로 합니다. 1년 이내 발생한 분쟁에 대해서는 회사 운영팀이 1차 중재를 무료로 시도합니다(법적 효력 없음).</p>
+        </Article>
 
-      <hr className="my-8" />
-      <p className="text-xs text-gray-500">
-        문의 / 노출 거부 / 정보 정정: <Link href="/listings" className="underline">매물 페이지에서 노출 거부 신청</Link> · 운영팀 카톡 채널 (예정) · 이메일: support@pilaos.app
-      </p>
-    </article>
+      </div>
+
+      <div className="mt-10 rounded-lg bg-amber-50 border border-amber-200 p-4 text-xs text-amber-900">
+        <strong>면책의 한계.</strong> 본 약관은 v3입니다. 향후 정책 변경 시 사전 공지 후 시행합니다. 약관 해석 분쟁은 이용자에게 유리하게 적용합니다.
+      </div>
+
+      <div className="mt-6 flex gap-3 text-sm">
+        <Link href="/pricing" className="text-amber-700 underline">가격 정책</Link>
+        <Link href="/process" className="text-amber-700 underline">5단계 절차</Link>
+        <Link href="/privacy" className="text-amber-700 underline">개인정보</Link>
+      </div>
+    </div>
+  );
+}
+
+function Article({ num, title, children }: { num: string; title: string; children: React.ReactNode }) {
+  return (
+    <section>
+      <h2 className="text-base font-bold sm:text-lg">제 {num} 조 <span className="text-stone-500 font-normal">·</span> {title}</h2>
+      <div className="mt-2 space-y-1.5">{children}</div>
+    </section>
   );
 }
