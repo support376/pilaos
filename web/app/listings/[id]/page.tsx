@@ -92,22 +92,14 @@ export default async function ListingPage({ params }: Params) {
           <EstimateNote listing={l} />
           <EstimateBasis listing={l} />
 
-          <div className="mt-5 grid gap-2 sm:grid-cols-2">
-            <Link href={`/sell/new?listing=${encodeURIComponent(l.id)}`} className="rounded-xl border-2 border-amber-300 bg-amber-50 px-5 py-4 text-center transition hover:bg-amber-100">
-              <div className="text-xs text-amber-700">셀러시면</div>
-              <div className="text-base font-bold text-amber-900">이거 우리 매장입니다 →</div>
-              <div className="mt-1 text-[11px] text-amber-700/80">매도 의향 등록 · 정보 수정 가능</div>
+          <div className="mt-5 space-y-2">
+            <Link href={`/inquire?listing=${encodeURIComponent(l.id)}&kind=acquire`} className="block rounded-xl bg-gray-900 px-5 py-4 text-center text-white transition hover:bg-gray-700">
+              <div className="text-base font-bold">이 매물 신청하기 →</div>
+              <div className="mt-0.5 text-[11px] text-gray-300">휴대폰만 남기면 운영팀이 카톡으로 회신</div>
             </Link>
-            <Link href={`/buy/intent?listing=${encodeURIComponent(l.id)}`} className="rounded-xl bg-gray-900 px-5 py-4 text-center text-white transition hover:bg-gray-700">
-              <div className="text-xs text-gray-300">매수자시면</div>
-              <div className="text-base font-bold">이 매물 사고 싶어요 →</div>
-              <div className="mt-1 text-[11px] text-gray-400">관심 등록 · 운영팀이 매도 의사 확인 컨택</div>
+            <Link href={`/inquire?listing=${encodeURIComponent(l.id)}&kind=sell`} className="block rounded-xl border-2 border-amber-300 bg-amber-50 px-5 py-3 text-center hover:bg-amber-100">
+              <div className="text-sm font-bold text-amber-900">이거 우리 매장입니다 (원장·강사)</div>
             </Link>
-          </div>
-
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Link href={`/calc?listing=${encodeURIComponent(l.id)}`} className="rounded-md border px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-50">수익률 계산기</Link>
-            <Link href={`/compare?ids=${encodeURIComponent(l.id)}`} className="rounded-md border px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-50">비교 추가</Link>
           </div>
         </div>
       </section>

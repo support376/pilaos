@@ -70,7 +70,17 @@ export default async function ListingsPage({ searchParams }: Props) {
       </div>
 
       <div className="grid gap-6 md:grid-cols-[260px_1fr]">
-        <FilterSidebar total={s.total} filtered={total} current={searchDict} metros={tree.metros} dos={tree.dos} />
+        <details className="md:hidden rounded-lg border border-gray-200 bg-white">
+          <summary className="cursor-pointer px-4 py-3 text-sm font-bold text-gray-800">
+            🔍 필터 ({total.toLocaleString()}건)
+          </summary>
+          <div className="border-t border-gray-100 p-3">
+            <FilterSidebar total={s.total} filtered={total} current={searchDict} metros={tree.metros} dos={tree.dos} />
+          </div>
+        </details>
+        <div className="hidden md:block">
+          <FilterSidebar total={s.total} filtered={total} current={searchDict} metros={tree.metros} dos={tree.dos} />
+        </div>
 
         <div>
           <div className="flex items-start justify-between gap-3">

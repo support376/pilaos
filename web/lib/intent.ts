@@ -64,19 +64,24 @@ export async function submitIntent(intent: Intent): Promise<Result> {
 
 function humanize(i: Intent): string {
   const tag: Record<Intent["kind"], string> = {
-    sell: "매도", acquire: "인수", start: "창업", close: "폐업",
+    sell: "매도", acquire: "인수", start: "창업", close: "폐업", inquire: "통합문의",
   };
   const lines = [
-    `[pilaos] ${tag[i.kind]} 의향 등록 — ${i.contact_name} ${i.contact_phone}`,
+    `[pilaos] ${tag[i.kind]} — ${i.contact_name || "(이름 미기재)"} ${i.contact_phone}`,
   ];
-  if (i.kind === "sell")
+  if (i.kind === "inquire") {
+    const role = i.role.length ? i.role.join("/") : "일반";
+    const region = [i.sido, i.sigungu].filter(Boolean).join(" ") || "지역 미지정";
+    lines.push(`타입: ${i.intent_type} · 역할: ${role} · 지역: ${region}${i.listing_id ? ` · 매물: ${i.listing_id}` : ""}`);
+  } else if (i.kind === "sell") {
     lines.push(`매물: ${i.listing_id} · 희망권리금 ${i.asking_key_money ?? "협의"}만 · 시점 ${i.timing}`);
-  if (i.kind === "acquire")
+  } else if (i.kind === "acquire") {
     lines.push(`예산 ${i.budget_total}만 · 지역 ${i.region_filters.join(", ")} · 긴급도 ${i.urgency}`);
-  if (i.kind === "start")
+  } else if (i.kind === "start") {
     lines.push(`예산 ${i.budget_total}만 · 지역 ${i.region_filters.join(", ")} · 시점 ${i.timing}`);
-  if (i.kind === "close")
+  } else if (i.kind === "close") {
     lines.push(`매물: ${i.listing_id} · 임대잔여 ${i.lease_remaining_months ?? "?"}m · 회원 ${i.active_member_count ?? "?"}`);
+  }
   if (i.message) lines.push(`메모: ${i.message}`);
   return lines.join("\n");
 }

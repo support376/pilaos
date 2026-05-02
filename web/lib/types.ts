@@ -143,7 +143,7 @@ export type Listing = {
 
 // === intents ===
 
-export type IntentKind = "sell" | "acquire" | "start" | "close";
+export type IntentKind = "sell" | "acquire" | "start" | "close" | "inquire";
 
 export type IntentBase = {
   kind: IntentKind;
@@ -192,7 +192,16 @@ export type CloseIntent = IntentBase & {
   preferred_outcome: "transfer_first" | "shutdown_only";
 };
 
-export type Intent = SellIntent | AcquireIntent | StartIntent | CloseIntent;
+export type GeneralInquiry = IntentBase & {
+  kind: "inquire";
+  intent_type: "sell" | "acquire" | "start" | "close";
+  role: ("owner" | "instructor" | "investor" | "buyer" | "general")[];
+  sido?: string;
+  sigungu?: string;
+  listing_id?: string;
+};
+
+export type Intent = SellIntent | AcquireIntent | StartIntent | CloseIntent | GeneralInquiry;
 
 
 // === marketplace meta ===

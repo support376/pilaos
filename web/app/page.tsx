@@ -9,92 +9,129 @@ async function go(formData: FormData) {
   const q = String(formData.get("q") || "").trim();
   const sido = String(formData.get("sido") || "").trim();
   const sigungu = String(formData.get("sigungu") || "").trim();
-  const key_max = String(formData.get("key_max") || "").trim();
 
   const params = new URLSearchParams();
   if (q) params.set("q", q);
   if (sido) params.set("sido", sido);
   if (sigungu) params.set("sigungu", sigungu);
-  if (key_max) params.set("key_max", key_max);
   redirect(params.toString() ? `/listings?${params.toString()}` : "/listings");
 }
 
 export default function Home() {
   const s = summary();
   const tree = regionTree();
-  const popular = topRegions(18);
-  const featured = searchListings({}, "yield_desc", 6).rows;
+  const popular = topRegions(8); // 모바일 8개로 축소
+  const featured = searchListings({}, "yield_desc", 4).rows;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12">
-      {/* HERO — 검색 중심 (엔카식) */}
-      <section className="text-center">
-        <h1 className="text-3xl font-extrabold tracking-tight md:text-5xl">
-          전국 필라테스 매장 <span className="text-amber-500">한 곳에</span>
+    <div className="mx-auto max-w-3xl px-4 py-6 sm:py-10">
+      {/* HERO */}
+      <section>
+        <h1 className="text-2xl font-extrabold tracking-tight sm:text-4xl">
+          필라테스·요가 매물<br className="sm:hidden" />
+          <span className="text-amber-500"> 한 곳에</span>
         </h1>
-        <p className="mt-4 text-sm text-gray-600 max-w-2xl mx-auto">
-          모든 지점 정보 · SNS 운영현황 · 추정매출 · 가치 측정 · 매수 의향 등록까지
+        <p className="mt-2 text-sm text-gray-600">
+          전국 1만 매장 · 권리금 추정 · 매수/매도 신청
         </p>
 
-        {/* 큰 검색 폼 */}
-        <form action={go} className="mt-8 mx-auto max-w-3xl rounded-2xl border border-gray-200 bg-white p-3 shadow-sm">
-          <div className="grid gap-2 sm:grid-cols-[1.2fr_2fr_160px_auto]">
-            <input
-              name="q"
-              type="text"
-              placeholder="상호 · 동 · 주소"
-              className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-gray-900 focus:outline-none"
-            />
-            <RegionSelect metros={tree.metros} dos={tree.dos} />
-            <select name="key_max" defaultValue="" className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-3 text-sm focus:bg-white focus:border-gray-900">
-              <option value="">권리금 무관</option>
-              <option value="0">무권리만</option>
-              <option value="3000">3천만 이하</option>
-              <option value="5000">5천만 이하</option>
-              <option value="10000">1억 이하</option>
-              <option value="30000">3억 이하</option>
-            </select>
-            <button className="rounded-lg bg-gray-900 px-6 py-3 text-sm font-bold text-white hover:bg-gray-700">검색</button>
-          </div>
+        {/* 검색 + 지역 */}
+        <form action={go} className="mt-5 space-y-2 rounded-2xl border border-gray-200 bg-white p-3 shadow-sm">
+          <input
+            name="q"
+            type="text"
+            placeholder="상호 · 동 · 주소"
+            className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-base focus:bg-white focus:border-gray-900 focus:outline-none"
+          />
+          <RegionSelect metros={tree.metros} dos={tree.dos} />
+          <button className="w-full rounded-lg bg-gray-900 px-4 py-3 text-base font-bold text-white hover:bg-gray-700">
+            매물 검색
+          </button>
         </form>
+      </section>
 
-        {/* 작은 보조 링크 */}
-        <div className="mt-5 flex flex-wrap justify-center gap-3 text-xs text-gray-600">
-          <Link href="/buy/intent" className="hover:text-gray-900">매수 의향 등록</Link>
-          <span className="text-gray-300">·</span>
-          <Link href="/sell/new" className="hover:text-gray-900">매물 등록 (매도)</Link>
+      {/* 시도로 찾기 — 모바일 핵심 진입 */}
+      <section className="mt-8">
+        <h2 className="mb-3 text-base font-bold text-gray-900">📍 지역으로 찾기</h2>
+
+        <div>
+          <p className="mb-1.5 text-[11px] font-semibold text-gray-500">광역시·특별시</p>
+          <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-8">
+            {tree.metros.map((g) => (
+              <Link
+                key={g.sido}
+                href={`/listings?sido=${encodeURIComponent(g.sido)}`}
+                className="rounded-lg border border-gray-200 bg-white px-2 py-3 text-center hover:bg-gray-50"
+              >
+                <div className="text-sm font-bold">{g.sido}</div>
+                <div className="text-[10px] text-gray-500">{g.total.toLocaleString()}</div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-3">
+          <p className="mb-1.5 text-[11px] font-semibold text-gray-500">도</p>
+          <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-9">
+            {tree.dos.map((g) => (
+              <Link
+                key={g.sido}
+                href={`/listings?sido=${encodeURIComponent(g.sido)}`}
+                className="rounded-lg border border-gray-200 bg-gray-50 px-2 py-3 text-center hover:bg-white"
+              >
+                <div className="text-sm font-bold">{g.sido}</div>
+                <div className="text-[10px] text-gray-500">{g.total.toLocaleString()}</div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* 인기 지역 칩 — 시도 prefix + 광역시/도 분기 */}
-      <section className="mt-12">
-        <h2 className="mb-3 text-sm font-bold text-gray-700">📍 인기 지역</h2>
-        <div className="flex flex-wrap gap-2">
+      {/* 인기 시군구 칩 (8개) */}
+      <section className="mt-8">
+        <h2 className="mb-2 text-sm font-bold text-gray-700">인기 시군구 <span className="text-[11px] font-normal text-gray-400">(매물 수 상위 8)</span></h2>
+        <div className="flex flex-wrap gap-1.5">
           {popular.map((r) => (
             <Link
               key={`${r.sido}-${r.sigungu}`}
               href={`/listings?sido=${encodeURIComponent(r.sido)}&sigungu=${encodeURIComponent(r.sigungu)}`}
-              className={`rounded-full border px-4 py-1.5 text-sm hover:bg-gray-50 ${isMetroSido(r.sido) ? "border-gray-300 bg-white" : "border-gray-200 bg-gray-50"}`}
+              className={`rounded-full border px-3 py-1 text-xs hover:bg-gray-50 ${isMetroSido(r.sido) ? "border-gray-300 bg-white" : "border-gray-200 bg-gray-50"}`}
             >
-              <span className="text-gray-500 mr-1">{r.sido}</span>
-              <span className="font-medium">{r.sigungu}</span>
-              <span className="ml-1 text-gray-400">({r.count})</span>
+              <span className="text-gray-500">{r.sido}</span>
+              <span className="ml-1 font-medium">{r.sigungu}</span>
+              <span className="ml-1 text-gray-400">{r.count}</span>
             </Link>
           ))}
         </div>
-        <p className="mt-2 text-[11px] text-gray-400">매물 수가 많은 상위 18개 지역. 광역시는 자치구, 도는 시·군 단위. 동률 시 행정 표준순(서울 → 세종 → 경기 → 제주) → 가나다.</p>
       </section>
 
       {/* 추천 매물 */}
-      <section className="mt-12">
-        <div className="mb-3 flex items-baseline justify-between">
-          <h2 className="text-lg font-bold">디지털 운영도 우수 매물</h2>
-          <Link href="/listings?sort=score" className="text-xs text-gray-500 hover:text-gray-900">전체 보기 →</Link>
+      <section className="mt-8">
+        <div className="mb-2 flex items-baseline justify-between">
+          <h2 className="text-base font-bold">추천 매물</h2>
+          <Link href="/listings?sort=score" className="text-xs text-gray-500 hover:text-gray-900">전체 →</Link>
         </div>
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2">
           {featured.map((l) => <ListingCard key={l.id} listing={l} />)}
         </div>
       </section>
+
+      {/* 신청 — 큰 CTA */}
+      <section className="mt-8 grid gap-2 sm:grid-cols-3">
+        <Link href="/inquire?kind=acquire" className="rounded-xl bg-gray-900 px-4 py-4 text-center text-sm font-bold text-white hover:bg-gray-700">
+          매수 신청
+        </Link>
+        <Link href="/inquire?kind=sell" className="rounded-xl border-2 border-gray-900 bg-white px-4 py-4 text-center text-sm font-bold text-gray-900 hover:bg-gray-100">
+          매도·매물 등록
+        </Link>
+        <Link href="/inquire?kind=start" className="rounded-xl border border-gray-300 bg-white px-4 py-4 text-center text-sm font-bold text-gray-700 hover:bg-gray-50">
+          창업·기타 문의
+        </Link>
+      </section>
+
+      <p className="mt-6 text-center text-[11px] text-gray-400">
+        총 {s.total.toLocaleString()}개 잠재매물 · 카카오 공개 데이터 기반 · 추정치
+      </p>
     </div>
   );
 }

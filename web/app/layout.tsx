@@ -23,11 +23,10 @@ function Nav() {
           <span className="text-lg font-extrabold tracking-tight">pilaos</span>
           <span className="hidden text-[11px] text-gray-500 sm:inline">필라테스 매물</span>
         </Link>
-        <nav className="flex items-center gap-3 text-sm">
+        <nav className="flex items-center gap-2 text-sm sm:gap-3">
           <Link href="/listings" className="text-gray-700 hover:text-gray-900">매물</Link>
-          <Link href="/me/watchlist" className="text-gray-700 hover:text-gray-900">관심</Link>
-          <Link href="/sell/new" className="rounded-md border border-gray-300 px-3 py-1.5 text-xs font-bold text-gray-800 hover:bg-gray-50">매물 등록</Link>
-          <Link href="/buy/intent" className="rounded-md bg-gray-900 px-3 py-1.5 text-xs font-bold text-white hover:bg-gray-700">매수 등록</Link>
+          <Link href="/me/watchlist" className="hidden text-gray-700 hover:text-gray-900 sm:inline">관심</Link>
+          <Link href="/inquire" className="rounded-md bg-gray-900 px-3 py-1.5 text-xs font-bold text-white hover:bg-gray-700">신청하기</Link>
         </nav>
       </div>
     </header>
