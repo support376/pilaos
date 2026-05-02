@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { searchListings, summary, regionTree } from "@/lib/listings";
 import { ListingCard } from "@/components/listing/ListingCard";
+import { HeroIllustration } from "@/components/landing/HeroIllustration";
 import { DisputeDonut } from "@/components/info/DonutChart";
 import { RevenueBar } from "@/components/info/BarCompare";
 import { DigitalRadar } from "@/components/info/RadarChart";
@@ -29,6 +30,7 @@ export default function Home() {
 
       {/* 1. HERO */}
       <section className="mx-auto max-w-3xl px-5 pt-16 pb-10 sm:pt-24 sm:pb-12">
+        <div className="mb-8 mx-auto max-w-md"><HeroIllustration /></div>
         <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">필라테스·요가 인수 자문 플랫폼</div>
         <h1 className="mt-5 text-[34px] sm:text-[56px] font-extrabold leading-[1.1] tracking-tight">
           필라오스와 함께라면,<br />
@@ -161,12 +163,12 @@ export default function Home() {
             의뢰하시면 <span className="text-blue-600">이런 게</span> 손에.
           </h2>
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
-            <Result n="01" title="진짜 매출 권리금 계산서" against="매도자 자랑이 진짜인지 모름" />
-            <Result n="02" title="회원 환불 폭탄 방어 조항" against="첫 달 환불 5천만~3억" />
-            <Result n="03" title="임대인 동의서 동시 체결" against="권리금 줬는데 임대 거부" />
-            <Result n="04" title="강사 잔류·경업금지 약정" against="인수 후 강사 단체 이탈" />
-            <Result n="05" title="포괄양수도 세무 처리" against="부가세 10% 추징" />
-            <Result n="06" title="1년간 사후 점검 카톡" against="인수 후에도 모르는 분쟁" />
+            <Result n="01" title="진짜 매출 권리금 계산서" against="매도자 자랑이 진짜인지 모름" icon="doc" />
+            <Result n="02" title="회원 환불 폭탄 방어 조항" against="첫 달 환불 5천만~3억" icon="shield" />
+            <Result n="03" title="임대인 동의서 동시 체결" against="권리금 줬는데 임대 거부" icon="key" />
+            <Result n="04" title="강사 잔류·경업금지 약정" against="인수 후 강사 단체 이탈" icon="users" />
+            <Result n="05" title="포괄양수도 세무 처리" against="부가세 10% 추징" icon="tax" />
+            <Result n="06" title="1년간 사후 점검 카톡" against="인수 후에도 모르는 분쟁" icon="bell" />
           </div>
         </div>
       </section>
@@ -324,17 +326,36 @@ function Risk({ title, hit, detail }: { title: string; hit: string; detail: stri
   );
 }
 
-function Result({ n, title, against }: { n: string; title: string; against: string }) {
+function Result({ n, title, against, icon }: { n: string; title: string; against: string; icon: "doc" | "shield" | "key" | "users" | "tax" | "bell" }) {
   return (
     <div className="rounded-2xl border border-black/10 bg-white p-5">
-      <div className="text-[11px] font-extrabold text-blue-600">{n}</div>
-      <h3 className="mt-2 text-[15px] font-extrabold text-black">{title}</h3>
+      <div className="flex items-start gap-3">
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+          <ResultIcon name={icon} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="text-[11px] font-extrabold text-blue-600">{n}</div>
+          <h3 className="mt-1 text-[15px] font-extrabold text-black leading-snug">{title}</h3>
+        </div>
+      </div>
       <div className="mt-3 flex gap-2 items-baseline">
         <span className="rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-bold text-red-700 whitespace-nowrap">막아주는 위험</span>
         <span className="text-[12px] text-black/55">{against}</span>
       </div>
     </div>
   );
+}
+
+function ResultIcon({ name }: { name: "doc" | "shield" | "key" | "users" | "tax" | "bell" }) {
+  const common = { width: 22, height: 22, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  switch (name) {
+    case "doc": return <svg {...common}><path d="M14 2v6h6"/><path d="M20 22H4V2h10l6 6v14z"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/></svg>;
+    case "shield": return <svg {...common}><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>;
+    case "key": return <svg {...common}><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9"/><path d="M16 7l3 3"/></svg>;
+    case "users": return <svg {...common}><circle cx="9" cy="9" r="3"/><path d="M3 19c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="11" r="2.5"/><path d="M14 19c0-2.5 1.5-4 3-4 2 0 4 1.5 4 4"/></svg>;
+    case "tax": return <svg {...common}><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>;
+    case "bell": return <svg {...common}><path d="M6 8a6 6 0 0112 0v5l2 3H4l2-3V8z"/><path d="M10 19a2 2 0 004 0"/></svg>;
+  }
 }
 
 function CmpRow({ label, a, b, c }: { label: string; a: string; b: string; c: string }) {

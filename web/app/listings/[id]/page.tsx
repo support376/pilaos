@@ -10,6 +10,7 @@ import { PotentialBadge } from "@/components/listing/PotentialBadge";
 import { FavButton } from "@/components/listing/FavButton";
 import { InlineLeadForm } from "@/components/listing/InlineLeadForm";
 import { ChannelLinks } from "@/components/listing/ChannelLinks";
+import { DigitalOpsRadar } from "@/components/listing/DigitalOpsRadar";
 import { EstimateNote } from "@/components/listing/EstimateNote";
 import { EstimateBasis } from "@/components/listing/EstimateBasis";
 import { PhotoMain } from "@/components/listing/PhotoMain";
@@ -109,15 +110,12 @@ export default async function ListingPage({ params }: Params) {
       {/* 디지털 운영 점수 — 우리 차별점 */}
       <section className="mt-6 rounded-2xl border border-black/10 bg-white p-5 sm:p-6">
         <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">우리 차별점</div>
-        <div className="mt-2 flex items-baseline justify-between">
-          <h2 className="text-lg font-extrabold">디지털 운영 점수</h2>
-          <div className="text-right">
-            <div className="text-[28px] font-extrabold text-blue-600 leading-none">{l.digital_score}<span className="text-sm text-black/50">/90</span></div>
-            <div className="mt-0.5 text-[11px] font-bold text-black/55">{l.digital_grade}급</div>
-          </div>
+        <h2 className="mt-2 text-lg font-extrabold">{l.digital_grade}급 운영 매장</h2>
+        <div className="mt-5">
+          <DigitalOpsRadar studio={s} score={l.digital_score} />
         </div>
-        <p className="mt-2 text-[12px] text-black/60 leading-relaxed">디지털 채널 운영, 리뷰 수, 메뉴·가격 등록 등을 종합한 점수입니다.</p>
-        <div className="mt-4">
+        <div className="mt-5 border-t border-black/10 pt-5">
+          <div className="text-[11px] font-bold text-black/55 uppercase mb-2">직접 둘러보기</div>
           <ChannelLinks studio={s} />
         </div>
         {(s.kakao_review_count ?? 0) > 0 || (s.blog_review_count ?? 0) > 0 ? (
