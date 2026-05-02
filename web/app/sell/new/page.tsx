@@ -110,6 +110,10 @@ function Step1Find({ query }: { query?: string }) {
   const hits = q ? searchListings({ q }, "score", 12).rows : [];
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6">
+      <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+        <p className="font-semibold">광고비 0원으로 잠재 매수자에게 자동 노출</p>
+        <p className="mt-1 text-xs leading-relaxed">메타·당근·블로그·파워링크에 매달 광고비 쓰는 대신, 본 매물을 등록하시면 운영팀이 잠재 매수자 풀에서 직접 매칭합니다. 네이버 플레이스 순위가 떨어진 매장도 OK.</p>
+      </div>
       <h2 className="text-lg font-bold">매장 찾기</h2>
       <p className="mt-1 text-sm text-gray-600">전국 1만개 매물 중에 본인 매장을 찾아주세요. 없으면 신규 등록도 가능합니다.</p>
       <form method="get" className="mt-4">

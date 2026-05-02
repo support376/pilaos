@@ -39,7 +39,7 @@ export function ListingCard({ listing: l }: { listing: Listing }) {
         <div className="absolute bottom-3 left-3 z-10">
           <div className="rounded-lg bg-black/65 px-2.5 py-1.5 backdrop-blur-sm">
             <div className="text-[9px] uppercase tracking-wide text-amber-200/90">권리금 추정</div>
-            <div className="text-base font-bold text-white">{fmtMan(l.estimate.key_money.mid)}</div>
+            <div className="text-base font-bold text-white">{l.estimate.key_money.mid <= 500 ? "무권리" : fmtMan(l.estimate.key_money.mid)}</div>
           </div>
         </div>
         {/* 우하단: 수익률 */}

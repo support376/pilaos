@@ -21,34 +21,14 @@ function Nav() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
         <Link href="/" className="flex items-baseline gap-2 shrink-0">
           <span className="text-lg font-extrabold tracking-tight">pilaos</span>
-          <span className="hidden text-[11px] text-gray-500 sm:inline">필라테스 매물 마켓플레이스</span>
+          <span className="hidden text-[11px] text-gray-500 sm:inline">필라테스 매물</span>
         </Link>
-        <nav className="flex items-center gap-3 text-sm flex-wrap justify-end">
+        <nav className="flex items-center gap-3 text-sm">
           <Link href="/listings" className="text-gray-700 hover:text-gray-900">매물</Link>
-          <Link href="/listings?sort=score" className="hidden text-gray-700 hover:text-gray-900 md:inline">SNS 운영</Link>
-          <Link href="/listings?sort=yield_desc" className="hidden text-gray-700 hover:text-gray-900 md:inline">매출 기준</Link>
-          <Link href="/why" className="hidden text-gray-700 hover:text-gray-900 sm:inline">왜 실사가 필요한가</Link>
-          <Link href="/experts" className="hidden text-gray-700 hover:text-gray-900 sm:inline">전문가</Link>
           <Link href="/me/watchlist" className="text-gray-700 hover:text-gray-900">관심</Link>
           <Link href="/sell/new" className="rounded-md border border-gray-300 px-3 py-1.5 text-xs font-bold text-gray-800 hover:bg-gray-50">매물 등록</Link>
           <Link href="/buy/intent" className="rounded-md bg-gray-900 px-3 py-1.5 text-xs font-bold text-white hover:bg-gray-700">매수 등록</Link>
         </nav>
-      </div>
-      {/* 빠른 탭 — 지역/SNS/매출 */}
-      <div className="border-t border-gray-100 bg-gray-50">
-        <div className="mx-auto flex max-w-6xl items-center gap-2 overflow-x-auto px-4 py-2 text-xs text-gray-700">
-          <Link href="/listings?sigungu=강남구" className="shrink-0 rounded-full bg-white border border-gray-200 px-3 py-1 hover:border-gray-400">📍 강남구</Link>
-          <Link href="/listings?sigungu=서초구" className="shrink-0 rounded-full bg-white border border-gray-200 px-3 py-1 hover:border-gray-400">📍 서초구</Link>
-          <Link href="/listings?sigungu=송파구" className="shrink-0 rounded-full bg-white border border-gray-200 px-3 py-1 hover:border-gray-400">📍 송파구</Link>
-          <Link href="/listings?sigungu=마포구" className="shrink-0 rounded-full bg-white border border-gray-200 px-3 py-1 hover:border-gray-400">📍 마포구</Link>
-          <span className="shrink-0 text-gray-300">·</span>
-          <Link href="/listings?has_naver=1&has_kchan=1&has_insta=1" className="shrink-0 rounded-full bg-white border border-gray-200 px-3 py-1 hover:border-gray-400">🌐 SNS 풀세트</Link>
-          <Link href="/listings?has_rev=1" className="shrink-0 rounded-full bg-white border border-gray-200 px-3 py-1 hover:border-gray-400">⭐ 리뷰 활성</Link>
-          <span className="shrink-0 text-gray-300">·</span>
-          <Link href="/listings?yield_min=8&sort=yield_desc" className="shrink-0 rounded-full bg-white border border-gray-200 px-3 py-1 hover:border-gray-400">💰 수익률 8%+</Link>
-          <Link href="/listings?payback_max=12" className="shrink-0 rounded-full bg-white border border-gray-200 px-3 py-1 hover:border-gray-400">⏱ 회수 12개월 이하</Link>
-          <Link href="/listings?total_max=10000" className="shrink-0 rounded-full bg-white border border-gray-200 px-3 py-1 hover:border-gray-400">💵 인수가 1억 이하</Link>
-        </div>
       </div>
     </header>
   );
@@ -58,13 +38,10 @@ function Foot() {
   return (
     <footer className="border-t border-gray-200 bg-white">
       <div className="mx-auto max-w-6xl px-4 py-6">
-        {/* 잠재매물 안내 */}
         <div className="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-900 leading-relaxed">
           <strong>잠재매물 안내.</strong> 본 사이트의 매물은 카카오·네이버 공개 데이터를 기반으로 자동 수집된 잠재매물입니다. 매장 운영자가 직접 등록한 매물이 아니며 권리금·매출 등 모든 숫자는 추정치입니다.
           <span className="font-semibold"> 매장 운영자께서 노출을 거부하시려면 매물 페이지의 "노출 거부 신청" 또는 운영팀 카톡 채널로 연락 주세요. 24시간 내 처리합니다.</span>
         </div>
-
-        {/* 면책 */}
         <div className="mt-3 rounded-lg bg-gray-50 border border-gray-200 px-4 py-3 text-[11px] text-gray-600 leading-relaxed">
           <strong className="text-gray-800">면책 및 책임의 한계.</strong>
           본 사이트가 제공하는 권리금·매출·수익률·매도 시그널 등 모든 숫자와 평가는 공개 데이터 기반의 <strong>추정·참고용</strong>이며 실제 거래 가격·실거래 매출과 다를 수 있습니다.
@@ -72,7 +49,6 @@ function Foot() {
           pilaos는 거래 당사자 간 분쟁의 직접 당사자가 아니며, 손해가 발생하더라도 정보 제공 범위 내에서 책임이 제한됩니다 (이용약관 제8조).
           영업양수도는 분쟁 빈도가 높은 거래이므로 <Link href="/why" className="underline">변호사 동반 실사</Link>를 권장합니다.
         </div>
-
         <div className="mt-4 flex flex-col gap-2 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
           <div>© 2026 pilaos · 필라테스 영업양수도 마켓플레이스</div>
           <div className="flex flex-wrap gap-3">

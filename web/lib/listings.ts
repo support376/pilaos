@@ -1,10 +1,9 @@
-// Listing 계층 — pilates_studio 위에 구축한 가상 listing 엔티티
-// 모든 매물은 기본 "잠재매물(potential)" 상태. 주인이 등록 → "claimed". 운영팀 검증 → "verified".
-// SQLite는 readonly. 시드 가짜 데이터는 v2.1부터 모두 제거. 실 데이터만 사용.
+// Listing 계층 — pilates_studio + DB에 사전 계산된 est_* 컬럼 활용 (v3.2 ~)
+//
+// 모든 매물은 기본 "잠재매물(potential)" 상태. estimate는 빌드 타임에 precompute_estimates.py로 계산되어 DB에 저장됨.
 
 import { db } from "./db";
-import { Studio, Listing, ListingBadge, ListingStatus, ChannelLink } from "./types";
-import { estimateListing } from "./estimate";
+import { Studio, Listing, ListingBadge, ListingStatus, ChannelLink, ListingEstimate, ConfidenceLevel } from "./types";
 import { brandFromName } from "./brands";
 
 const STUDIO_COLS = `
@@ -19,38 +18,87 @@ const STUDIO_COLS = `
   has_coupon
 `;
 
-export function studioToListing(s: Studio): Listing {
-  // 모든 v2 매물은 "potential" 상태로 시작. 클레임/검증은 별도 워크플로(v3+)에서.
-  const status: ListingStatus = "cold"; // 모든 매물 cold = 잠재매물
-  const est = estimateListing({
-    studio: s,
-    area_m2: null,           // ← 시드 제거
-    reformer_count: null,    // ← 시드 제거
-  });
+const ESTIMATE_COLS = `
+  est_member_count, est_monthly_fee,
+  est_monthly_revenue_low, est_monthly_revenue, est_monthly_revenue_high,
+  est_monthly_profit, est_monthly_rent, est_deposit,
+  est_key_money_low, est_key_money, est_key_money_high,
+  est_total_acquisition, est_yield_pct, est_payback_months, est_payback_total_months,
+  est_annual_roi, est_multiple, est_confidence, est_confidence_score,
+  est_sell_signal, est_model_version
+`;
 
-  // 도/동 추출 (도로명에서 마지막 "동/로/길"의 앞)
+type StudioRow = Studio & {
+  est_member_count: number | null;
+  est_monthly_fee: number | null;
+  est_monthly_revenue_low: number | null;
+  est_monthly_revenue: number | null;
+  est_monthly_revenue_high: number | null;
+  est_monthly_profit: number | null;
+  est_monthly_rent: number | null;
+  est_deposit: number | null;
+  est_key_money_low: number | null;
+  est_key_money: number | null;
+  est_key_money_high: number | null;
+  est_total_acquisition: number | null;
+  est_yield_pct: number | null;
+  est_payback_months: number | null;
+  est_payback_total_months: number | null;
+  est_annual_roi: number | null;
+  est_multiple: number | null;
+  est_confidence: string | null;
+  est_confidence_score: number | null;
+  est_sell_signal: number | null;
+  est_model_version: string | null;
+};
+
+function rangeOf(low: number | null, mid: number | null, high: number | null) {
+  return { low: low ?? 0, mid: mid ?? 0, high: high ?? 0 };
+}
+
+function rowToEstimate(row: StudioRow): ListingEstimate {
+  return {
+    monthly_revenue: rangeOf(row.est_monthly_revenue_low, row.est_monthly_revenue, row.est_monthly_revenue_high),
+    monthly_profit: rangeOf(Math.round((row.est_monthly_profit ?? 0) * 0.6), row.est_monthly_profit, Math.round((row.est_monthly_profit ?? 0) * 1.4)),
+    key_money: rangeOf(row.est_key_money_low, row.est_key_money, row.est_key_money_high),
+    monthly_rent: rangeOf(Math.round((row.est_monthly_rent ?? 0) * 0.8), row.est_monthly_rent, Math.round((row.est_monthly_rent ?? 0) * 1.2)),
+    deposit: rangeOf(Math.round((row.est_deposit ?? 0) * 0.8), row.est_deposit, Math.round((row.est_deposit ?? 0) * 1.2)),
+    member_count: rangeOf(Math.round((row.est_member_count ?? 0) * 0.7), row.est_member_count, Math.round((row.est_member_count ?? 0) * 1.3)),
+    total_acquisition: rangeOf(Math.round((row.est_total_acquisition ?? 0) * 0.65), row.est_total_acquisition, Math.round((row.est_total_acquisition ?? 0) * 1.35)),
+    monthly_yield_pct: row.est_yield_pct ?? 0,
+    payback_months_keyMoney: row.est_payback_months ?? 999,
+    payback_months_total: row.est_payback_total_months ?? 999,
+    annual_roi_pct: row.est_annual_roi ?? 0,
+    multiple_used: row.est_multiple ?? 6,
+    confidence: (row.est_confidence as ConfidenceLevel) ?? "estimate",
+    confidence_score: row.est_confidence_score ?? 0.55,
+    sell_signal_score: row.est_sell_signal ?? 50,
+  };
+}
+
+export function studioToListing(s: StudioRow): Listing {
+  const status: ListingStatus = "cold";
+  const est = rowToEstimate(s);
+
   let dong: string | null = null;
   const addr = s.road_address_name || s.address_name || "";
   const m = addr.match(/([가-힣]+동|[가-힣]+가|[가-힣]+로[0-9]*|[가-힣]+길)/);
   if (m) dong = m[1];
 
-  // 한 줄 카피 — 진짜 데이터만으로 생성
+  const reviewSum = (s.kakao_review_count ?? 0) + (s.blog_review_count ?? 0);
+  const channelCount = [s.naver_url, s.homepage_url, s.instagram_handle, s.naver_blog_handle, s.kakao_channel_name].filter(Boolean).length;
   const oneLinerParts: string[] = [];
   if (s.sigungu) oneLinerParts.push(s.sigungu);
-  const reviewSum = (s.kakao_review_count ?? 0) + (s.blog_review_count ?? 0);
   if (reviewSum > 0) oneLinerParts.push(`리뷰 ${reviewSum}`);
-  const channelCount = [s.naver_url, s.homepage_url, s.instagram_handle, s.naver_blog_handle, s.kakao_channel_name].filter(Boolean).length;
   if (channelCount > 0) oneLinerParts.push(`채널 ${channelCount}/5`);
 
   const titleParts: string[] = [];
   if (s.sigungu) titleParts.push(s.sigungu);
   if (dong) titleParts.push(dong);
 
-  // 디지털 점수
   const digital = (() => {
-    let score = 0;
+    let score = 10;
     if (s.naver_url) score += 15;
-    score += 10;
     if (s.kakao_channel_name) score += 10;
     if (s.homepage_url) score += 10;
     if (s.instagram_handle) score += 15;
@@ -65,18 +113,13 @@ export function studioToListing(s: Studio): Listing {
   const digitalGradeOf = (s_: number) =>
     s_ >= 75 ? "A" : s_ >= 60 ? "B" : s_ >= 45 ? "C" : s_ >= 30 ? "D" : "F";
 
-  // 뱃지 — 모든 매물은 일단 "잠재매물". 매도 시그널이 매우 강하면 추가 뱃지.
-  const badges: ListingBadge[] = [];
-  // potential은 status로 표시, 뱃지로는 별도 표기 안 함 (UI에서 처리)
-
-  // listed_at — 실 first_seen_at이 없으니 null 처리, UI에서 "수집 시점"으로
   const listedAt = new Date("2026-04-23").toISOString();
 
   return {
     id: `PIL-${s.kakao_place_id}`,
     studio_id: s.kakao_place_id,
     status,
-    badges,
+    badges: [],
     title: titleParts.join(" · ") || s.place_name,
     one_liner: oneLinerParts.join(" · ") || "정보 수집 중",
     sido: s.sido,
@@ -85,7 +128,6 @@ export function studioToListing(s: Studio): Listing {
     full_address: null,
     lng: s.lng,
     lat: s.lat,
-    // === 실데이터 없음 — null 유지 (UI에서 "—" 또는 hide) ===
     area_m2: null,
     area_pyeong: null,
     floor: null,
@@ -98,12 +140,10 @@ export function studioToListing(s: Studio): Listing {
     has_sauna: false,
     has_flying: false,
     has_barre: false,
-    // === 진짜 데이터 ===
     studio: s,
     digital_score: digital,
     digital_grade: digitalGradeOf(digital) as Listing["digital_grade"],
     estimate: est,
-    // === 메타 — KV(외부)로 이관 예정. 지금은 0 ===
     view_count: 0,
     fav_count: 0,
     buyer_intent_count: 0,
@@ -112,7 +152,6 @@ export function studioToListing(s: Studio): Listing {
   };
 }
 
-// 외부 채널 링크 빌더 — 실 데이터만
 export function channelsOf(s: Studio): ChannelLink[] {
   const out: ChannelLink[] = [];
   if (s.place_url) out.push({ kind: "kakao_place", label: "카카오맵", url: s.place_url, has_data: true });
@@ -123,8 +162,6 @@ export function channelsOf(s: Studio): ChannelLink[] {
   if (s.kakao_channel_url) out.push({ kind: "kakao_channel", label: s.kakao_channel_name ?? "카카오톡 채널", url: s.kakao_channel_url, has_data: true });
   return out;
 }
-
-// ---- queries ----
 
 export type ListingFilters = {
   q?: string;
@@ -145,6 +182,7 @@ export type ListingFilters = {
   hasBlog?: boolean;
   hasHomepage?: boolean;
   hasReviews?: boolean;
+  noKeyMoney?: boolean;
 };
 
 export type ListingSort =
@@ -161,23 +199,19 @@ export type ListingSort =
 export function getListing(id: string): Listing | null {
   const kid = id.startsWith("PIL-") ? id.slice(4) : id;
   const row = db()
-    .prepare(`SELECT ${STUDIO_COLS} FROM pilates_studio WHERE kakao_place_id = ? AND is_pilates = 1`)
-    .get(kid) as Studio | undefined;
+    .prepare(`SELECT ${STUDIO_COLS}, ${ESTIMATE_COLS} FROM pilates_studio WHERE kakao_place_id = ? AND is_pilates = 1`)
+    .get(kid) as StudioRow | undefined;
   if (!row) return null;
   return studioToListing(row);
-}
-
-export function listAllStudios(limit = 12000): Studio[] {
-  return db()
-    .prepare(`SELECT ${STUDIO_COLS} FROM pilates_studio WHERE is_pilates = 1 LIMIT ?`)
-    .all(limit) as Studio[];
 }
 
 let _allCache: Listing[] | null = null;
 export function listAllListings(): Listing[] {
   if (_allCache) return _allCache;
-  const studios = listAllStudios();
-  _allCache = studios.map(studioToListing);
+  const rows = db()
+    .prepare(`SELECT ${STUDIO_COLS}, ${ESTIMATE_COLS} FROM pilates_studio WHERE is_pilates = 1`)
+    .all() as StudioRow[];
+  _allCache = rows.map(studioToListing);
   return _allCache;
 }
 
@@ -195,12 +229,12 @@ export function searchListings(filters: ListingFilters, sort: ListingSort = "ad"
   if (filters.sido) rows = rows.filter((l) => l.sido === filters.sido);
   if (filters.brand && filters.brand !== "all") rows = rows.filter((l) => l.brand_slug === filters.brand);
   if (filters.status) rows = rows.filter((l) => l.status === filters.status);
+  if (filters.noKeyMoney) rows = rows.filter((l) => l.estimate.key_money.mid <= 500);
   if (typeof filters.keyMoneyMin === "number") rows = rows.filter((l) => l.estimate.key_money.mid >= filters.keyMoneyMin!);
   if (typeof filters.keyMoneyMax === "number") rows = rows.filter((l) => l.estimate.key_money.mid <= filters.keyMoneyMax!);
   if (typeof filters.totalAcqMax === "number") rows = rows.filter((l) => l.estimate.total_acquisition.mid <= filters.totalAcqMax!);
   if (typeof filters.yieldMin === "number") rows = rows.filter((l) => l.estimate.monthly_yield_pct >= filters.yieldMin!);
   if (typeof filters.paybackMax === "number") rows = rows.filter((l) => l.estimate.payback_months_keyMoney <= filters.paybackMax!);
-  // 시설 필터 — 진짜 데이터 기반(v2.1엔 모두 false)이라 적용 시 결과 0. 채널 필터로 대체.
   if (filters.hasNaver) rows = rows.filter((l) => !!l.studio.naver_url);
   if (filters.hasKakaoChannel) rows = rows.filter((l) => !!l.studio.kakao_channel_name);
   if (filters.hasInstagram) rows = rows.filter((l) => !!l.studio.instagram_handle);
@@ -271,9 +305,9 @@ export function summary(): {
     total: all.length,
     by_sido,
     by_sigungu,
-    intent_sell_count: 0,    // 실제 등록 의향만 — 영속화 후 카운트
-    buyer_pool: 0,           // 실제 매수 의향 등록만
-    potential_count: all.length,  // 모두 잠재매물 (v2.1)
+    intent_sell_count: 0,
+    buyer_pool: 0,
+    potential_count: all.length,
     claimed_count: 0,
   };
 }
@@ -315,8 +349,6 @@ export function similarListings(l: Listing, n = 4): Listing[] {
     .map(({ x }) => x);
 }
 
-
-// 시군구 매물의 권리금/매출/수익률 분포 히스토그램용
 export type Histogram = { bins: { from: number; to: number; count: number }[]; min: number; max: number; mean: number; median: number; };
 export function distribution(values: number[], binCount = 8): Histogram {
   const arr = values.filter((v) => Number.isFinite(v) && v >= 0).sort((a, b) => a - b);
@@ -334,7 +366,6 @@ export function distribution(values: number[], binCount = 8): Histogram {
   return { bins, min, max, mean, median };
 }
 
-// 전국 분포 (캐시 1회 계산)
 let _natCache: { keyMoney: Histogram; revenue: Histogram; yield_pct: Histogram } | null = null;
 export function nationalDistribution() {
   if (_natCache) return _natCache;

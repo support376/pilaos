@@ -52,6 +52,7 @@ SLIM_COLS = [
     "photo_urls",
     "photo_main",
     "photo_count_real",
+    "industry",
 ]
 
 

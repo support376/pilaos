@@ -64,6 +64,12 @@ export function FilterSidebar({ total, filtered, current, topSigungu }: Props) {
           <NumberInput name="payback_max" defaultValue={current.payback_max} placeholder="예 12" />
         </div>
 
+        <div className="space-y-1.5 border-t border-gray-100 pt-3">
+          <label className="flex items-center gap-2 text-xs font-bold text-gray-700">
+            <input type="checkbox" name="no_key" defaultChecked={current.no_key === "1"} value="1" /> 무권리 매물만 (권리금 ≤ 500만)
+          </label>
+        </div>
+
         <div className="space-y-1.5">
           <label className="block text-xs font-bold text-gray-700">디지털 채널 보유</label>
           <label className="flex items-center gap-2 text-xs text-gray-700">

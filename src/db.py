@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS crawl_run (
 """
 
 # 기존 DB에 컬럼·테이블 추가(idempotent). 에러는 이미 존재한다는 의미라 무시.
+# (note) industry 컬럼은 향후 헬스·요가 등 다업종 확장 대비. default 'pilates'.
 MIGRATIONS = [
     """CREATE TABLE IF NOT EXISTS waitlist (
         id              INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -40,6 +40,7 @@ export default async function ListingsPage({ searchParams }: Props) {
     hasBlog: asStr(sp.has_blog) === "1",
     hasHomepage: asStr(sp.has_hp) === "1",
     hasReviews: asStr(sp.has_rev) === "1",
+    noKeyMoney: asStr(sp.no_key) === "1",
   };
   const sort = (asStr(sp.sort) as ListingSort) ?? "ad";
   const page = Math.max(1, asNum(sp.page) ?? 1);
