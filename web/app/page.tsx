@@ -2,15 +2,18 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { searchListings, summary, regionTree, topRegions, isMetroSido } from "@/lib/listings";
 import { ListingCard } from "@/components/listing/ListingCard";
+import { RegionSelect } from "@/components/listing/RegionSelect";
 
 async function go(formData: FormData) {
   "use server";
   const q = String(formData.get("q") || "").trim();
+  const sido = String(formData.get("sido") || "").trim();
   const sigungu = String(formData.get("sigungu") || "").trim();
   const key_max = String(formData.get("key_max") || "").trim();
 
   const params = new URLSearchParams();
   if (q) params.set("q", q);
+  if (sido) params.set("sido", sido);
   if (sigungu) params.set("sigungu", sigungu);
   if (key_max) params.set("key_max", key_max);
   redirect(params.toString() ? `/listings?${params.toString()}` : "/listings");
@@ -35,38 +38,14 @@ export default function Home() {
 
         {/* 큰 검색 폼 */}
         <form action={go} className="mt-8 mx-auto max-w-3xl rounded-2xl border border-gray-200 bg-white p-3 shadow-sm">
-          <div className="grid gap-2 sm:grid-cols-[1fr_180px_180px_auto]">
+          <div className="grid gap-2 sm:grid-cols-[1.2fr_2fr_160px_auto]">
             <input
               name="q"
               type="text"
               placeholder="상호 · 동 · 주소"
               className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-gray-900 focus:outline-none"
             />
-            <select name="sigungu" defaultValue="" className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-3 text-sm focus:bg-white focus:border-gray-900">
-              <option value="">전체 지역</option>
-              <optgroup label="── 광역시 ──">
-                {tree.metros.map((g) => (
-                  <optgroup key={g.sido} label={`${g.sido} (${g.total.toLocaleString()})`}>
-                    {g.sigungu.map((sg) => (
-                      <option key={`${g.sido}-${sg.sigungu}`} value={sg.sigungu}>
-                        {g.sido} {sg.sigungu} ({sg.count})
-                      </option>
-                    ))}
-                  </optgroup>
-                ))}
-              </optgroup>
-              <optgroup label="── 도 ──">
-                {tree.dos.map((g) => (
-                  <optgroup key={g.sido} label={`${g.sido} (${g.total.toLocaleString()})`}>
-                    {g.sigungu.map((sg) => (
-                      <option key={`${g.sido}-${sg.sigungu}`} value={sg.sigungu}>
-                        {g.sido} {sg.sigungu} ({sg.count})
-                      </option>
-                    ))}
-                  </optgroup>
-                ))}
-              </optgroup>
-            </select>
+            <RegionSelect metros={tree.metros} dos={tree.dos} />
             <select name="key_max" defaultValue="" className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-3 text-sm focus:bg-white focus:border-gray-900">
               <option value="">권리금 무관</option>
               <option value="0">무권리만</option>
@@ -103,7 +82,7 @@ export default function Home() {
             </Link>
           ))}
         </div>
-        <p className="mt-2 text-[11px] text-gray-400">광역시는 구 단위, 도는 시 단위. 시도→시군구 순서로 정렬됩니다.</p>
+        <p className="mt-2 text-[11px] text-gray-400">매물 수가 많은 상위 18개 지역. 광역시는 자치구, 도는 시·군 단위. 동률 시 행정 표준순(서울 → 세종 → 경기 → 제주) → 가나다.</p>
       </section>
 
       {/* 추천 매물 */}

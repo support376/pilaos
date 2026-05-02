@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { RegionSelect } from "./RegionSelect";
 
 type RegionGroup = { sido: string; total: number; sigungu: { sigungu: string; count: number }[] };
 type Props = {
@@ -34,44 +35,13 @@ export function FilterSidebar({ total, filtered, current, metros, dos }: Props) 
 
         <div>
           <label className="mb-1 block text-xs font-bold text-gray-700">지역 (시도 → 시군구)</label>
-          <select name="sido" defaultValue={current.sido ?? ""} className="mb-2 w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm">
-            <option value="">시도 — 전체</option>
-            <optgroup label="광역시">
-              {metros.map((g) => (
-                <option key={g.sido} value={g.sido}>{g.sido} ({g.total.toLocaleString()})</option>
-              ))}
-            </optgroup>
-            <optgroup label="도">
-              {dos.map((g) => (
-                <option key={g.sido} value={g.sido}>{g.sido} ({g.total.toLocaleString()})</option>
-              ))}
-            </optgroup>
-          </select>
-          <select name="sigungu" defaultValue={current.sigungu ?? ""} className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm">
-            <option value="">시군구 — 전체</option>
-            <optgroup label="── 광역시 (구) ──">
-              {metros.map((g) => (
-                <optgroup key={g.sido} label={g.sido}>
-                  {g.sigungu.map((sg) => (
-                    <option key={`${g.sido}-${sg.sigungu}`} value={sg.sigungu}>
-                      {g.sido} {sg.sigungu} ({sg.count})
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </optgroup>
-            <optgroup label="── 도 (시·군) ──">
-              {dos.map((g) => (
-                <optgroup key={g.sido} label={g.sido}>
-                  {g.sigungu.map((sg) => (
-                    <option key={`${g.sido}-${sg.sigungu}`} value={sg.sigungu}>
-                      {g.sido} {sg.sigungu} ({sg.count})
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </optgroup>
-          </select>
+          <RegionSelect
+            metros={metros}
+            dos={dos}
+            defaultSido={current.sido ?? ""}
+            defaultSigungu={current.sigungu ?? ""}
+            size="sm"
+          />
         </div>
 
         <div>
