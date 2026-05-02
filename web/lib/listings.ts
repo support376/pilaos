@@ -312,6 +312,74 @@ export function summary(): {
   };
 }
 
+// Sido 분류: 광역시(특별/광역/특별자치시) vs 도
+const METRO_ORDER = ["서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종"];
+const DO_ORDER = ["경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주"];
+const SIDO_ORDER = [...METRO_ORDER, ...DO_ORDER];
+
+export function isMetroSido(sido: string): boolean {
+  return METRO_ORDER.includes(sido);
+}
+
+/**
+ * 시도→시군구 그룹 트리. 시도 정렬은 행정 표준 순서(광역시 → 도),
+ * 각 시도 내 시군구는 가나다순.
+ */
+export function regionTree(): {
+  metros: { sido: string; total: number; sigungu: { sigungu: string; count: number }[] }[];
+  dos: { sido: string; total: number; sigungu: { sigungu: string; count: number }[] }[];
+} {
+  const all = listAllListings();
+  const map = new Map<string, Map<string, number>>();
+  for (const l of all) {
+    if (!l.sido || !l.sigungu) continue;
+    if (!map.has(l.sido)) map.set(l.sido, new Map());
+    const sm = map.get(l.sido)!;
+    sm.set(l.sigungu, (sm.get(l.sigungu) || 0) + 1);
+  }
+
+  const build = (sido: string) => {
+    const sm = map.get(sido);
+    if (!sm) return null;
+    const list = Array.from(sm.entries())
+      .map(([sigungu, count]) => ({ sigungu, count }))
+      .sort((a, b) => a.sigungu.localeCompare(b.sigungu, "ko"));
+    const total = list.reduce((s, r) => s + r.count, 0);
+    return { sido, total, sigungu: list };
+  };
+
+  const metros = METRO_ORDER.map(build).filter((x): x is NonNullable<typeof x> => !!x);
+  const dos = DO_ORDER.map(build).filter((x): x is NonNullable<typeof x> => !!x);
+  return { metros, dos };
+}
+
+/**
+ * 인기 지역 chip용 — 시도순 + 시군구 카운트 순으로 안정 정렬한 top N.
+ */
+export function topRegions(limit = 18): { sido: string; sigungu: string; count: number }[] {
+  const all = listAllListings();
+  const sgMap = new Map<string, { sido: string; sigungu: string; count: number }>();
+  for (const l of all) {
+    if (!l.sido || !l.sigungu) continue;
+    const k = `${l.sido}|${l.sigungu}`;
+    const cur = sgMap.get(k);
+    if (cur) cur.count++;
+    else sgMap.set(k, { sido: l.sido, sigungu: l.sigungu, count: 1 });
+  }
+  return Array.from(sgMap.values())
+    .sort((a, b) => {
+      // 1차: 카운트 내림차순 (인기도)
+      if (b.count !== a.count) return b.count - a.count;
+      // 2차: 시도 순서 (광역시 우선)
+      const ai = SIDO_ORDER.indexOf(a.sido);
+      const bi = SIDO_ORDER.indexOf(b.sido);
+      if (ai !== bi) return ai - bi;
+      // 3차: 시군구 가나다
+      return a.sigungu.localeCompare(b.sigungu, "ko");
+    })
+    .slice(0, limit);
+}
+
 export function listingsByBrand(brandSlug: string, limit = 200): Listing[] {
   const all = listAllListings();
   return all.filter((l) => l.brand_slug === brandSlug).slice(0, limit);

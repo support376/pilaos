@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { searchListings, summary } from "@/lib/listings";
+import { searchListings, summary, regionTree, topRegions, isMetroSido } from "@/lib/listings";
 import { ListingCard } from "@/components/listing/ListingCard";
 
 async function go(formData: FormData) {
@@ -18,6 +18,8 @@ async function go(formData: FormData) {
 
 export default function Home() {
   const s = summary();
+  const tree = regionTree();
+  const popular = topRegions(18);
   const featured = searchListings({}, "yield_desc", 6).rows;
 
   return (
@@ -42,9 +44,28 @@ export default function Home() {
             />
             <select name="sigungu" defaultValue="" className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-3 text-sm focus:bg-white focus:border-gray-900">
               <option value="">전체 지역</option>
-              {s.by_sigungu.slice(0, 30).map((x) => (
-                <option key={x.sigungu} value={x.sigungu}>{x.sigungu}</option>
-              ))}
+              <optgroup label="── 광역시 ──">
+                {tree.metros.map((g) => (
+                  <optgroup key={g.sido} label={`${g.sido} (${g.total.toLocaleString()})`}>
+                    {g.sigungu.map((sg) => (
+                      <option key={`${g.sido}-${sg.sigungu}`} value={sg.sigungu}>
+                        {g.sido} {sg.sigungu} ({sg.count})
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </optgroup>
+              <optgroup label="── 도 ──">
+                {tree.dos.map((g) => (
+                  <optgroup key={g.sido} label={`${g.sido} (${g.total.toLocaleString()})`}>
+                    {g.sigungu.map((sg) => (
+                      <option key={`${g.sido}-${sg.sigungu}`} value={sg.sigungu}>
+                        {g.sido} {sg.sigungu} ({sg.count})
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </optgroup>
             </select>
             <select name="key_max" defaultValue="" className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-3 text-sm focus:bg-white focus:border-gray-900">
               <option value="">권리금 무관</option>
@@ -66,17 +87,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 인기 지역 칩 */}
+      {/* 인기 지역 칩 — 시도 prefix + 광역시/도 분기 */}
       <section className="mt-12">
         <h2 className="mb-3 text-sm font-bold text-gray-700">📍 인기 지역</h2>
         <div className="flex flex-wrap gap-2">
-          {s.by_sigungu.slice(0, 18).map((r) => (
-            <Link key={`${r.sido}-${r.sigungu}`} href={`/listings?sigungu=${encodeURIComponent(r.sigungu)}`}
-              className="rounded-full border border-gray-300 bg-white px-4 py-1.5 text-sm hover:bg-gray-50">
-              {r.sigungu} <span className="text-gray-400">({r.count})</span>
+          {popular.map((r) => (
+            <Link
+              key={`${r.sido}-${r.sigungu}`}
+              href={`/listings?sido=${encodeURIComponent(r.sido)}&sigungu=${encodeURIComponent(r.sigungu)}`}
+              className={`rounded-full border px-4 py-1.5 text-sm hover:bg-gray-50 ${isMetroSido(r.sido) ? "border-gray-300 bg-white" : "border-gray-200 bg-gray-50"}`}
+            >
+              <span className="text-gray-500 mr-1">{r.sido}</span>
+              <span className="font-medium">{r.sigungu}</span>
+              <span className="ml-1 text-gray-400">({r.count})</span>
             </Link>
           ))}
         </div>
+        <p className="mt-2 text-[11px] text-gray-400">광역시는 구 단위, 도는 시 단위. 시도→시군구 순서로 정렬됩니다.</p>
       </section>
 
       {/* 추천 매물 */}

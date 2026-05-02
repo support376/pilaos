@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ListingCard } from "@/components/listing/ListingCard";
 import { FilterSidebar } from "@/components/listing/FilterSidebar";
 import { SortBar } from "@/components/listing/SortBar";
-import { searchListings, summary, type ListingFilters, type ListingSort } from "@/lib/listings";
+import { searchListings, summary, regionTree, type ListingFilters, type ListingSort } from "@/lib/listings";
 
 export const metadata = {
   title: "매물 전체 — 필라테스 양수도",
@@ -53,7 +53,7 @@ export default async function ListingsPage({ searchParams }: Props) {
   const totalPages = Math.max(1, Math.ceil(total / perPage));
 
   const s = summary();
-  const topSigungu = s.by_sigungu.slice(0, 30).map((x) => ({ sigungu: x.sigungu, count: x.count }));
+  const tree = regionTree();
 
   // sort link 보존용 search dict (string keys)
   const searchDict: Record<string, string> = {};
@@ -70,7 +70,7 @@ export default async function ListingsPage({ searchParams }: Props) {
       </div>
 
       <div className="grid gap-6 md:grid-cols-[260px_1fr]">
-        <FilterSidebar total={s.total} filtered={total} current={searchDict} topSigungu={topSigungu} />
+        <FilterSidebar total={s.total} filtered={total} current={searchDict} metros={tree.metros} dos={tree.dos} />
 
         <div>
           <div className="flex items-start justify-between gap-3">
