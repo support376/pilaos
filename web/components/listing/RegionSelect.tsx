@@ -47,8 +47,8 @@ export function RegionSelect({
 
   const cls =
     size === "sm"
-      ? "rounded-md border border-gray-300 px-2 py-1.5 text-sm"
-      : "rounded-lg border border-gray-200 bg-gray-50 px-3 py-3 text-sm focus:bg-white focus:border-gray-900";
+      ? "rounded-md border border-black/15 px-2 py-2 text-[14px]"
+      : "rounded-lg border border-black/15 bg-black/[.03] px-3 py-3 text-[16px] focus:bg-white focus:border-black focus:outline-none";
 
   return (
     <div className={`grid grid-cols-2 gap-2 ${className}`}>

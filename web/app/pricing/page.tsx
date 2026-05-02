@@ -28,7 +28,7 @@ export default async function Pricing({ searchParams }: Props) {
         <div className="flex gap-1 rounded-xl bg-black/5 p-1">
           <Tab href="/pricing?tab=buyer" active={tab === "buyer"}>매수자</Tab>
           <Tab href="/pricing?tab=seller" active={tab === "seller"}>매도자</Tab>
-          <Tab href="/pricing?tab=legal" active={tab === "legal"}>변호사·세무사</Tab>
+          <Tab href="/pricing?tab=legal" active={tab === "legal"}>변호사·세무</Tab>
         </div>
       </section>
 
@@ -169,7 +169,7 @@ export default async function Pricing({ searchParams }: Props) {
 
 function Tab({ href, active, children }: { href: string; active: boolean; children: React.ReactNode }) {
   return (
-    <Link href={href} className={`flex-1 rounded-lg px-3 py-2.5 text-center text-sm font-bold transition ${active ? "bg-white text-black shadow-sm" : "text-black/55 hover:text-black"}`}>
+    <Link href={href} className={`flex-1 rounded-lg px-2 py-2.5 text-center text-[13px] sm:text-sm font-bold transition whitespace-nowrap ${active ? "bg-white text-black shadow-sm" : "text-black/55 hover:text-black"}`}>
       {children}
     </Link>
   );

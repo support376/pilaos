@@ -28,7 +28,7 @@ export default async function ListingPage({ params }: Params) {
   const similar = similarListings(l, 4);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
+    <div className="mx-auto max-w-3xl px-5 py-8">
       <div className="mb-4 flex items-center gap-2 text-xs text-gray-500">
         <Link href="/listings" className="hover:text-gray-900">매물</Link>
         <span>/</span>
