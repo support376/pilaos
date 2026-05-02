@@ -19,34 +19,45 @@ export function SuccessFeeSimulator() {
   const pct = keyMoney > 0 ? (total / keyMoney * 100).toFixed(2) : "0";
 
   return (
-    <div className="mt-3 space-y-4">
+    <div className="space-y-5">
+      {/* 슬라이더 */}
       <div>
-        <div className="flex items-baseline justify-between">
-          <label className="text-xs font-bold text-black/70">권리금 (만원)</label>
-          <span className="text-2xl font-black text-blue-600">{fmt(keyMoney)}<span className="ml-1 text-sm text-black/50">만</span></span>
+        <div className="flex items-baseline justify-between mb-2">
+          <label className="text-[12px] font-bold text-black/65 uppercase">권리금</label>
+          <span className="text-[32px] font-black text-black leading-none">{fmt(keyMoney)}<span className="ml-1 text-[14px] font-normal text-black/55">만원</span></span>
         </div>
         <input
           type="range" min={3000} max={300000} step={500} value={keyMoney}
           onChange={(e) => setKeyMoney(Number(e.target.value))}
-          className="mt-2 w-full accent-blue-600"
+          className="w-full accent-blue-600 cursor-pointer"
         />
-        <div className="mt-1 flex justify-between text-[10px] text-black/40">
+        <div className="mt-1 flex justify-between text-[10px] text-black/35 font-medium">
           <span>3천만</span><span>1억</span><span>3억</span><span>10억</span><span>30억</span>
         </div>
       </div>
 
-      <div className="rounded-xl border border-black/10 bg-white p-4">
-        <table className="w-full text-sm">
-          <tbody>
-            <tr><td className="py-1.5 text-black/65">착수금 (1단계)</td><td className="text-right font-bold">{retainer}만원</td></tr>
-            <tr className="border-t border-black/10"><td className="py-1.5 text-black/65">성공 보수 ({f.rate})</td><td className="text-right font-bold">{fmt(f.amount)}만원</td></tr>
-            <tr className="border-t-2 border-black"><td className="py-2 font-bold">매도자 총 부담</td><td className="text-right text-lg font-extrabold text-blue-600">{fmt(total)}만원</td></tr>
-            <tr><td className="py-1 text-[11px] text-black/55">권리금 대비</td><td className="text-right text-[11px] text-black/55">{pct}%</td></tr>
-          </tbody>
-        </table>
+      {/* 결과 박스 */}
+      <div className="rounded-2xl border-2 border-black bg-white overflow-hidden">
+        <div className="px-5 py-4 border-b border-black/10 flex items-center justify-between">
+          <span className="text-[13px] text-black/65">착수금</span>
+          <span className="text-[16px] font-extrabold text-black">{retainer}<span className="text-[12px] font-normal text-black/55">만원</span></span>
+        </div>
+        <div className="px-5 py-4 border-b border-black/10 flex items-center justify-between">
+          <span className="text-[13px] text-black/65">성공 보수 <span className="ml-1 rounded-full bg-black/5 px-2 py-0.5 text-[10px] font-bold text-black/55">{f.rate}</span></span>
+          <span className="text-[16px] font-extrabold text-black">{fmt(f.amount)}<span className="text-[12px] font-normal text-black/55">만원</span></span>
+        </div>
+        <div className="bg-blue-50 px-5 py-5">
+          <div className="flex items-baseline justify-between">
+            <span className="text-[14px] font-bold text-blue-900">매도자 총 부담</span>
+            <span className="text-[26px] font-black text-blue-600 leading-none">{fmt(total)}<span className="ml-1 text-[14px] font-bold text-blue-900">만원</span></span>
+          </div>
+          <div className="mt-1 text-right text-[11px] text-blue-900/60">권리금의 {pct}%</div>
+        </div>
       </div>
 
-      <p className="text-[11px] text-black/55">※ 거래 미성사 시 착수금만 부담, 성공 보수 0. 매물 검증 구독은 별도.</p>
+      <p className="text-[11px] text-black/55 leading-relaxed">
+        ※ 거래 미성사 시 착수금만 부담, 성공 보수 0원. 매물 검증 구독 (월 5만)은 별도.
+      </p>
     </div>
   );
 }
