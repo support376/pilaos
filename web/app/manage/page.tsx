@@ -79,6 +79,47 @@ export default function Manage() {
         </div>
       </section>
 
+      {/* 데이터 연동 — 5채널 인증 방법 */}
+      <section className="border-t border-black/10 bg-white">
+        <div className="mx-auto max-w-3xl px-5 py-14 sm:py-20">
+          <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">데이터 연동</div>
+          <h2 className="mt-3 text-[24px] sm:text-[28px] font-extrabold leading-tight tracking-tight">
+            점수 자동 갱신, <span className="text-blue-600">3가지 방법</span>
+          </h2>
+          <p className="mt-3 text-[14px] text-black/65 leading-relaxed">
+            채널마다 데이터 가져오는 방식이 다릅니다. 가장 간편한 방법부터 시작 → 점차 OAuth/스크래핑으로 자동화 확장.
+          </p>
+
+          <div className="mt-8 space-y-3">
+            <LinkMethod
+              method="OAuth 자동"
+              difficulty="가장 쉬움"
+              channels={["인스타그램"]}
+              detail="비즈니스 계정 + 페이스북 페이지 연결 후 OAuth 한 번 → 매주 자동 데이터 수집"
+              setupTime="3분"
+            />
+            <LinkMethod
+              method="스크린샷 OCR"
+              difficulty="중간"
+              channels={["네이버 플레이스", "당근", "네이버 블로그", "카카오 채널"]}
+              detail="사장님이 운영자 통계 화면 캡처 업로드 → AI가 점수/지표 자동 추출 (Claude Vision)"
+              setupTime="채널당 1분"
+            />
+            <LinkMethod
+              method="공개 데이터 자동"
+              difficulty="자동"
+              channels={["네이버 플레이스 검색결과", "구글 비즈니스", "카카오맵 리뷰"]}
+              detail="공개 정보는 PilaOS가 자동 스크래핑 — 사장님은 매장 인증만 하면 됨"
+              setupTime="0분 (자동)"
+            />
+          </div>
+
+          <div className="mt-6 rounded-lg bg-blue-50 p-4 text-[13px] text-blue-900 leading-relaxed">
+            <strong>왜 자체 API 안 쓰나요?</strong> 네이버 플레이스/당근은 공식 API가 없습니다. 그래서 OCR + 공개 스크래핑이 현실적인 유일한 방법. 인스타그램만 공식 OAuth (Meta Graph API) 사용.
+          </div>
+        </div>
+      </section>
+
       {/* 4개 채널 KPI + 각 채널 대행 요청 */}
       <section className="border-t border-black/10 bg-black/[.02]">
         <div className="mx-auto max-w-3xl px-5 py-14 sm:py-20">
@@ -209,6 +250,26 @@ export default function Manage() {
         </div>
       </section>
 
+    </div>
+  );
+}
+
+function LinkMethod({ method, difficulty, channels, detail, setupTime }: { method: string; difficulty: string; channels: string[]; detail: string; setupTime: string }) {
+  return (
+    <div className="rounded-xl border border-black/10 bg-white p-5">
+      <div className="flex items-baseline justify-between gap-3 flex-wrap">
+        <div className="flex items-baseline gap-3">
+          <div className="text-[15px] font-extrabold">{method}</div>
+          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700">{difficulty}</span>
+        </div>
+        <span className="text-[11px] text-black/45">초기 설정 {setupTime}</span>
+      </div>
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {channels.map((c) => (
+          <span key={c} className="text-[11px] font-medium px-2 py-0.5 rounded bg-black/5 text-black/70">{c}</span>
+        ))}
+      </div>
+      <div className="mt-3 text-[12.5px] text-black/65 leading-relaxed">{detail}</div>
     </div>
   );
 }
