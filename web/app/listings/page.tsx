@@ -63,7 +63,7 @@ export default async function ListingsPage({ searchParams }: Props) {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
+    <div className="mx-auto max-w-[1400px] px-4 py-8">
       <div className="mb-6 sm:mb-8">
         <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">매물 검색</div>
         <h1 className="mt-2 text-[26px] sm:text-[32px] font-extrabold tracking-tight">
@@ -74,7 +74,7 @@ export default async function ListingsPage({ searchParams }: Props) {
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-[260px_1fr]">
+      <div className="grid gap-6 md:grid-cols-[220px_1fr]">
         <details className="md:hidden rounded-lg border border-black/10 bg-white">
           <summary className="cursor-pointer px-4 py-3 text-sm font-bold text-black/85">
             🔍 필터 ({total.toLocaleString()}건)
@@ -97,9 +97,9 @@ export default async function ListingsPage({ searchParams }: Props) {
             <PerPageSelect current={perPage} options={perOptions} search={searchDict} />
           </div>
 
-          <div className="mt-4 grid gap-3 md:grid-cols-2">
+          <div className="mt-4 grid gap-3 grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {rows.length === 0 ? (
-              <div className="md:col-span-2 rounded-xl border border-dashed border-black/15 bg-white p-10 text-center">
+              <div className="col-span-2 md:col-span-2 lg:col-span-3 xl:col-span-4 rounded-xl border border-dashed border-black/15 bg-white p-10 text-center">
                 <div className="text-sm font-bold text-black">조건에 맞는 매물이 없습니다.</div>
                 <p className="mt-1 text-xs text-black/55">필터를 완화하시거나, <a href="/inquire?kind=acquire" className="text-blue-600 underline">조건만 등록</a>하시면 매칭해드립니다.</p>
               </div>

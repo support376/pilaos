@@ -38,7 +38,25 @@
     font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; letter-spacing: -0.01em;
     font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
   .wrap { max-width: 1100px; margin: 0 auto; padding: 20px; }
-  header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 10; padding-top: 14px; }
+  header.site-nav { border-bottom: 1px solid rgba(0,0,0,0.10); background: #ffffff; position: sticky; top: 0; z-index: 30; margin: -20px -20px 0 -20px; }
+  .site-nav-inner { max-width: 768px; margin: 0 auto; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .site-logo { font-size: 18px; font-weight: 800; color: #0a0a0a; text-decoration: none; letter-spacing: -0.02em; }
+  .site-logo span { color: #2563eb; }
+  .site-menu { display: flex; align-items: center; gap: 14px; font-size: 14px; }
+  .site-menu a { color: rgba(0,0,0,0.7); text-decoration: none; }
+  .site-menu a:hover { color: #0a0a0a; }
+  .site-menu a.active { color: #0a0a0a; font-weight: 600; }
+  .site-menu a.cta { background: #0a0a0a; color: white; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 12.5px; }
+  .site-menu a.cta:hover { background: rgba(0,0,0,0.85); }
+  .page-meta { max-width: 1100px; margin: 14px auto 24px; padding: 0 4px; font-size: 12px; color: rgba(0,0,0,0.45); display: flex; align-items: center; gap: 8px; }
+  .page-meta .back { color: #2563eb; text-decoration: none; font-weight: 600; }
+  .page-meta .back:hover { text-decoration: underline; }
+  .page-meta .dot { color: rgba(0,0,0,0.30); }
+  @media (max-width: 600px) {
+    .site-menu { gap: 10px; font-size: 13px; }
+    .site-menu a:not(.cta) { display: none; }
+    .site-menu a.active { display: inline; }
+  }
   .logo { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
   .logo span { color: var(--purple); }
   .header-sub { font-size: 13px; color: var(--text-2); }
@@ -198,13 +216,18 @@
 <body>
 <div class="wrap">
 
-<header>
-  <div>
-    <a href="/sell" style="text-decoration:none; color:inherit;"><div class="logo">pila<span style="color:var(--purple);">os</span> 진단기 <span style="font-size:11px; color:var(--text-3); font-weight:400;">v5</span></div></a>
-    <div class="header-sub">필라테스 권리금 진단 · 시나리오 비교 · 지원사업 매칭 · 매물 등록</div>
+<header class="site-nav">
+  <div class="site-nav-inner">
+    <a href="/" class="site-logo">pila<span>os</span></a>
+    <nav class="site-menu">
+      <a href="/listings">스페이스</a>
+      <a href="/diagnostic/" class="active">진단</a>
+      <a href="/sell/new">등록</a>
+      <a href="/inquire?kind=acquire" class="cta">상담 신청</a>
+    </nav>
   </div>
-  <div class="header-sub"><a href="/sell" style="color: var(--purple); text-decoration:none; font-weight:600;">← 랜딩</a> · 예시: 강남 30평 18개월</div>
 </header>
+<div class="page-meta"><a href="/sell" class="back">← 매각</a><span class="dot">·</span>예시: 강남 30평 18개월</div>
 
 <nav class="steps" id="steps">
   <button class="step active" data-step="1">
