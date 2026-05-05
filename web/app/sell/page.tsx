@@ -75,7 +75,7 @@ export default function SellPage() {
               pillColor="amber"
               duration="2~3주"
               what="매수자가 디파짓 50만 결제 → 비밀유지 약속 후 진성 자료 일체 수령"
-              gate="매수자가 자료 본 후 \"이 가격에 인수\" 의사 확정"
+              gate={`매수자가 자료 본 후 "이 가격에 인수" 의사 확정`}
             />
             <StageCard
               n={3}
