@@ -36,36 +36,53 @@ NEGATIVE_CATEGORY_HINTS = (
 
 
 def classify_pilates(doc: dict) -> tuple[int, str]:
+    """하위 호환 wrapper — is_pilates는 1 if industry in (pilates|yoga|both)."""
+    industry, reason = classify_industry(doc)
+    return (1 if industry in ("pilates", "yoga", "both") else 0), reason
+
+
+def classify_industry(doc: dict) -> tuple[str, str]:
     """
-    returns (is_pilates: 0|1, reason)
-    - 1: 필라테스 스튜디오로 판정
-    - 0: 아님 또는 판정 보류 (확실치 않은 것은 0으로, 검수 큐에 남김)
+    returns (industry, reason)
+    industry: 'pilates' | 'yoga' | 'both' | 'none'
+
+    이름·카테고리에 두 키워드가 모두 있으면 'both'.
     """
     name = (doc.get("place_name") or "").strip()
     category = (doc.get("category_name") or "").strip()
 
     if not name:
-        return 0, "empty_name"
+        return "none", "empty_name"
 
     for bl in NAME_BLACKLIST:
         if bl in name:
-            return 0, f"name_blacklist:{bl}"
+            return "none", f"name_blacklist:{bl}"
 
     for neg in NEGATIVE_CATEGORY_HINTS:
         if neg in category:
-            return 0, f"category_negative:{neg}"
+            return "none", f"category_negative:{neg}"
 
-    has_name = "필라테스" in name
-    has_cat = any(h in category for h in POSITIVE_CATEGORY_HINTS)
+    text = f"{name} {category}".lower()
+    has_pilates = ("필라테스" in text) or ("pilates" in text) or ("리포머" in text)
+    has_yoga = (
+        ("요가" in text) or ("yoga" in text)
+        or ("빈야사" in text) or ("아쉬탕가" in text)
+        or ("하타" in text) or ("핫요가" in text)
+        or ("vinyasa" in text) or ("ashtanga" in text)
+    )
 
-    if has_name and has_cat:
-        return 1, "name+category"
-    if has_name:
-        return 1, "name_only"
-    if "필라테스" in category:
-        return 1, "category_only"
+    if has_pilates and has_yoga:
+        return "both", "name_or_cat:both"
+    if has_pilates:
+        return "pilates", "name_or_cat:pilates"
+    if has_yoga:
+        return "yoga", "name_or_cat:yoga"
 
-    return 0, "no_signal"
+    # 카테고리만 "요가,필라테스" 류이면 pilates 기본 (DB 호환)
+    if any(h in category for h in POSITIVE_CATEGORY_HINTS):
+        return "pilates", "category_fallback"
+
+    return "none", "no_signal"
 
 
 _PUNC_RE = re.compile(r"[\s\-_.,·•&()\[\]<>{}!?'\"/\\]+")

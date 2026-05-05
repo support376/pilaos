@@ -56,7 +56,17 @@ def naver_search(query: str, client_id: str, client_secret: str, display: int = 
         with request.urlopen(req, timeout=10) as resp:
             return json.loads(resp.read().decode("utf-8"))
     except error.HTTPError as e:
-        print(f"  [HTTP {e.code}] {query}: {e.read().decode('utf-8', 'ignore')[:200]}")
+        body = e.read().decode("utf-8", "ignore")[:200]
+        print(f"  [HTTP {e.code}] {query}: {body}")
+        if e.code == 401:
+            print()
+            print("  ⚠ 인증 실패 — 다음 중 하나 확인하세요:")
+            print("    1) developers.naver.com → 내 애플리케이션 → API 설정 → '검색' 체크")
+            print("    2) Client ID/Secret 복사 시 공백·따옴표 포함되지 않았는지")
+            print("    3) 환경변수가 현재 PowerShell 세션에 실제로 설정됐는지")
+            print()
+            print("  해결 후 다시 실행하세요. 추가 401 방지 위해 종료합니다.")
+            sys.exit(1)
         return None
     except Exception as e:
         print(f"  [ERR] {query}: {e}")
@@ -74,6 +84,26 @@ def strip_tags(s: str) -> str:
     return s.replace("<b>", "").replace("</b>", "").replace("&quot;", '"').replace("&amp;", "&")
 
 
+def load_dotenv() -> None:
+    """레포 루트의 .env 파일을 환경변수로 로드 (있으면)."""
+    for cand in [
+        Path(__file__).resolve().parent.parent / ".env",
+        Path(__file__).resolve().parent / ".env",
+    ]:
+        if not cand.exists():
+            continue
+        for line in cand.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            k, v = k.strip(), v.strip().strip('"').strip("'")
+            if k and v and k not in os.environ:
+                os.environ[k] = v
+        print(f"[ENV] .env loaded from {cand}")
+        break
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=0, help="0 = no limit")
@@ -82,12 +112,25 @@ def main():
     ap.add_argument("--only-empty", action="store_true", help="아직 크롤 안된 row만")
     args = ap.parse_args()
 
-    cid = os.environ.get("NAVER_CLIENT_ID")
-    csec = os.environ.get("NAVER_CLIENT_SECRET")
+    load_dotenv()
+
+    cid = (os.environ.get("NAVER_CLIENT_ID") or "").strip()
+    csec = (os.environ.get("NAVER_CLIENT_SECRET") or "").strip()
     if not cid or not csec:
-        print("[ERR] NAVER_CLIENT_ID / NAVER_CLIENT_SECRET 환경변수가 필요합니다.")
-        print("       developers.naver.com 에서 검색 API 앱 등록 후 키를 받으세요.")
+        print("[ERR] NAVER_CLIENT_ID / NAVER_CLIENT_SECRET 가 비어있습니다.")
+        print()
+        print("  방법 1 — .env 파일 (권장):")
+        print("    레포 루트(C:\\Users\\user\\Documents\\Claude\\Projects\\PilaOS\\pilaos\\.env)에 다음 두 줄:")
+        print("      NAVER_CLIENT_ID=받은아이디")
+        print("      NAVER_CLIENT_SECRET=받은시크릿")
+        print()
+        print("  방법 2 — PowerShell 환경변수 (현재 세션):")
+        print("    $env:NAVER_CLIENT_ID = \"받은아이디\"")
+        print("    $env:NAVER_CLIENT_SECRET = \"받은시크릿\"")
         sys.exit(1)
+    print(f"[ENV] NAVER_CLIENT_ID = {cid[:6]}...{cid[-3:]} (길이 {len(cid)})")
+    print(f"[ENV] NAVER_CLIENT_SECRET = {csec[:4]}... (길이 {len(csec)})")
+    print()
 
     if not DB.exists():
         print(f"[ERR] DB 없음: {DB}")
