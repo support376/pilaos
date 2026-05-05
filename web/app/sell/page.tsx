@@ -11,22 +11,34 @@ export default function SellPage() {
 
       {/* HERO */}
       <section className="mx-auto max-w-3xl px-5 pt-14 pb-10 sm:pt-20">
-        <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">매각</div>
+        <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">매각 · LIVE</div>
         <h1 className="mt-3 text-[34px] sm:text-[52px] font-extrabold leading-[1.05] tracking-tight">
-          내 가게,<br />
-          <span className="text-blue-600">얼마에 팔릴까?</span>
+          내 가게 권리금,<br />
+          <span className="text-blue-600">지금 시점에서 최고가?</span>
         </h1>
         <p className="mt-5 text-[16px] sm:text-[18px] text-black/65 leading-relaxed">
-          60초 진단으로 권리금 범위 확인. 매각이 안 맞으면 폐업 시 받을 수 있는 지원사업도 같이 매칭.
+          매주 갱신되는 매장 주가. 시장 좋을 때 매각, 마이너스 신호 시 폐업 — 진단 1회로 트래킹 시작.
         </p>
+        <div className="mt-6 inline-flex items-baseline gap-3 rounded-lg bg-blue-50 border border-blue-200 px-4 py-2.5">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-blue-700">예시 데이터</span>
+          <span className="text-[20px] font-extrabold text-black">₩ 2.04<span className="text-[14px] text-black/55">억</span></span>
+          <span className="text-[12px] font-bold text-blue-700">▲ 1.2% (지난주)</span>
+        </div>
 
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
           <CtaCard
             href="/diagnostic/#stage1"
-            kicker="60초 진단"
-            title="권리금 진단"
+            kicker="60초 무료"
+            title="권리금 간이 진단"
             desc="입력 6개 → LOW–MID–HIGH 범위. 매각 vs 폐업 비교까지."
             primary
+          />
+          <CtaCard
+            href="/inquire?kind=live_report&src=sell"
+            kicker="₩ 9,900"
+            title="LIVE 리포트 PDF"
+            desc="매장 주가 PDF + 7일 what-if 시뮬레이터 + 권리금 변동 카톡 알림."
+            paid
           />
           <CtaCard
             href="/sell/new"
@@ -62,7 +74,7 @@ export default function SellPage() {
               n={1}
               name="권리금 계산서"
               pill="착수금 150만"
-              pillColor="amber"
+              pillColor="paid"
               duration="7영업일"
               what="POS·카드·세금계산서로 진성 매출 확인 + 회원권 부채 산정 + 적정 권리금 보고서"
               gate="양측이 보고서 본 후 ±10% 협상 의사 확인"
@@ -72,7 +84,7 @@ export default function SellPage() {
               n={2}
               name="실사·자료 검토"
               pill="매수자 부담"
-              pillColor="amber"
+              pillColor="paid"
               duration="2~3주"
               what="매수자가 디파짓 50만 결제 → 비밀유지 약속 후 진성 자료 일체 수령"
               gate={`매수자가 자료 본 후 "이 가격에 인수" 의사 확정`}
@@ -81,7 +93,7 @@ export default function SellPage() {
               n={3}
               name="계약·잔금"
               pill="성공보수"
-              pillColor="green"
+              pillColor="success"
               duration="2주"
               what="변호사 자문 + 회원권 정리 + 임대인 연락 대행"
               gate="잔금 지급 + 인수 완료"
@@ -182,23 +194,25 @@ export default function SellPage() {
   );
 }
 
-function CtaCard({ href, kicker, title, desc, primary }: { href: string; kicker: string; title: string; desc: string; primary?: boolean }) {
-  const border = primary ? "border-black" : "border-black/15";
+function CtaCard({ href, kicker, title, desc, primary, paid }: { href: string; kicker: string; title: string; desc: string; primary?: boolean; paid?: boolean }) {
+  const border = primary ? "border-black" : paid ? "border-blue-600 bg-blue-50/30" : "border-black/15";
+  const kickerColor = paid ? "text-blue-700" : "text-blue-600";
   return (
     <Link href={href} className={`block rounded-2xl border-2 ${border} bg-white p-6 hover:border-blue-600 transition-colors`}>
-      <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">{kicker}</div>
+      <div className={`text-[11px] font-bold uppercase tracking-widest ${kickerColor}`}>{kicker}</div>
       <div className="mt-2 text-[18px] font-extrabold leading-tight">{title}</div>
       <div className="mt-3 text-[13px] text-black/65 leading-relaxed">{desc}</div>
-      <div className="mt-4 text-[13px] font-bold text-blue-600">시작하기 →</div>
+      <div className={`mt-4 text-[13px] font-bold ${paid ? "text-blue-700" : "text-blue-600"}`}>{paid ? "결제하기 →" : "시작하기 →"}</div>
     </Link>
   );
 }
 
-function StageCard({ n, name, pill, pillColor, duration, what, gate, note }: { n: number; name: string; pill: string; pillColor: "blue" | "amber" | "green"; duration: string; what: string; gate?: string; note?: string }) {
+function StageCard({ n, name, pill, pillColor, duration, what, gate, note }: { n: number; name: string; pill: string; pillColor: "blue" | "paid" | "success"; duration: string; what: string; gate?: string; note?: string }) {
+  // blue (무료/시작) / black (유료) / blue-600 (성공) — 흑+blue+red 시스템
   const pillCls = {
     blue: "bg-blue-50 text-blue-700",
-    amber: "bg-amber-50 text-amber-800",
-    green: "bg-green-50 text-green-800",
+    paid: "bg-black text-white",
+    success: "bg-blue-600 text-white",
   }[pillColor];
   return (
     <div className="rounded-xl border border-black/10 bg-white p-5">
@@ -215,8 +229,8 @@ function StageCard({ n, name, pill, pillColor, duration, what, gate, note }: { n
         </div>
       )}
       {note && (
-        <div className="mt-2 text-[12px] text-amber-800 leading-snug">
-          <strong>참고.</strong> {note}
+        <div className="mt-2 text-[12px] text-red-600 leading-snug">
+          <strong>주의.</strong> {note}
         </div>
       )}
     </div>

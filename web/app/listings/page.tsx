@@ -63,7 +63,7 @@ export default async function ListingsPage({ searchParams }: Props) {
   }
 
   return (
-    <div className="mx-auto max-w-[1400px] px-4 py-8">
+    <div className="mx-auto max-w-6xl px-5 py-8">
       <div className="mb-6 sm:mb-8">
         <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">매물 검색</div>
         <h1 className="mt-2 text-[26px] sm:text-[32px] font-extrabold tracking-tight">
@@ -152,7 +152,7 @@ function PerPageSelect({ current, options, search }: { current: number; options:
         <Link
           key={n}
           href={linkFor(n)}
-          className={`rounded px-2 py-1 ${n === current ? "bg-black text-white" : "border border-black/15 hover:bg-black/[.03]"}`}
+          className={`rounded px-2 py-1 ${n === current ? "bg-black text-white" : "border border-black/15 hover:bg-black/5"}`}
         >
           {n}
         </Link>

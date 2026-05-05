@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 function Nav() {
   return (
     <header className="border-b border-black/10 bg-white sticky top-0 z-30">
-      <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-5 py-3.5">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-3.5">
         <Link href="/" className="text-black"><Logo size={20} /></Link>
         <nav className="flex items-center gap-3 text-sm">
           <Link href="/listings" className="text-black/70 hover:text-black">스페이스</Link>
@@ -32,7 +32,7 @@ function Nav() {
 function Foot() {
   return (
     <footer className="border-t border-black/10 bg-white">
-      <div className="mx-auto max-w-3xl px-5 py-8">
+      <div className="mx-auto max-w-6xl px-5 py-8">
         <div className="rounded-lg bg-black/5 px-4 py-3 text-xs text-black/60 leading-relaxed">
           <strong className="text-black">안내.</strong> 본 사이트의 매물은 카카오·네이버 공개 데이터를 기반으로 자동 수집된 잠재 매물입니다. 매장 운영자가 직접 등록한 것이 아니며 권리금·매출 등 모든 숫자는 추정값입니다.
           매장 운영자께서 노출 거부를 원하시면 매물 페이지의 <strong>노출 거부 신청</strong> 또는 운영팀 카톡으로 연락 주세요. 24시간 안에 처리합니다.
@@ -45,7 +45,7 @@ function Foot() {
             <Link href="/risk" className="hover:text-black">위험 7가지</Link>
             <Link href="/terms" className="hover:text-black">이용약관</Link>
             <Link href="/privacy" className="hover:text-black">개인정보</Link>
-            <Link href="/admin/inbox" className="text-black/30">운영팀</Link>
+            <Link href="/admin/inbox" className="text-black/55">운영팀</Link>
           </div>
         </div>
       </div>

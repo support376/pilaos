@@ -9,13 +9,13 @@ export default function Home() {
 
       {/* HERO */}
       <section className="mx-auto max-w-3xl px-5 pt-16 pb-12 sm:pt-24 sm:pb-16">
-        <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">필라테스 매장 OS</div>
+        <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">필라테스 매장 OS · LIVE</div>
         <h1 className="mt-4 text-[36px] sm:text-[56px] font-extrabold leading-[1.05] tracking-tight">
-          내 매장 운영부터<br />
-          <span className="text-blue-600">매각까지.</span>
+          내 가게 권리금,<br />
+          <span className="text-blue-600">지금 얼마?</span>
         </h1>
         <p className="mt-6 text-[16px] sm:text-[18px] text-black/65 leading-relaxed">
-          {s.total.toLocaleString()}개 스페이스 데이터 기반. 운영 중인 사장님은 매장 관리, 정리하시는 사장님은 매각까지 한 곳에서.
+          매주 갱신되는 매장 주가 트래킹. {s.total.toLocaleString()}개 매물 시세 기반. 사장님 입력 6개면 권리금 LIVE 차트가 시작됩니다.
         </p>
 
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -28,15 +28,15 @@ export default function Home() {
           />
           <Pillar
             href="/sell"
-            kicker="매각"
+            kicker="매각 · ₩9,900부터"
             title="내 가게 얼마"
-            desc="60초 진단 + 5단계 절차"
+            desc="60초 무료 진단 → ₩9,900 LIVE PDF → 매각 5단계"
           />
           <Pillar
             href="/manage"
-            kicker="매장 관리"
-            title="운영 SaaS (베타)"
-            desc="회원·매출·강사 한 곳에서"
+            kicker="매장 관리 · LIVE"
+            title="권리금 ▲ 매주 갱신"
+            desc="₩2.04억 → 매주 자동 트래킹. 마이너스 시 폐업 1-click."
             beta
           />
         </div>
@@ -106,7 +106,7 @@ function Pillar({ href, kicker, title, desc, primary, beta }: { href: string; ki
     <Link href={href} className={`block rounded-2xl border-2 ${border} bg-white p-6 hover:border-blue-600 transition-colors`}>
       <div className="flex items-center gap-2">
         <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">{kicker}</div>
-        {beta && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">BETA</span>}
+        {beta && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-black text-white">BETA</span>}
       </div>
       <div className="mt-2 text-[18px] font-extrabold leading-tight">{title}</div>
       <div className="mt-2 text-[12.5px] text-black/65 leading-relaxed">{desc}</div>
@@ -129,7 +129,7 @@ function Feat({ n, title, desc, href, beta }: { n: string; title: string; desc: 
       <div className="flex items-baseline gap-3 flex-wrap">
         <div className="text-[11px] font-bold text-black/45">{n}</div>
         <div className="text-[15px] font-extrabold">{title}</div>
-        {beta && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">BETA</span>}
+        {beta && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-black text-white">BETA</span>}
         <span className="ml-auto text-[12px] font-bold text-blue-600">→</span>
       </div>
       <div className="mt-2 text-[13px] text-black/65 leading-relaxed">{desc}</div>
