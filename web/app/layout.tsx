@@ -19,9 +19,9 @@ function Nav() {
       <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-5 py-3.5">
         <Link href="/" className="text-black"><Logo size={20} /></Link>
         <nav className="flex items-center gap-3 text-sm">
-          <Link href="/listings" className="text-black/70 hover:text-black">매물 검색</Link>
-          <Link href="/process" className="hidden text-black/70 hover:text-black sm:inline">절차</Link>
-          <Link href="/pricing" className="text-black/70 hover:text-black">비용</Link>
+          <Link href="/listings" className="text-black/70 hover:text-black">스페이스</Link>
+          <Link href="/diagnostic/" className="hidden text-black/70 hover:text-black sm:inline">진단</Link>
+          <Link href="/sell/new" className="text-black/70 hover:text-black">등록</Link>
           <Link href="/inquire?kind=acquire" className="rounded-md bg-black px-3.5 py-1.5 text-xs font-bold text-white hover:bg-black/85">상담 신청</Link>
         </nav>
       </div>
@@ -38,10 +38,10 @@ function Foot() {
           매장 운영자께서 노출 거부를 원하시면 매물 페이지의 <strong>노출 거부 신청</strong> 또는 운영팀 카톡으로 연락 주세요. 24시간 안에 처리합니다.
         </div>
         <div className="mt-4 flex flex-col gap-2 text-xs text-black/50 sm:flex-row sm:items-center sm:justify-between">
-          <div>© 2026 pilaos · 필라테스·요가 인수 자문</div>
+          <div>© 2026 pilaos · 필라테스 매장 OS</div>
           <div className="flex flex-wrap gap-3">
-            <Link href="/process" className="hover:text-black">절차</Link>
-            <Link href="/pricing" className="hover:text-black">비용</Link>
+            <Link href="/sell" className="hover:text-black">매각</Link>
+            <Link href="/diagnostic/" className="hover:text-black">진단</Link>
             <Link href="/risk" className="hover:text-black">위험 7가지</Link>
             <Link href="/terms" className="hover:text-black">이용약관</Link>
             <Link href="/privacy" className="hover:text-black">개인정보</Link>
