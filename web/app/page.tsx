@@ -34,9 +34,9 @@ export default function Home() {
           />
           <Pillar
             href="/manage"
-            kicker="매장 관리 · LIVE"
-            title="권리금 ▲ 매주 갱신"
-            desc="₩2.04억 → 매주 자동 트래킹. 마이너스 시 폐업 1-click."
+            kicker="매장 점수 · LIVE"
+            title="잘 될지 안 될지"
+            desc="플레이스·당근·SNS 점수 매주. 낮은 채널은 PilaOS 대행."
             beta
           />
         </div>

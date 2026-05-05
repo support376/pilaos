@@ -11,18 +11,27 @@ export default function SellPage() {
 
       {/* HERO */}
       <section className="mx-auto max-w-3xl px-5 pt-14 pb-10 sm:pt-20">
-        <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">매각 · LIVE</div>
+        <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">매각 · 원큐 funnel</div>
         <h1 className="mt-3 text-[34px] sm:text-[52px] font-extrabold leading-[1.05] tracking-tight">
-          내 가게 권리금,<br />
-          <span className="text-blue-600">지금 시점에서 최고가?</span>
+          진단부터 등록까지<br />
+          <span className="text-blue-600">원큐에 가자.</span>
         </h1>
         <p className="mt-5 text-[16px] sm:text-[18px] text-black/65 leading-relaxed">
-          매주 갱신되는 매장 주가. 시장 좋을 때 매각, 마이너스 신호 시 폐업 — 진단 1회로 트래킹 시작.
+          간이 진단 → 프로 진단 → 지원사업 자격 → 매물 등록까지 한 흐름. 입력하신 정보는 다음 단계로 자동 전달.
         </p>
-        <div className="mt-6 inline-flex items-baseline gap-3 rounded-lg bg-blue-50 border border-blue-200 px-4 py-2.5">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-blue-700">예시 데이터</span>
-          <span className="text-[20px] font-extrabold text-black">₩ 2.04<span className="text-[14px] text-black/55">억</span></span>
-          <span className="text-[12px] font-bold text-blue-700">▲ 1.2% (지난주)</span>
+
+        {/* 원큐 funnel 시각화 */}
+        <div className="mt-7 rounded-xl border-2 border-black bg-white p-4 sm:p-5">
+          <div className="text-[11px] font-bold uppercase tracking-widest text-blue-600">원큐 흐름</div>
+          <div className="mt-3 grid grid-cols-1 sm:grid-cols-4 gap-2 text-center">
+            <FunnelStep n="1" label="간이 진단" detail="60초 · 무료" active />
+            <FunnelStep n="2" label="프로 진단" detail="5~10분 · ₩9,900 LIVE" />
+            <FunnelStep n="3" label="지원사업 자격" detail="13종 자동 매칭" />
+            <FunnelStep n="4" label="매각/폐업 등록" detail="1-click 인계" />
+          </div>
+          <div className="mt-3 text-[11px] text-black/50 leading-relaxed">
+            * 각 단계 입력값이 다음 단계로 자동 전달 — 같은 정보 두 번 입력 X.
+          </div>
         </div>
 
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -190,6 +199,17 @@ export default function SellPage() {
         </div>
       </section>
 
+    </div>
+  );
+}
+
+function FunnelStep({ n, label, detail, active }: { n: string; label: string; detail: string; active?: boolean }) {
+  const bg = active ? "bg-black text-white" : "bg-blue-50 text-blue-700";
+  return (
+    <div className={`rounded-lg ${active ? "border-2 border-black" : "border border-black/10"} bg-white p-3`}>
+      <div className={`inline-flex items-center justify-center w-6 h-6 rounded-full ${bg} text-[11px] font-extrabold`}>{n}</div>
+      <div className="mt-2 text-[12.5px] font-extrabold">{label}</div>
+      <div className="mt-1 text-[10.5px] text-black/55">{detail}</div>
     </div>
   );
 }
